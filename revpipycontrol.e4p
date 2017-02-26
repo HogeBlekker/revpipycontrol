@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project revpipycontrol -->
-<!-- Saved: 2017-02-15, 20:52:17 -->
+<!-- Saved: 2017-02-26, 18:33:07 -->
 <!-- Copyright (C) 2017 Sven Sager, akira@narux.de -->
 <Project version="5.1">
   <Language>en_US</Language>
@@ -16,6 +16,7 @@
   <Sources>
     <Source>revpipycontrol/__init__.py</Source>
     <Source>revpipycontrol/revpipycontrol.py</Source>
+    <Source>revpipycontrol/revpicheckclient.py</Source>
   </Sources>
   <Forms/>
   <Translations/>
@@ -23,7 +24,110 @@
   <Interfaces/>
   <Others/>
   <Vcs>
-    <VcsType>None</VcsType>
+    <VcsType>Mercurial</VcsType>
+    <VcsOptions>
+      <dict>
+        <key>
+          <string>add</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>checkout</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>commit</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>diff</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>export</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>global</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>history</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>log</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>remove</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>status</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>tag</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>update</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+      </dict>
+    </VcsOptions>
+    <VcsOtherData>
+      <dict/>
+    </VcsOtherData>
   </Vcs>
   <FiletypeAssociations>
     <FiletypeAssociation pattern="*.idl" type="INTERFACES"/>
