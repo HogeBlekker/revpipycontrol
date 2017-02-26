@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Project SYSTEM "Project-5.1.dtd">
+<!-- eric project file for project revpipycontrol -->
+<!-- Saved: 2017-02-15, 20:52:17 -->
+<!-- Copyright (C) 2017 Sven Sager, akira@narux.de -->
+<Project version="5.1">
+  <Language>en_US</Language>
+  <Hash>66103e2eaf8a762f14d1fd51d8b1c9dcaf35a275</Hash>
+  <ProgLanguage mixed="0">Python3</ProgLanguage>
+  <ProjectType>Console</ProjectType>
+  <Description></Description>
+  <Version>0.1.0</Version>
+  <Author>Sven Sager</Author>
+  <Email>akira@narux.de</Email>
+  <Eol index="-1"/>
+  <Sources>
+    <Source>revpipycontrol/__init__.py</Source>
+    <Source>revpipycontrol/revpipycontrol.py</Source>
+  </Sources>
+  <Forms/>
+  <Translations/>
+  <Resources/>
+  <Interfaces/>
+  <Others/>
+  <Vcs>
+    <VcsType>None</VcsType>
+  </Vcs>
+  <FiletypeAssociations>
+    <FiletypeAssociation pattern="*.idl" type="INTERFACES"/>
+    <FiletypeAssociation pattern="*.py" type="SOURCES"/>
+    <FiletypeAssociation pattern="*.py3" type="SOURCES"/>
+    <FiletypeAssociation pattern="*.pyw" type="SOURCES"/>
+    <FiletypeAssociation pattern="*.pyw3" type="SOURCES"/>
+  </FiletypeAssociations>
+</Project>
