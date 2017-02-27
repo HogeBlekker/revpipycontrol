@@ -1,12 +1,15 @@
 #!/usr/bin/python3
 #
-# (c) Sven Sager, License: GPLv3
+# RevPiPyControl
+# Version: 0.2.0
+#
+# Webpage: https://revpimodio.org/
+# (c) Sven Sager, License: LGPLv3
 #
 # -*- coding: utf-8 -*-
 import revpicheckclient
 import tkinter
 from argparse import ArgumentParser
-from concurrent.futures import ThreadPoolExecutor
 from xmlrpc.client import ServerProxy, Binary
 
 
@@ -39,16 +42,37 @@ class RevPiPyLogs(tkinter.Frame):
 
         self.get_applog()
         self.get_plclog()
+        
+        # Timer zum nachladen aktivieren
+        self.master.after(1000, self.get_applines)
+        self.master.after(1000, self.get_plclines)
+
+    def get_applines(self):
+        roll = self.applog.yview()[1] == 1.0
+        for line in self.xmlcli.get_applines():
+            self.applog.insert(tkinter.END, line)
+        if roll:
+            self.applog.see(tkinter.END)
+        self.master.after(1000, self.get_applines)
 
     def get_applog(self):
         self.applog.delete(1.0, tkinter.END)
         self.applog.insert(1.0, self.xmlcli.get_applog())
         self.applog.see(tkinter.END)
-    
+
+    def get_plclines(self):
+        roll = self.plclog.yview()[1] == 1.0
+        for line in self.xmlcli.get_plclines():
+            self.plclog.insert(tkinter.END, line)
+        if roll:
+            self.plclog.see(tkinter.END)
+        self.master.after(1000, self.get_plclines)
+
     def get_plclog(self):
         self.plclog.delete(1.0, tkinter.END)
         self.plclog.insert(1.0, self.xmlcli.get_plclog())
         self.plclog.see(tkinter.END)
+
 
 class RevPiPyControl(tkinter.Frame):
     
@@ -137,7 +161,8 @@ class RevPiPyControl(tkinter.Frame):
         self.plcrunning()
 
     def plcrestart(self):
-        self.cli.plcrestart()
+        self.cli.plcstop()
+        self.cli.plcstart()
         self.plcrunning()
 
     def plcrunning(self):
@@ -147,7 +172,12 @@ class RevPiPyControl(tkinter.Frame):
         else:
             self.btn_plcrunning["activebackground"] = "red"
             self.btn_plcrunning["bg"] = "red"
-        self.var_status.set(self.cli.plcexitcode())
+        plcec = self.cli.plcexitcode()
+        if plcec == -1:
+            plcec = "RUNNING"
+        elif plcec == 0:
+            plcec = "NOT RUNNING"
+        self.var_status.set(plcec)
 
 
 if __name__ == "__main__":
