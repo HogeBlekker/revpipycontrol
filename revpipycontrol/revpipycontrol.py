@@ -13,8 +13,8 @@ from argparse import ArgumentParser
 from xmlrpc.client import ServerProxy, Binary
 
 
-class RevPiPyLogs(tkinter.Frame):
-    
+class RevPiPlcLogs(tkinter.Frame):
+
     def __init__(self, master, xmlcli):
         super().__init__(master)
         self.pack(fill="both", expand=True)
@@ -29,6 +29,7 @@ class RevPiPyLogs(tkinter.Frame):
         self.plcscr = tkinter.Scrollbar(self)
         self.plclog.pack(side="left", expand=True, fill="both")
         self.plcscr.pack(side="left", fill="y")
+        # self.plclog["state"] = "disabled"
         self.plclog["yscrollcommand"] = self.plcscr.set
         self.plcscr["command"] = self.plclog.yview
 
@@ -37,12 +38,13 @@ class RevPiPyLogs(tkinter.Frame):
         self.appscr = tkinter.Scrollbar(self)
         self.appscr.pack(side="right", fill="y")
         self.applog.pack(side="right", expand=True, fill="both")
+        # self.applog["state"] = "disabled"
         self.applog["yscrollcommand"] = self.appscr.set
         self.appscr["command"] = self.applog.yview
 
         self.get_applog()
         self.get_plclog()
-        
+
         # Timer zum nachladen aktivieren
         self.master.after(1000, self.get_applines)
         self.master.after(1000, self.get_plclines)
@@ -75,12 +77,12 @@ class RevPiPyLogs(tkinter.Frame):
 
 
 class RevPiPyControl(tkinter.Frame):
-    
+
     def __init__(self, master=None):
         super().__init__(master)
         self.pack(fill="both", expand=True)
 
-       # Command arguments
+        # Command arguments
         parser = ArgumentParser(
             description="Revolution Pi IO-Client"
         )
@@ -102,22 +104,33 @@ class RevPiPyControl(tkinter.Frame):
         self._createwidgets()
 
         # Daten aktualisieren
-        self.plcrunning()
+        self.tmr_plcrunning()
 
     def _createwidgets(self):
         """Erstellt den Fensterinhalt."""
         # Hauptfenster
         self.master.wm_title("RevPi Python PLC Loader")
 
-        self.var_status = tkinter.StringVar()
-        self.txt_status = tkinter.Entry()
-        self.txt_status["textvariable"] = self.var_status
-        self.txt_status.pack(fill="x")
+        self.var_opt = tkinter.StringVar()
+        self.lst_opt = [
+            "Verbindungen...",
+            "------------------",
+            "PLC Log...",
+            "PLC Monitor...",
+            "PLC Optionen...",
+            "------------------",
+            "Beenden",
+        ]
+        self.opt_menu = tkinter.OptionMenu(
+            self, self.var_opt, *self.lst_opt, command=self._opt_do
+        )
+        self.opt_menu.pack(fill="x")
 
-        self.btn_plcrunning = tkinter.Button(self)
-        self.btn_plcrunning["text"] = "PLC Status"
-        self.btn_plcrunning["command"] = self.plcrunning
-        self.btn_plcrunning.pack(fill="x")
+        self.var_conn = tkinter.StringVar()
+        self.txt_conn = tkinter.Entry(self)
+        self.txt_conn["state"] = "readonly"
+        self.txt_conn["textvariable"] = self.var_conn
+        self.txt_conn.pack()
 
         self.btn_plcstart = tkinter.Button(self)
         self.btn_plcstart["text"] = "PLC Start"
@@ -144,40 +157,61 @@ class RevPiPyControl(tkinter.Frame):
         self.btn_plcrestart["command"] = self.plclogs
         self.btn_plcrestart.pack(fill="x")
 
+        self.var_status = tkinter.StringVar()
+        self.txt_status = tkinter.Entry(self)
+        self.txt_status["state"] = "readonly"
+        self.txt_status["textvariable"] = self.var_status
+        self.txt_status.pack()
+
+    def _opt_do(self, text):
+        optselect = self.lst_opt.index(text)
+        if optselect == 0:
+            # Verbindungen
+            pass
+        elif optselect == 2:
+            self.plclogs()
+        elif optselect == 3:
+            pass
+            # self.plcmonitor()
+        elif optselect == 4:
+            # Optionen
+            pass
+        elif optselect == 6:
+            self.master.destroy()
+        self.var_opt.set("")
+
     def plclogs(self):
         root = tkinter.Tk()
-        self.tklogs = RevPiPyLogs(root, self.cli)
+        self.tklogs = RevPiPlcLogs(root, self.cli)
 
     def plcmonitor(self):
         root = tkinter.Tk()
         self.tkmonitor = revpicheckclient.RevPiCheckClient(root, self.cli)
 
-    def plcstart (self):
+    def plcstart(self):
         self.cli.plcstart()
-        self.plcrunning()
 
     def plcstop(self):
         self.cli.plcstop()
-        self.plcrunning()
 
     def plcrestart(self):
         self.cli.plcstop()
         self.cli.plcstart()
-        self.plcrunning()
 
-    def plcrunning(self):
+    def tmr_plcrunning(self):
         if self.cli.plcrunning():
-            self.btn_plcrunning["activebackground"] = "green"
-            self.btn_plcrunning["bg"] = "green"
+            self.txt_status["readonlybackground"] = "green"
         else:
-            self.btn_plcrunning["activebackground"] = "red"
-            self.btn_plcrunning["bg"] = "red"
+            self.txt_status["readonlybackground"] = "red"
+
         plcec = self.cli.plcexitcode()
         if plcec == -1:
             plcec = "RUNNING"
         elif plcec == 0:
             plcec = "NOT RUNNING"
         self.var_status.set(plcec)
+
+        self.master.after(1000, self.tmr_plcrunning)
 
 
 if __name__ == "__main__":

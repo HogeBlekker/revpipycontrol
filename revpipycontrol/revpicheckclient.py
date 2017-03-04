@@ -73,7 +73,7 @@ class RevPiCheckClient(tkinter.Frame):
 
             sleep(0.1)
 
-    def onFrameConfigure(self, canvas):
+    def onfrmconf(self, canvas):
         canvas.configure(scrollregion=canvas.bbox("all"))
 
     def _createiogroup(self, device, frame, iotype):
@@ -88,13 +88,17 @@ class RevPiCheckClient(tkinter.Frame):
         canvas.pack(side="left", fill="both", expand=True)
 
         canvas.create_window((4, 4), window=s_frame, anchor="nw")
-        s_frame.bind("<Configure>", lambda event, canvas=canvas: self.onFrameConfigure(canvas))
-        
+        s_frame.bind(
+            "<Configure>", lambda event, canvas=canvas: self.onfrmconf(canvas)
+        )
+
         rowcount = 0
         for io in self.cli.get_iolist(device, iotype):
             # io = [name,default,anzbits,adressbyte,export,adressid,bmk,bitaddress,tkinter_var]
 
-            tkinter.Label(s_frame, text=io[0]).grid(column=0, row=rowcount, sticky="w")
+            tkinter.Label(s_frame, text=io[0]).grid(
+                column=0, row=rowcount, sticky="w"
+            )
 
             if io[7] >= 0:
                 var = tkinter.BooleanVar()
@@ -103,16 +107,13 @@ class RevPiCheckClient(tkinter.Frame):
                 check["text"] = ""
                 check["variable"] = var
                 check.grid(column=1, row=rowcount)
-                #check.pack(anchor="e", side="right")
             else:
                 var = tkinter.IntVar()
-                #txt = tkinter.Spinbox(fra_group, to=256)
                 txt = tkinter.Spinbox(s_frame, to=256)
                 txt["state"] = "disabled" if iotype == "inp" else "normal"
                 txt["width"] = 4
                 txt["textvariable"] = var
                 txt.grid(column=1, row=rowcount)
-                #txt.pack(anchor="e", side="right")
 
             # Steuerelementvariable in IO übernehmen
             io.append(var)
@@ -120,7 +121,7 @@ class RevPiCheckClient(tkinter.Frame):
                 self.dict_inpvar[device].append(io)
             elif iotype == "out":
                 self.dict_outvar[device].append(io)
-            
+
             rowcount += 1
 
     def _createwidgets(self):
@@ -158,7 +159,7 @@ class RevPiCheckClient(tkinter.Frame):
         self.btn_read["text"] = "LESEN"
         self.btn_read["command"] = self.readvalues
         self.btn_read.pack(side="bottom", fill="x")
-        
+
         check = tkinter.Checkbutton(self)
         check["command"] = self.toggleauto
         check["text"] = "autoupdate"
@@ -211,7 +212,8 @@ class RevPiCheckClient(tkinter.Frame):
     def toggleauto(self):
         self.btn_read["state"] = "disabled" if self.autorw.get() else "normal"
         self.btn_write["state"] = "disabled" if self.autorw.get() else "normal"
-        if self.autorw.get() and (self.fut_autorw is None or self.fut_autorw.done()):
+        if self.autorw.get() \
+                and (self.fut_autorw is None or self.fut_autorw.done()):
             e = ThreadPoolExecutor(max_workers=1)
             self.fut_autorw = e.submit(self._autorw)
 
