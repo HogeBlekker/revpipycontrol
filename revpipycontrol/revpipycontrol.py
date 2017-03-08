@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 #
 # RevPiPyControl
-# Version: 0.2.0
+# Version: 0.2.1
 #
 # Webpage: https://revpimodio.org/revpipyplc/
 # (c) Sven Sager, License: LGPLv3
@@ -9,10 +9,12 @@
 # -*- coding: utf-8 -*-
 import revpicheckclient
 import revpilogfile
+import revpioption
 import revpiplclist
 import socket
 import tkinter
 import tkinter.messagebox as tkmsg
+from functools import partial
 from xmlrpc.client import ServerProxy
 
 socket.setdefaulttimeout(3)
@@ -47,27 +49,22 @@ class RevPiPyControl(tkinter.Frame):
         self.master.wm_resizable(width=False, height=False)
 
         # Menü ganz oben
-        self.var_opt = tkinter.StringVar(self)
-        self.lst_opt = [
-            "Connections...",
-            "------------------",
-            "PLC log...",
-            "PLC monitor...",
-            "PLC options...",
-            "PLC program...",
-            "------------------",
-            "Exit",
-        ]
-        self.opt_menu = tkinter.OptionMenu(
-            self, self.var_opt, *self.lst_opt, command=self._opt_do)
-        self.opt_menu.pack(fill="x")
+        self.mbar = tkinter.Menu(self.master)
+        self.master.config(menu=self.mbar)
 
-        # Verbindungen
+        menu1 = tkinter.Menu(self.mbar, tearoff=False)
+        menu1.add_command(label="Connections...", command=self.plclist)
+        menu1.add_separator()
+        menu1.add_command(label="Exit", command=self.master.destroy)
+        self.mbar.add_cascade(label="Main", menu=menu1)
+
+        self._fillmbar()
+        self._fillconnbar()
+
         self.var_conn = tkinter.StringVar(self)
-        self.lst_conn = sorted(self.dict_conn.keys(), key=lambda x: x.lower())
-        self.opt_conn = tkinter.OptionMenu(
-            self, self.var_conn, *self.lst_conn, command=self._opt_conn)
-        self.opt_conn.pack(fill="x")
+        self.txt_connect = tkinter.Entry(
+            self, textvariable=self.var_conn, state="readonly", width=30)
+        self.txt_connect.pack(fill="x")
 
         self.btn_plcstart = tkinter.Button(self)
         self.btn_plcstart["text"] = "PLC Start"
@@ -93,9 +90,28 @@ class RevPiPyControl(tkinter.Frame):
         self.txt_status = tkinter.Entry(self)
         self.txt_status["state"] = "readonly"
         self.txt_status["textvariable"] = self.var_status
-        self.txt_status.pack()
+        self.txt_status.pack(fill="x")
+
+    def _fillmbar(self):
+        # PLC Menü
+        self.mplc = tkinter.Menu(self.mbar, tearoff=False)
+        self.mplc.add_command(label="PLC log...", command=self.plclogs)
+        self.mplc.add_command(label="PLC monitor...", command=self.plcmonitor)
+        self.mplc.add_command(label="PLC options...", command=self.plcoptions)
+        self.mplc.add_command(label="PLC program...", command=self.plcprogram)
+        self.mbar.add_cascade(label="PLC", menu=self.mplc, state="disabled")
+
+        # Connection Menü
+        self.mconn = tkinter.Menu(self.mbar, tearoff=False)
+        self.mbar.add_cascade(label="Connect", menu=self.mconn)
+
+    def _fillconnbar(self):
+        self.mconn.delete(0, "end")
+        for con in sorted(self.dict_conn.keys(), key=lambda x: x.lower()):
+            self.mconn.add_command(label=con, command=partial(self._opt_conn, con))
 
     def _opt_conn(self, text):
+        print(text)
         sp = ServerProxy(
             "http://{}:{}".format(
                 self.dict_conn[text][0], int(self.dict_conn[text][1])
@@ -108,27 +124,10 @@ class RevPiPyControl(tkinter.Frame):
             self.servererror()
         else:
             self.cli = sp
-
-    def _opt_do(self, text):
-        optselect = self.lst_opt.index(text)
-        if optselect == 0:
-            # Verbindungen
-            self.plclist()
-        elif optselect == 2:
-            # Logs
-            self.plclogs()
-        elif optselect == 3:
-            pass
-            # self.plcmonitor()
-        elif optselect == 4:
-            # Optionen
-            pass
-        elif optselect == 5:
-            # Programm updown
-            pass
-        elif optselect == 7:
-            self.master.destroy()
-        self.var_opt.set("")
+            self.var_conn.set("{} - {}:{}".format(
+                text, self.dict_conn[text][0], int(self.dict_conn[text][1])
+            ))
+            self.mbar.entryconfig("PLC", state="normal")
 
     def plclist(self):
         win = tkinter.Toplevel(self)
@@ -136,13 +135,27 @@ class RevPiPyControl(tkinter.Frame):
         win.focus_set()
         win.grab_set()
         self.wait_window(win)
+        self.dict_conn = revpiplclist.get_connections()
+        self._fillconnbar()
 
     def plclogs(self):
+        # TODO: nicht doppelt starten
         win = tkinter.Toplevel(self)
         self.tklogs = revpilogfile.RevPiLogfile(win, self.cli)
 
     def plcmonitor(self):
+        # TODO: Monitorfenster
         #self.tkmonitor = revpicheckclient.RevPiCheckClient(self.master, self.cli)
+        pass
+
+    def plcoptions(self):
+        # TODO: Optionsfenster
+        win = tkinter.Toplevel(self)
+        revpioption.RevPiOption(win, self.cli)
+        self.wait_window(win)
+
+    def plcprogram(self):
+        # TODO: Programfenster
         pass
 
     def plcstart(self):
@@ -158,6 +171,7 @@ class RevPiPyControl(tkinter.Frame):
     def servererror(self):
         self.cli = None
         self._btnstate()
+        self.mbar.entryconfig("PLC", state="disabled")
         self.var_conn.set("")
         tkmsg.showerror("Fehler", "Server ist nicht erreichbar!")
 
