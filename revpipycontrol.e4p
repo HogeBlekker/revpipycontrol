@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project revpipycontrol -->
-<!-- Saved: 2017-03-03, 16:51:50 -->
+<!-- Saved: 2017-03-07, 18:53:58 -->
 <!-- Copyright (C) 2017 Sven Sager, akira@narux.de -->
 <Project version="5.1">
   <Language>en_US</Language>
@@ -19,6 +19,7 @@
     <Source>revpipycontrol/revpicheckclient.py</Source>
     <Source>setup.py</Source>
     <Source>revpipycontrol/revpiplclist.py</Source>
+    <Source>revpipycontrol/revpilogfile.py</Source>
   </Sources>
   <Forms/>
   <Translations/>
@@ -138,4 +139,83 @@
     <FiletypeAssociation pattern="*.pyw" type="SOURCES"/>
     <FiletypeAssociation pattern="*.pyw3" type="SOURCES"/>
   </FiletypeAssociations>
+  <Checkers>
+    <CheckersParams>
+      <dict>
+        <key>
+          <string>Pep8Checker</string>
+        </key>
+        <value>
+          <dict>
+            <key>
+              <string>DocstringType</string>
+            </key>
+            <value>
+              <string>pep257</string>
+            </value>
+            <key>
+              <string>ExcludeFiles</string>
+            </key>
+            <value>
+              <string></string>
+            </value>
+            <key>
+              <string>ExcludeMessages</string>
+            </key>
+            <value>
+              <string>E123,E226,E24</string>
+            </value>
+            <key>
+              <string>FixCodes</string>
+            </key>
+            <value>
+              <string></string>
+            </value>
+            <key>
+              <string>FixIssues</string>
+            </key>
+            <value>
+              <bool>False</bool>
+            </value>
+            <key>
+              <string>HangClosing</string>
+            </key>
+            <value>
+              <bool>False</bool>
+            </value>
+            <key>
+              <string>IncludeMessages</string>
+            </key>
+            <value>
+              <string></string>
+            </value>
+            <key>
+              <string>MaxLineLength</string>
+            </key>
+            <value>
+              <int>80</int>
+            </value>
+            <key>
+              <string>NoFixCodes</string>
+            </key>
+            <value>
+              <string>E501</string>
+            </value>
+            <key>
+              <string>RepeatMessages</string>
+            </key>
+            <value>
+              <bool>True</bool>
+            </value>
+            <key>
+              <string>ShowIgnored</string>
+            </key>
+            <value>
+              <bool>False</bool>
+            </value>
+          </dict>
+        </value>
+      </dict>
+    </CheckersParams>
+  </Checkers>
 </Project>
