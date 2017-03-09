@@ -11,6 +11,7 @@ import revpicheckclient
 import revpilogfile
 import revpioption
 import revpiplclist
+import revpiprogram
 import socket
 import tkinter
 import tkinter.messagebox as tkmsg
@@ -28,6 +29,7 @@ class RevPiPyControl(tkinter.Frame):
 
         self.cli = None
         self.dict_conn = revpiplclist.get_connections()
+        self.revpiname = None
 
         # Fenster aufbauen
         self._createwidgets()
@@ -108,10 +110,11 @@ class RevPiPyControl(tkinter.Frame):
     def _fillconnbar(self):
         self.mconn.delete(0, "end")
         for con in sorted(self.dict_conn.keys(), key=lambda x: x.lower()):
-            self.mconn.add_command(label=con, command=partial(self._opt_conn, con))
+            self.mconn.add_command(
+                label=con, command=partial(self._opt_conn, con)
+            )
 
     def _opt_conn(self, text):
-        print(text)
         sp = ServerProxy(
             "http://{}:{}".format(
                 self.dict_conn[text][0], int(self.dict_conn[text][1])
@@ -124,6 +127,7 @@ class RevPiPyControl(tkinter.Frame):
             self.servererror()
         else:
             self.cli = sp
+            self.revpiname = text
             self.var_conn.set("{} - {}:{}".format(
                 text, self.dict_conn[text][0], int(self.dict_conn[text][1])
             ))
@@ -149,14 +153,15 @@ class RevPiPyControl(tkinter.Frame):
         pass
 
     def plcoptions(self):
-        # TODO: Optionsfenster
         win = tkinter.Toplevel(self)
         revpioption.RevPiOption(win, self.cli)
         self.wait_window(win)
 
     def plcprogram(self):
         # TODO: Programfenster
-        pass
+        win = tkinter.Toplevel(self)
+        revpiprogram.RevPiProgram(win, self.cli, self.revpiname)
+        self.wait_window(win)
 
     def plcstart(self):
         self.cli.plcstart()

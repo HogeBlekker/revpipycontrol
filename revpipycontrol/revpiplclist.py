@@ -20,6 +20,7 @@ else:
     homedir = environ["APPDATA"]
 savefile = os.path.join(homedir, ".revpipyplc", "connections.dat")
 
+
 def get_connections():
     if os.path.exists(savefile):
         fh = open(savefile, "rb")
@@ -65,7 +66,7 @@ class RevPiPlcList(tkinter.Frame):
         self.txt_name = tkinter.Entry(self, textvariable=self.var_name)
         self.txt_name.bind("<KeyRelease>", self.evt_keypress)
         self.txt_name.grid(
-            column=3, row=0, columnspan=3, sticky="n", padx=5, pady=5)        
+            column=3, row=0, columnspan=3, sticky="n", padx=5, pady=5)
 
         tkinter.Label(self, text="IP-Adresse").grid(
             column=2, row=1, sticky="wn", padx=5, pady=5
@@ -87,10 +88,12 @@ class RevPiPlcList(tkinter.Frame):
             self, text="Neu", command=self.evt_btnnew)
         self.btn_new.grid(column=2, row=3, sticky="s")
         self.btn_add = tkinter.Button(
-            self, text="Übernehmen", command=self.evt_btnadd, state="disabled")
+            self, text="Übernehmen", command=self.evt_btnadd,
+            state="disabled")
         self.btn_add.grid(column=3, row=3, sticky="s")
         self.btn_remove = tkinter.Button(
-            self, text="Entfernen", command=self.evt_btnremove, state="disabled")
+            self, text="Entfernen", command=self.evt_btnremove,
+            state="disabled")
         self.btn_remove.grid(column=4, row=3, sticky="s")
 
         # Fensterbuttons
@@ -119,7 +122,7 @@ class RevPiPlcList(tkinter.Frame):
     def build_listconn(self):
         self.list_conn.delete(0, "end")
         lst_conns = sorted(self._connections.keys(), key=lambda x: x.lower())
-        self.list_conn.insert("end",*lst_conns)
+        self.list_conn.insert("end", *lst_conns)
 
     def evt_btnadd(self):
         # TODO: Daten prüfen
@@ -197,7 +200,8 @@ class RevPiPlcList(tkinter.Frame):
             self.btn_remove["state"] = "disabled"
 
     def evt_keypress(self, evt=None):
-        okvalue = "normal" if (self.var_address.get() != ""
+        okvalue = "normal" if (
+            self.var_address.get() != ""
             and self.var_name.get() != ""
             and self.var_port.get() != ""
         ) else "disabled"

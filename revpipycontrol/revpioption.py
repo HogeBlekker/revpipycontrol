@@ -13,7 +13,7 @@ class RevPiOption(tkinter.Frame):
 
     def __init__(self, master, xmlcli):
         super().__init__(master)
-        self.pack()
+        self.pack(expand=True, fill="both")
 
         self.xmlcli = xmlcli
 
@@ -68,9 +68,12 @@ class RevPiOption(tkinter.Frame):
         lbl = tkinter.Label(prog)
         lbl["text"] = "Python PLC Programname"
         lbl.grid(**cpadw)
-        txt_startpy = tkinter.Entry(prog)
-        txt_startpy["textvariable"] = self.var_startpy
-        txt_startpy.grid(**cpadwe)
+#        txt_startpy = tkinter.Entry(prog)
+#        txt_startpy["textvariable"] = self.var_startpy
+#        txt_startpy.grid(**cpadwe)
+        opt_startpy = tkinter.OptionMenu(
+            prog, self.var_startpy, *self.xmlcli.get_filelist())
+        opt_startpy.grid(**cpadwe)
         ckb_slave = tkinter.Checkbutton(prog, justify="left")
         ckb_slave["text"] = "RevPi als PLC-Slave verwenden"
         ckb_slave["state"] = "disabled"
@@ -140,8 +143,8 @@ class RevPiOption(tkinter.Frame):
 
         ask = tkmsg.askyesnocancel(
             "Frage", "Die Einstellungen werden jetzt auf den Revolution Pi "
-            "gespeichert.\nSollen die neuen Einstellungen sofort in Kraft "
-            "treten? Dies bedeutet einen Neustart des Dienstes und des ggf. "
+            "gespeichert. \n\nSollen die neuen Einstellungen sofort in Kraft "
+            "treten? \nDies bedeutet einen Neustart des Dienstes und des ggf. "
             "laufenden PLC-Programms!", parent=self.master
         )
         if ask is not None:
