@@ -155,12 +155,16 @@ class RevPiPyControl(tkinter.Frame):
     def plcoptions(self):
         win = tkinter.Toplevel(self)
         revpioption.RevPiOption(win, self.cli)
+        win.focus_set()
+        win.grab_set()
         self.wait_window(win)
 
     def plcprogram(self):
         # TODO: Programfenster
         win = tkinter.Toplevel(self)
         revpiprogram.RevPiProgram(win, self.cli, self.revpiname)
+        win.focus_set()
+        win.grab_set()
         self.wait_window(win)
 
     def plcstart(self):

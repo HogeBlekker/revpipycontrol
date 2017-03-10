@@ -5,11 +5,12 @@
 # (c) Sven Sager, License: LGPLv3
 #
 # -*- coding: utf-8 -*-
+import os
 import tarfile
 import tkinter
 import tkinter.filedialog as tkfd
 import tkinter.messagebox as tkmsg
-from os import makedirs
+import zipfile
 from tempfile import mktemp
 from xmlrpc.client import Binary
 
@@ -46,9 +47,9 @@ class RevPiProgram(tkinter.Frame):
         self.columnconfigure(0, weight=1)
 
         cpad = {"padx": 4, "pady": 2}
-        cpade = {"padx": 4, "pady": 2, "sticky": "e"}
+        # cpade = {"padx": 4, "pady": 2, "sticky": "e"}
         cpadw = {"padx": 4, "pady": 2, "sticky": "w"}
-        cpadwe = {"padx": 4, "pady": 2, "sticky": "we"}
+        # cpadwe = {"padx": 4, "pady": 2, "sticky": "we"}
 
         # Gruppe Programm
         prog = tkinter.LabelFrame(self)
@@ -64,7 +65,7 @@ class RevPiProgram(tkinter.Frame):
         self.var_typeup = tkinter.StringVar(prog)
 
         self.lst_typedown = ["Dateien", "Zip Archiv", "TGZ Archiv"]
-        self.lst_typeup = ["Datei", "Ordner", "Zip Archiv", "TGZ Archiv"]
+        self.lst_typeup = ["Dateien", "Ordner", "Zip Archiv", "TGZ Archiv"]
         self.var_typedown.set(self.lst_typedown[0])
         self.var_typeup.set(self.lst_typeup[0])
 
@@ -99,6 +100,12 @@ class RevPiProgram(tkinter.Frame):
         opt.grid(column=1, row=r, **cpad)
 
         r = 3
+        ckb = tkinter.Checkbutton(prog)
+        ckb["text"] = "vorher alles im Uploadverzeichnis löschen"
+        ckb["variable"] = self.var_cleanup
+        ckb.grid(column=0, row=r, columnspan=2, **cpadw)
+
+        r = 4
         self.ckb_picup = tkinter.Checkbutton(prog)
         self.ckb_picup["text"] = "enthält piCtory Konfiguration"
         self.ckb_picup["variable"] = self.var_picup
@@ -107,12 +114,6 @@ class RevPiProgram(tkinter.Frame):
         btn["command"] = self.plcupload
         btn["text"] = "Upload"
         btn.grid(column=1, row=r, **cpad)
-
-        r = 4
-        ckb = tkinter.Checkbutton(prog)
-        ckb["text"] = "vorher alles im Uploadverzeichnis löschen"
-        ckb["variable"] = self.var_cleanup
-        ckb.grid(column=0, row=r, columnspan=2, **cpadw)
 
         # Gruppe piCtory
         picto = tkinter.LabelFrame(self)
@@ -162,11 +163,19 @@ class RevPiProgram(tkinter.Frame):
             self.ckb_picdown["state"] = "normal"
 
     def _evt_optup(self, text=""):
-        if self.lst_typeup.index(self.var_typeup.get()) == 0:
+        if self.lst_typeup.index(self.var_typeup.get()) <= 1:
             self.var_picup.set(False)
             self.ckb_picup["state"] = "disable"
         else:
             self.ckb_picup["state"] = "normal"
+
+    def _loaddefault(self):
+        # TODO: letzte Einstellungen laden
+        pass
+
+    def _savedefaults(self):
+        # TODO: Einstellungen sichern
+        pass
 
     def getpictoryrsc(self):
         fh = tkfd.asksaveasfile(
@@ -221,7 +230,6 @@ class RevPiProgram(tkinter.Frame):
                 fh.close()
 
     def setpictoryrsc(self):
-        print("setpictoryrsc")
         fh = tkfd.askopenfile(
             mode="rb", parent=self.master,
             title="piCtory Datei öffnen...",
@@ -267,15 +275,15 @@ class RevPiProgram(tkinter.Frame):
     def plcdownload(self):
         tdown = self.lst_typedown.index(self.var_typedown.get())
         fh = None
-        dir = ""
+        dirselect = ""
 
         if tdown == 0:
             # Ordner
-            dir = tkfd.askdirectory(
+            dirselect = tkfd.askdirectory(
                 parent=self.master, title="Verzeichnis zum Ablegen",
                 mustexist=False, initialdir=self.revpi)
 
-            if type(dir) == str and dir != "":
+            if type(dirselect) == str and dirselect != "":
                 fh = open(mktemp(), "wb")
 
         elif tdown == 1:
@@ -300,18 +308,28 @@ class RevPiProgram(tkinter.Frame):
 
         if fh is not None:
             if tdown == 1:
-                plcfile = self.xmlcli.plcdownload("zip")
+                plcfile = self.xmlcli.plcdownload(
+                    "zip", self.var_picdown.get())
             else:
-                plcfile = self.xmlcli.plcdownload("tar")
+                plcfile = self.xmlcli.plcdownload(
+                    "tar", self.var_picdown.get())
 
             try:
                 fh.write(plcfile.data)
                 # Optional entpacken
                 if tdown == 0:
                     fh.close()
-                    makedirs(dir, exist_ok=True)
+                    os.makedirs(dirselect, exist_ok=True)
                     fh_pack = tarfile.open(fh.name)
-                    fh_pack.extractall(dir)
+
+                    # Unterverzeichnis streichen
+                    rootname = ""
+                    for taritem in fh_pack.getmembers():
+                        print(rootname)
+                        if not taritem.name == "revpipyload":
+                            taritem.name = taritem.name.replace("revpipyload/", "")
+                            fh_pack.extract(taritem, dirselect)
+
                     fh_pack.close()
 
             except:
@@ -330,13 +348,160 @@ class RevPiProgram(tkinter.Frame):
             finally:
                 fh.close()
 
-        print("plcdownload", tdown)
-
     def plcupload(self):
         tup = self.lst_typeup.index(self.var_typeup.get())
+        fh = None
+        dirselect = ""
 
-        print("plcupload", tup)
+        if tup == 0:
+            # Datei
+            fileselect = tkfd.askopenfilenames(
+                parent=self.master, title="Pythonprogramm übertragen...",
+                filetypes=(("Python", "*.py"), ("All Files", "*.*"))
+            )
+            if type(fileselect) == tuple and len(fileselect) > 0:
+                # Datei als TAR packen
+                tmpfile = mktemp()
+                noerr = True
+
+                try:
+                    fh_pack = tarfile.open(
+                        name=tmpfile, mode="w:gz", dereference=True)
+                    for file in fileselect:
+                        fh_pack.add(
+                            file, arcname=os.path.basename(file))
+                except:
+                    noerr = False
+                    tkmsg.showerror(
+                        parent=self.master, title="Fehler",
+                        message="Die Datei konnte für die Übertragung nicht "
+                        "gepackt werden")
+                finally:
+                    fh_pack.close()
+                
+                if noerr:
+                    # fh für Versand öffnen
+                    fh = open(tmpfile, "rb")
+
+        elif tup == 1:
+            # Ordner
+            dirselect = tkfd.askdirectory(
+                parent=self.master, title="Verzeichnis zum Hochladen",
+                mustexist=True, initialdir=self.revpi)
+
+            if type(dirselect) == str and dirselect != "":
+                # Ordner als TAR packen
+                tmpfile = mktemp()
+                noerr = True
+
+                try:
+                    fh_pack = tarfile.open(
+                        name=tmpfile, mode="w:gz", dereference=True)
+                    fh_pack.add(
+                        #dirselect, arcname=os.path.basename(dirselect))
+                        dirselect, arcname="")
+                except:
+                    noerr = False
+                    tkmsg.showerror(
+                        parent=self.master, title="Fehler",
+                        message="Der Ordner konnte für die Übertragung nicht "
+                        "gepackt werden")
+                finally:
+                    fh_pack.close()
+
+                if noerr:
+                    # fh für Versand öffnen
+                    fh = open(tmpfile, "rb")
+
+        elif tup == 2:
+            # Zip
+            fh = tkfd.askopenfile(
+                mode="rb", parent=self.master,
+                title="Zip-Archive übertragen...",
+                initialfile=self.revpi + ".zip",
+                filetypes=(("Zip Archiv", "*.zip"), ("All Files", "*.*"))
+            )
+            if not zipfile.is_zipfile(fh.name):
+                # Zipdatei prüfen
+                tkmsg.showerror(
+                    parent=self.master, title="Fehler",
+                    message="Die angegebene Datei ist kein ZIP-Archiv.")
+                fh.close()
+                fh = None
+
+        elif tup == 3:
+            # TarGz
+            fh = tkfd.askopenfile(
+                mode="rb", parent=self.master,
+                title="TarGz-Archiv übertragen...",
+                initialfile=self.revpi + ".tar.gz",
+                filetypes=(("Tar Archiv", "*.tar.gz"), ("All Files", "*.*"))
+            )
+            if not tarfile.is_tarfile(fh.name):
+                # Zipdatei prüfen
+                tkmsg.showerror(
+                    parent=self.master, title="Fehler",
+                    message="Die angegebene Datei ist kein TAR-Archiv.")
+                fh.close()
+                fh = None
+
+        
+
+        # Wenn kein fh existiert abbrachen
+        if fh is None:
+            return False
+
+        # Vor Übertragung aufräumen wenn ausgewählt
+        if self.var_cleanup.get() and not self.xmlcli.plcuploadclean():
+            tkmsg.showerror(
+                parent=self.masger, title="Fehler", 
+                message="Beim Löschen der Dateien auf dem Revolution Pi ist "
+                "ein Fehler aufgetreten.")
+            return False
+
+        # Flag setzen, weil ab hier Veränderungen existieren
         self.uploaded = True
+
+        # piControlReset abfragen
+        ask = False
+        if self.var_picup.get():
+            ask = tkmsg.askyesno(
+                parent=self.master, title="Frage",
+                message="Sie laden eine piCtory Konfiguration mit hoch. \n"
+                "Soll nach dem Hochladen ein reset am piControl "
+                "Treiber durchgeführt werden?",
+            )
+
+        # TODO: Fehlerabfang bei Dateilesen
+        xmldata = Binary(fh.read())
+        ec = self.xmlcli.plcupload(xmldata, self.var_picup.get(), ask)
+        
+        if ec == 0:
+            tkmsg.showinfo(
+                parent=self.master, title="Erfolgreich",
+                message="Die Übertragung war erfolgreich.")
+        elif ec > 0:
+            tkmsg.showwarning(
+                parent=self.master, title="Warnung",
+                message="Die Übertragung war erfolgreich. \n"
+                "Beim piControl Reset trat allerdings ein Fehler auf!")
+        elif ec == -1:
+            tkmsg.showerror(
+                parent=self.master, title="Fehler",
+                message="Der Revoluton Pi konnte die übertragene Datei nicht "
+                "verarbeiten.")
+        elif ec < -1:
+            tkmsg.showwarning(
+                parent=self.master, title="Warnung",
+                message="Die Übertragung war erfolgreich. \n"
+                "Beim verarbeiten der piCtory Konfiguration trat allerdings "
+                "ein Fehler auf!")
+
+        fh.close()
+
+        # Temp-File aufräumen
+        if tup <= 1:
+            os.remove(fh.name)
 
 
 if __name__ == "__main__":
