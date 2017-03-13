@@ -229,20 +229,20 @@ class RevPiProgram(tkinter.Frame):
             finally:
                 fh.close()
 
-    def setpictoryrsc(self):
-        fh = tkfd.askopenfile(
-            mode="rb", parent=self.master,
-            title="piCtory Datei öffnen...",
-            initialfile=self.revpi + ".rsc",
-            filetypes=(("piCtory Config", "*.rsc"), ("All Files", "*.*"))
-        )
-        if fh is not None:
-            # TODO: Test, ob es wirklich piCtory ist
+    def setpictoryrsc(self, fh=None):
+        if fh is None:
+            fh = tkfd.askopenfile(
+                mode="rb", parent=self.master,
+                title="piCtory Datei öffnen...",
+                initialfile=self.revpi + ".rsc",
+                filetypes=(("piCtory Config", "*.rsc"), ("All Files", "*.*"))
+            )
 
+        if fh is not None:
             ask = tkmsg.askyesno(
                 parent=self.master, title="Frage",
-                message="Soll nach dem Hochladen ein reset am piControl "
-                "Treiber durchgeführt werden?",
+                message="Soll nach dem Hochladen der piCtory Konfiguration "
+                "ein reset am piControl Treiber durchgeführt werden?"
             )
 
             ec = self.xmlcli.set_pictoryrsc(Binary(fh.read()), ask)
@@ -445,8 +445,6 @@ class RevPiProgram(tkinter.Frame):
                 fh.close()
                 fh = None
 
-        
-
         # Wenn kein fh existiert abbrachen
         if fh is None:
             return False
@@ -462,19 +460,20 @@ class RevPiProgram(tkinter.Frame):
         # Flag setzen, weil ab hier Veränderungen existieren
         self.uploaded = True
 
+
+        # Archiv prüfen und umpacken
+        if tup >= 2:
+            # TODO: Archive umpacken
+            pass
+
+
         # piControlReset abfragen
-        ask = False
         if self.var_picup.get():
-            ask = tkmsg.askyesno(
-                parent=self.master, title="Frage",
-                message="Sie laden eine piCtory Konfiguration mit hoch. \n"
-                "Soll nach dem Hochladen ein reset am piControl "
-                "Treiber durchgeführt werden?",
-            )
+            pass
 
         # TODO: Fehlerabfang bei Dateilesen
         xmldata = Binary(fh.read())
-        ec = self.xmlcli.plcupload(xmldata, self.var_picup.get(), ask)
+        ec = self.xmlcli.plcupload(xmldata)
         
         if ec == 0:
             tkmsg.showinfo(
