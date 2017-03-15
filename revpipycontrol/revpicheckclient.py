@@ -1,4 +1,11 @@
-# Thranks to: http://stackoverflow.com/questions/3085696/adding-a-scrollbar-to-a-group-of-widgets-in-tkinter
+#
+# RevPiPyControl
+#
+# Webpage: https://revpimodio.org/revpipyplc/
+# (c) Sven Sager, License: LGPLv3
+#
+# Thranks to: http://stackoverflow.com/questions/3085696/adding-a-
+# scrollbar-to-a-group-of-widgets-in-tkinter
 
 import pickle
 import tkinter
@@ -10,28 +17,13 @@ from xmlrpc.client import ServerProxy, Binary, MultiCall
 
 class RevPiCheckClient(tkinter.Frame):
 
-    def __init__(self, master, xmlcli=None):
+    def __init__(self, master, xmlcli):
         """Instantiiert MyApp-Klasse."""
         super().__init__(master)
         self.pack(fill="both", expand=True)
 
-        # Command arguments
-        parser = ArgumentParser(
-            description="Revolution Pi IO-Client"
-        )
-        parser.add_argument(
-            "-a", "--address", dest="address", default="127.0.0.1",
-            help="Server address (Default: 127.0.0.1)"
-        )
-        parser.add_argument(
-            "-p", "--port", dest="port", type=int, default=55074,
-            help="Use port to connect to server (Default: 55074)"
-        )
-        self.pargs = parser.parse_args()
+        self.cli = xmlcli
 
-        self.cli = xmlcli if xmlcli is not None else ServerProxy(
-            "http://{}:{}".format(self.pargs.address, self.pargs.port)
-        )
         self.lst_devices = self.cli.get_devicenames()
         self.lst_group = []
         self.dict_inpvar = {}

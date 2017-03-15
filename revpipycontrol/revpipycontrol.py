@@ -7,18 +7,35 @@
 # (c) Sven Sager, License: LGPLv3
 #
 # -*- coding: utf-8 -*-
-import revpicheckclient
 import revpilogfile
 import revpioption
 import revpiplclist
 import revpiprogram
 import socket
+import sys
 import tkinter
 import tkinter.messagebox as tkmsg
 from functools import partial
+from os.path import dirname
+from os.path import join as pathjoin
 from xmlrpc.client import ServerProxy
 
 socket.setdefaulttimeout(3)
+
+def addroot(filename):
+    u"""Hängt root-dir der Anwendung vor Dateinamen.
+
+        Je nach Ausführungsart der Anwendung muss das root-dir über
+        andere Arten abgerufen werden.
+
+        @param filename: Datei oder Ordnername
+        @returns: root dir
+
+    """
+    if getattr(sys, "frozen", False):
+        return pathjoin(dirname(sys.executable), filename)
+    else:
+        return pathjoin(dirname(__file__), filename)
 
 
 class RevPiPyControl(tkinter.Frame):
@@ -48,6 +65,9 @@ class RevPiPyControl(tkinter.Frame):
         """Erstellt den Fensterinhalt."""
         # Hauptfenster
         self.master.wm_title("RevPi Python PLC Loader")
+        self.master.wm_iconphoto(
+            True, tkinter.PhotoImage(file=addroot("revpipycontrol.png"))
+        )
         self.master.wm_resizable(width=False, height=False)
 
         # Menü ganz oben
@@ -115,6 +135,7 @@ class RevPiPyControl(tkinter.Frame):
             )
 
     def _opt_conn(self, text):
+        socket.setdefaulttimeout(20)
         sp = ServerProxy(
             "http://{}:{}".format(
                 self.dict_conn[text][0], int(self.dict_conn[text][1])
@@ -160,7 +181,6 @@ class RevPiPyControl(tkinter.Frame):
         self.wait_window(win)
 
     def plcprogram(self):
-        # TODO: Programfenster
         win = tkinter.Toplevel(self)
         revpiprogram.RevPiProgram(win, self.cli, self.revpiname)
         win.focus_set()
@@ -178,6 +198,7 @@ class RevPiPyControl(tkinter.Frame):
         self.cli.plcstart()
 
     def servererror(self):
+        socket.setdefaulttimeout(3)
         self.cli = None
         self._btnstate()
         self.mbar.entryconfig("PLC", state="disabled")

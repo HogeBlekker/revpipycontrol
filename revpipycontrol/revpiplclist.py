@@ -25,7 +25,9 @@ def get_connections():
     if os.path.exists(savefile):
         fh = open(savefile, "rb")
         connections = pickle.load(fh)
-    return connections
+        return connections
+    else:
+        return {}
 
 
 class RevPiPlcList(tkinter.Frame):

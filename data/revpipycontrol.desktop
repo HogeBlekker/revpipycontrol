@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=RevPi PLC Control
+Comment=Controls the Python PLC program on your RevolutionPI
+Name[de]=RevPi PLC Steuerung
+Comment[de]=Kontrolliert das Python PLC Programm auf dem RevolutionPI
+Exec=/usr/bin/revpipycontrol
+Icon=revpipycontrol
+Terminal=false
+Type=Application
+Categories=Application;
+#StartupNotify=true
