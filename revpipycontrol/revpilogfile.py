@@ -21,21 +21,42 @@ class RevPiLogfile(tkinter.Frame):
     def _createwidgets(self):
         self.master.wm_title("RevPi Python PLC Logs")
 
+        self.rowconfigure(0, weight=0)
+        self.rowconfigure(1, weight=1)
+        self.columnconfigure(0, weight=1)
+        self.columnconfigure(1, weight=0)
+        self.columnconfigure(2, weight=0)
+        self.columnconfigure(3, weight=1)
+        self.columnconfigure(4, weight=0)
+        self.columnconfigure(5, weight=0)
+
         # PLC Log
+        self.lblapplog = tkinter.Label(self)
+        self.lblapplog["text"] = "RevPyPyLoad - Logfile"
+        self.lblapplog.grid(column=0, row=0, sticky="w")
+        self.btnapplog = tkinter.Button(self)
+        self.btnapplog["command"] = self.btn_clearplc
+        self.btnapplog["text"] = "Clear screen"
+        self.btnapplog.grid(column=1, row=0, sticky="e")
         self.plclog = tkinter.Text(self)
         self.plcscr = tkinter.Scrollbar(self)
-        self.plclog.pack(side="left", expand=True, fill="both")
-        self.plcscr.pack(side="left", fill="y")
-        # self.plclog["state"] = "disabled"
+        self.plclog.grid(sticky="wnse", columnspan=2, column=0, row=1)
+        self.plcscr.grid(sticky="ns", column=2, row=1)
         self.plclog["yscrollcommand"] = self.plcscr.set
         self.plcscr["command"] = self.plclog.yview
 
         # APP Log
+        self.lblapplog = tkinter.Label(self)
+        self.lblapplog["text"] = "Python PLC program - Logfile"
+        self.lblapplog.grid(column=3, row=0, sticky="w")
+        self.btnapplog = tkinter.Button(self)
+        self.btnapplog["command"] = self.btn_clearapp
+        self.btnapplog["text"] = "Clear screen"
+        self.btnapplog.grid(column=4, row=0, sticky="e")
         self.applog = tkinter.Text(self)
         self.appscr = tkinter.Scrollbar(self)
-        self.appscr.pack(side="right", fill="y")
-        self.applog.pack(side="right", expand=True, fill="both")
-        # self.applog["state"] = "disabled"
+        self.applog.grid(sticky="nesw", columnspan=2, column=3, row=1)
+        self.appscr.grid(sticky="ns", column=5, row=1)
         self.applog["yscrollcommand"] = self.appscr.set
         self.appscr["command"] = self.applog.yview
 
@@ -46,10 +67,19 @@ class RevPiLogfile(tkinter.Frame):
         self.master.after(1000, self.get_applines)
         self.master.after(1000, self.get_plclines)
 
+    def btn_clearapp(self):
+        self.applog.delete(1.0, tkinter.END)
+    
+    def btn_clearplc(self):
+        self.plclog.delete(1.0, tkinter.END)
+
     def get_applines(self):
         roll = self.applog.yview()[1] == 1.0
-        for line in self.xmlcli.get_applines():
-            self.applog.insert(tkinter.END, line)
+        try:
+            for line in self.xmlcli.get_applines():
+                self.applog.insert(tkinter.END, line)
+        except:
+            pass
         if roll:
             self.applog.see(tkinter.END)
         self.master.after(1000, self.get_applines)
@@ -61,8 +91,11 @@ class RevPiLogfile(tkinter.Frame):
 
     def get_plclines(self):
         roll = self.plclog.yview()[1] == 1.0
-        for line in self.xmlcli.get_plclines():
-            self.plclog.insert(tkinter.END, line)
+        try:
+            for line in self.xmlcli.get_plclines():
+                self.plclog.insert(tkinter.END, line)
+        except:
+            pass
         if roll:
             self.plclog.see(tkinter.END)
         self.master.after(1000, self.get_plclines)

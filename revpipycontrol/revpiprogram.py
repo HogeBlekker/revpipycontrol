@@ -286,6 +286,7 @@ class RevPiProgram(tkinter.Frame):
             )
 
             ec = self.xmlcli.set_pictoryrsc(Binary(fh.read()), ask)
+            print(ec)
             if ec == 0:
                 if ask:
                     tkmsg.showinfo(

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 #
 # RevPiPyControl
-# Version: 0.2.1
+# Version: 0.2.6
 #
 # Webpage: https://revpimodio.org/revpipyplc/
 # (c) Sven Sager, License: LGPLv3
@@ -20,7 +20,7 @@ from os.path import dirname
 from os.path import join as pathjoin
 from xmlrpc.client import ServerProxy
 
-socket.setdefaulttimeout(3)
+socket.setdefaulttimeout(2)
 
 def addroot(filename):
     u"""Hängt root-dir der Anwendung vor Dateinamen.
@@ -46,7 +46,13 @@ class RevPiPyControl(tkinter.Frame):
 
         self.cli = None
         self.dict_conn = revpiplclist.get_connections()
+        self.errcount = 0
         self.revpiname = None
+
+        # Globale Fenster
+        self.tklogs = None
+        self.tkoptions = None
+        self.tkprogram = None
 
         # Fenster aufbauen
         self._createwidgets()
@@ -118,7 +124,7 @@ class RevPiPyControl(tkinter.Frame):
         # PLC Menü
         self.mplc = tkinter.Menu(self.mbar, tearoff=False)
         self.mplc.add_command(label="PLC log...", command=self.plclogs)
-        self.mplc.add_command(label="PLC monitor...", command=self.plcmonitor)
+        #self.mplc.add_command(label="PLC monitor...", command=self.plcmonitor)
         self.mplc.add_command(label="PLC options...", command=self.plcoptions)
         self.mplc.add_command(label="PLC program...", command=self.plcprogram)
         self.mbar.add_cascade(label="PLC", menu=self.mplc, state="disabled")
@@ -135,7 +141,6 @@ class RevPiPyControl(tkinter.Frame):
             )
 
     def _opt_conn(self, text):
-        socket.setdefaulttimeout(20)
         sp = ServerProxy(
             "http://{}:{}".format(
                 self.dict_conn[text][0], int(self.dict_conn[text][1])
@@ -147,12 +152,26 @@ class RevPiPyControl(tkinter.Frame):
         except:
             self.servererror()
         else:
-            self.cli = sp
+            self._closeall()
+            socket.setdefaulttimeout(15)
+            self.cli = ServerProxy(
+                "http://{}:{}".format(
+                    self.dict_conn[text][0], int(self.dict_conn[text][1])
+                )
+            )
             self.revpiname = text
             self.var_conn.set("{} - {}:{}".format(
                 text, self.dict_conn[text][0], int(self.dict_conn[text][1])
             ))
             self.mbar.entryconfig("PLC", state="normal")
+
+    def _closeall(self):
+        if self.tklogs is not None:
+            self.tklogs.master.destroy()
+        if self.tkoptions is not None:
+            self.tkoptions.destroy()
+        if self.tkprogram is not None:
+            self.tkprogram.destroy()
 
     def plclist(self):
         win = tkinter.Toplevel(self)
@@ -175,14 +194,14 @@ class RevPiPyControl(tkinter.Frame):
 
     def plcoptions(self):
         win = tkinter.Toplevel(self)
-        revpioption.RevPiOption(win, self.cli)
+        self.tkoptions = revpioption.RevPiOption(win, self.cli)
         win.focus_set()
         win.grab_set()
         self.wait_window(win)
 
     def plcprogram(self):
         win = tkinter.Toplevel(self)
-        revpiprogram.RevPiProgram(win, self.cli, self.revpiname)
+        self.tkprogram = revpiprogram.RevPiProgram(win, self.cli, self.revpiname)
         win.focus_set()
         win.grab_set()
         self.wait_window(win)
@@ -198,11 +217,15 @@ class RevPiPyControl(tkinter.Frame):
         self.cli.plcstart()
 
     def servererror(self):
-        socket.setdefaulttimeout(3)
+        """Setzt alles auf NULL."""
+        socket.setdefaulttimeout(2)
         self.cli = None
         self._btnstate()
         self.mbar.entryconfig("PLC", state="disabled")
         self.var_conn.set("")
+
+        self._closeall()
+
         tkmsg.showerror("Fehler", "Server ist nicht erreichbar!")
 
     def tmr_plcrunning(self):
@@ -212,16 +235,17 @@ class RevPiPyControl(tkinter.Frame):
             self.var_status.set("NOT CONNECTED")
         else:
             try:
-                if self.cli.plcrunning():
-                    self.txt_status["readonlybackground"] = "green"
-                else:
-                    self.txt_status["readonlybackground"] = "red"
-
                 plcec = self.cli.plcexitcode()
             except:
-                self.var_status.set("SERVER ERROR")
-                self.servererror()
+                self.errcount += 1
+                if self.errcount >= 5:
+                    self.var_status.set("SERVER ERROR")
+                    self.servererror()
             else:
+                self.errcount = 0
+                self.txt_status["readonlybackground"] = \
+                    "green" if plcec == -1 else "red"
+
                 if plcec == -1:
                     plcec = "RUNNING"
                 elif plcec == -2:

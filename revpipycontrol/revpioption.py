@@ -84,8 +84,11 @@ class RevPiOption(tkinter.Frame):
         lbl = tkinter.Label(prog)
         lbl["text"] = "Python PLC Programname"
         lbl.grid(columnspan=2, **cpadw)
+        lst = self.xmlcli.get_filelist()
+        if len(lst) == 0:
+            lst.append("none")
         opt_startpy = tkinter.OptionMenu(
-            prog, self.var_startpy, *self.xmlcli.get_filelist())
+            prog, self.var_startpy, *lst)
         opt_startpy.grid(columnspan=2, **cpadwe)
         ckb_slave = tkinter.Checkbutton(prog, justify="left")
         ckb_slave["text"] = "RevPi als PLC-Slave verwenden"
