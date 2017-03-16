@@ -36,6 +36,8 @@ class RevPiPlcList(tkinter.Frame):
         super().__init__(master)
         self.pack()
 
+        self.changes = False
+
         # Daten laden
         self._connections = {}
 
@@ -117,6 +119,7 @@ class RevPiPlcList(tkinter.Frame):
             makedirs(os.path.dirname(savefile), exist_ok=True)
             fh = open(savefile, "wb")
             pickle.dump(self._connections, fh)
+            self.changes = False
         except:
             return False
         return True
@@ -133,14 +136,18 @@ class RevPiPlcList(tkinter.Frame):
 
         self.build_listconn()
         self.evt_btnnew()
+        self.changes = True
 
     def evt_btnclose(self):
-        ask = tkmsg.askyesno(
-            "Frage...",
-            "Wollen Sie wirklich beenden?\n"
-            "Nicht gespeicherte Änderungen gehen verloren",
-            parent=self.master
-        )
+        if self.changes:
+            ask = tkmsg.askyesno(
+                parent=self.master, title="Frage...",
+                message="Wollen Sie wirklich beenden?\n"
+                "Nicht gespeicherte Änderungen gehen verloren",
+            )
+        else:
+            ask = True
+
         if ask:
             self.master.destroy()
 
@@ -168,6 +175,7 @@ class RevPiPlcList(tkinter.Frame):
                 del self._connections[item]
                 self.build_listconn()
                 self.evt_btnnew()
+                self.changes = True
 
     def evt_btnsave(self):
         if self._saveappdata():

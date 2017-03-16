@@ -69,7 +69,7 @@ class RevPiLogfile(tkinter.Frame):
 
     def btn_clearapp(self):
         self.applog.delete(1.0, tkinter.END)
-    
+
     def btn_clearplc(self):
         self.plclog.delete(1.0, tkinter.END)
 

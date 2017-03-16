@@ -19,7 +19,10 @@ from xmlrpc.client import Binary
 
 class RevPiProgram(tkinter.Frame):
 
-    def __init__(self, master, xmlcli, revpi):
+    def __init__(self, master, xmlcli, xmlmode, revpi):
+        if xmlmode < 2:
+            return None
+
         super().__init__(master)
 #        master.protocol("WM_DELETE_WINDOW", self._checkclose)
         self.pack(expand=True, fill="both")
@@ -27,6 +30,8 @@ class RevPiProgram(tkinter.Frame):
         self.uploaded = False
         self.revpi = revpi
         self.xmlcli = xmlcli
+        self.xmlmode = xmlmode
+        self.xmlstate = "normal" if xmlmode == 3 else "disabled"
 
         # Fenster bauen
         self._createwidgets()
@@ -56,7 +61,7 @@ class RevPiProgram(tkinter.Frame):
         # Gruppe Programm
         prog = tkinter.LabelFrame(self)
         prog.columnconfigure(0, weight=1)
-        prog["text"] = "PLC Pythonprogramm"
+        prog["text"] = "PLC Python programm"
         prog.grid(columnspan=2, pady=2, sticky="we")
 
         # Variablen vorbereiten
@@ -98,22 +103,26 @@ class RevPiProgram(tkinter.Frame):
         opt = tkinter.OptionMenu(
             prog, self.var_typeup, *self.lst_typeup,
             command=self._evt_optup)
+        opt["state"] = self.xmlstate
         opt["width"] = 10
         opt.grid(column=1, row=r, **cpad)
 
         r = 3
         ckb = tkinter.Checkbutton(prog)
+        ckb["state"] = self.xmlstate
         ckb["text"] = "vorher alles im Uploadverzeichnis löschen"
         ckb["variable"] = self.var_cleanup
         ckb.grid(column=0, row=r, columnspan=2, **cpadw)
 
         r = 4
         self.ckb_picup = tkinter.Checkbutton(prog)
+        self.ckb_picup["state"] = self.xmlstate
         self.ckb_picup["text"] = "enthält piCtory Konfiguration"
         self.ckb_picup["variable"] = self.var_picup
         self.ckb_picup.grid(column=0, row=r, **cpadw)
         btn = tkinter.Button(prog)
         btn["command"] = self.plcupload
+        btn["state"] = self.xmlstate
         btn["text"] = "Upload"
         btn.grid(column=1, row=r, **cpad)
 
@@ -135,6 +144,7 @@ class RevPiProgram(tkinter.Frame):
         lbl.grid(column=0, row=1, **cpadw)
         btn = tkinter.Button(picto)
         btn["command"] = self.setpictoryrsc
+        btn["state"] = self.xmlstate
         btn["text"] = "Upload"
         btn.grid(column=1, row=1, **cpad)
 
@@ -144,7 +154,7 @@ class RevPiProgram(tkinter.Frame):
         proc["text"] = "piControl0 Prozessabbild"
         proc.grid(columnspan=2, pady=2, sticky="we")
         lbl = tkinter.Label(proc)
-        lbl["text"] = "Prozessabbild herunterladen"
+        lbl["text"] = "Prozessabbild-Dump herunterladen"
         lbl.grid(column=0, row=0, **cpadw)
         btn = tkinter.Button(proc)
         btn["command"] = self.getprocimg
@@ -282,7 +292,7 @@ class RevPiProgram(tkinter.Frame):
             ask = tkmsg.askyesno(
                 parent=self.master, title="Frage",
                 message="Soll nach dem Hochladen der piCtory Konfiguration "
-                "ein reset am piControl Treiber durchgeführt werden?"
+                "ein Reset am piControl Treiber durchgeführt werden?"
             )
 
             ec = self.xmlcli.set_pictoryrsc(Binary(fh.read()), ask)
@@ -400,7 +410,7 @@ class RevPiProgram(tkinter.Frame):
         if tup == 0:
             # Datei
             fileselect = tkfd.askopenfilenames(
-                parent=self.master, title="Pythonprogramm übertragen...",
+                parent=self.master, title="Python Programm übertragen...",
                 filetypes=(("Python", "*.py"), ("All Files", "*.*"))
             )
             if type(fileselect) == tuple and len(fileselect) > 0:

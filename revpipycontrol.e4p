@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project revpipycontrol -->
-<!-- Saved: 2017-03-16, 16:32:04 -->
+<!-- Saved: 2017-03-16, 21:00:50 -->
 <!-- Copyright (C) 2017 Sven Sager, akira@narux.de -->
 <Project version="5.1">
   <Language>en_US</Language>
@@ -14,7 +14,6 @@
   <Email>akira@narux.de</Email>
   <Eol index="-1"/>
   <Sources>
-    <Source>revpipycontrol/__init__.py</Source>
     <Source>revpipycontrol/revpipycontrol.py</Source>
     <Source>revpipycontrol/revpicheckclient.py</Source>
     <Source>setup.py</Source>
@@ -29,6 +28,7 @@
   <Interfaces/>
   <Others>
     <Other>data</Other>
+    <Other>doc</Other>
   </Others>
   <MainScript>revpipycontrol/revpipycontrol.py</MainScript>
   <Vcs>
@@ -144,6 +144,59 @@
     <FiletypeAssociation pattern="*.pyw" type="SOURCES"/>
     <FiletypeAssociation pattern="*.pyw3" type="SOURCES"/>
   </FiletypeAssociations>
+  <Documentation>
+    <DocumentationParams>
+      <dict>
+        <key>
+          <string>ERIC4DOC</string>
+        </key>
+        <value>
+          <dict>
+            <key>
+              <string>ignoreFilePatterns</string>
+            </key>
+            <value>
+              <list>
+                <string></string>
+              </list>
+            </value>
+            <key>
+              <string>noindex</string>
+            </key>
+            <value>
+              <bool>True</bool>
+            </value>
+            <key>
+              <string>outputDirectory</string>
+            </key>
+            <value>
+              <string>doc</string>
+            </value>
+            <key>
+              <string>qtHelpEnabled</string>
+            </key>
+            <value>
+              <bool>False</bool>
+            </value>
+            <key>
+              <string>sourceExtensions</string>
+            </key>
+            <value>
+              <list>
+                <string></string>
+              </list>
+            </value>
+            <key>
+              <string>useRecursion</string>
+            </key>
+            <value>
+              <bool>True</bool>
+            </value>
+          </dict>
+        </value>
+      </dict>
+    </DocumentationParams>
+  </Documentation>
   <Checkers>
     <CheckersParams>
       <dict>

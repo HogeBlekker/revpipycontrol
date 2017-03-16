@@ -22,6 +22,7 @@ from xmlrpc.client import ServerProxy
 
 socket.setdefaulttimeout(2)
 
+
 def addroot(filename):
     u"""Hängt root-dir der Anwendung vor Dateinamen.
 
@@ -48,6 +49,7 @@ class RevPiPyControl(tkinter.Frame):
         self.dict_conn = revpiplclist.get_connections()
         self.errcount = 0
         self.revpiname = None
+        self.xmlmode = 0
 
         # Globale Fenster
         self.tklogs = None
@@ -148,7 +150,7 @@ class RevPiPyControl(tkinter.Frame):
         )
         # Server prüfen
         try:
-            sp.system.listMethods()
+            self.xmlmode = sp.xmlmodus()
         except:
             self.servererror()
         else:
@@ -183,28 +185,46 @@ class RevPiPyControl(tkinter.Frame):
         self._fillconnbar()
 
     def plclogs(self):
-        # TODO: nicht doppelt starten
-        win = tkinter.Toplevel(self)
-        self.tklogs = revpilogfile.RevPiLogfile(win, self.cli)
+        if self.tklogs is None or len(self.tklogs.children) == 0:
+            win = tkinter.Toplevel(self)
+            self.tklogs = revpilogfile.RevPiLogfile(win, self.cli)
+        else:
+            self.tklogs.focus_set()
 
     def plcmonitor(self):
         # TODO: Monitorfenster
-        #self.tkmonitor = revpicheckclient.RevPiCheckClient(self.master, self.cli)
         pass
 
     def plcoptions(self):
-        win = tkinter.Toplevel(self)
-        self.tkoptions = revpioption.RevPiOption(win, self.cli)
-        win.focus_set()
-        win.grab_set()
-        self.wait_window(win)
+        if self.xmlmode < 2:
+            tkmsg.showwarning(
+                parent=self.master, title="Warnung",
+                message="Der XML-RPC Modus ist beim RevPiPyLoad nicht hoch "
+                "genug eingestellt, um diesen Dialog zu verwenden!"
+            )
+        else:
+            win = tkinter.Toplevel(self)
+            self.tkoptions = \
+                revpioption.RevPiOption(win, self.cli, self.xmlmode)
+            win.focus_set()
+            win.grab_set()
+            self.wait_window(win)
+            self.xmlmode = self.tkoptions.xmlmode
 
     def plcprogram(self):
-        win = tkinter.Toplevel(self)
-        self.tkprogram = revpiprogram.RevPiProgram(win, self.cli, self.revpiname)
-        win.focus_set()
-        win.grab_set()
-        self.wait_window(win)
+        if self.xmlmode < 2:
+            tkmsg.showwarning(
+                parent=self.master, title="Warnung",
+                message="Der XML-RPC Modus ist beim RevPiPyLoad nicht hoch "
+                "genug eingestellt, um diesen Dialog zu verwenden!"
+            )
+        else:
+            win = tkinter.Toplevel(self)
+            self.tkprogram = revpiprogram.RevPiProgram(
+                win, self.cli, self.xmlmode, self.revpiname)
+            win.focus_set()
+            win.grab_set()
+            self.wait_window(win)
 
     def plcstart(self):
         self.cli.plcstart()
@@ -223,9 +243,7 @@ class RevPiPyControl(tkinter.Frame):
         self._btnstate()
         self.mbar.entryconfig("PLC", state="disabled")
         self.var_conn.set("")
-
         self._closeall()
-
         tkmsg.showerror("Fehler", "Server ist nicht erreichbar!")
 
     def tmr_plcrunning(self):
@@ -250,6 +268,10 @@ class RevPiPyControl(tkinter.Frame):
                     plcec = "RUNNING"
                 elif plcec == -2:
                     plcec = "FILE NOT FOUND"
+                elif plcec == -9:
+                    plcec = "PROGRAM KILLED"
+                elif plcec == -15:
+                    plcec = "PROGRAMS TERMED"
                 elif plcec == 0:
                     plcec = "NOT RUNNING"
                 self.var_status.set(plcec)

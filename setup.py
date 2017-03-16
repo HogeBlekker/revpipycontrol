@@ -24,9 +24,9 @@ globsetup = {
     "url": "https://revpimodio.org/revpipyplc/",
     "license": "LGPLv3",
     "version": "0.2.6",
-    
+
     "name": "revpipycontrol",
-    
+
     "description": "PLC Loader für Python-Projekte auf den RevolutionPi",
     "long_description": ""
     "Dieses Programm startet beim Systemstart ein angegebenes Python PLC\n"
