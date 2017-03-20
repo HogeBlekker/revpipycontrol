@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 #
 # RevPiPyControl
-# Version: 0.2.6
+# Version: 0.2.7
 #
 # Webpage: https://revpimodio.org/revpipyplc/
 # (c) Sven Sager, License: LGPLv3
@@ -19,8 +19,6 @@ from functools import partial
 from os.path import dirname
 from os.path import join as pathjoin
 from xmlrpc.client import ServerProxy
-
-socket.setdefaulttimeout(2)
 
 
 def addroot(filename):
@@ -143,6 +141,7 @@ class RevPiPyControl(tkinter.Frame):
             )
 
     def _opt_conn(self, text):
+        socket.setdefaulttimeout(2)
         sp = ServerProxy(
             "http://{}:{}".format(
                 self.dict_conn[text][0], int(self.dict_conn[text][1])

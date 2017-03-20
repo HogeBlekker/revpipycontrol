@@ -76,6 +76,7 @@ class RevPiOption(tkinter.Frame):
 
         self.var_pythonver = tkinter.IntVar(prog)
         self.var_startpy = tkinter.StringVar(prog)
+        self.var_startargs = tkinter.StringVar(prog)
         self.var_slave = tkinter.BooleanVar(prog)
 
         self.var_pythonver.set(3)
@@ -108,6 +109,14 @@ class RevPiOption(tkinter.Frame):
             prog, self.var_startpy, *lst)
         opt_startpy["state"] = self.xmlstate
         opt_startpy.grid(columnspan=2, **cpadwe)
+
+        lbl = tkinter.Label(prog)
+        lbl["text"] = "Programm Argumente"
+        lbl.grid(columnspan=2, **cpadw)
+
+        txt = tkinter.Entry(prog)
+        txt["textvariable"] = self.var_startargs
+        txt.grid(columnspan=2, **cpadw)
 
         ckb_slave = tkinter.Checkbutton(prog, justify="left")
         ckb_slave["state"] = self.xmlstate
@@ -175,20 +184,21 @@ class RevPiOption(tkinter.Frame):
     def _loadappdata(self):
         dc = self.xmlcli.get_config()
 
-        self.var_start.set(dc["autostart"])
-        self.var_reload.set(dc["autoreload"])
-        self.var_zexit.set(dc["zeroonexit"])
-        self.var_zerr.set(dc["zeroonerror"])
+        self.var_start.set(dc.get("autostart", "1"))
+        self.var_reload.set(dc.get("autoreload", "1"))
+        self.var_zexit.set(dc.get("zeroonexit", "0"))
+        self.var_zerr.set(dc.get("zeroonerror", "0"))
 
-        self.var_startpy.set(dc["plcprogram"])
-        self.var_pythonver.set(dc["pythonversion"])
-        self.var_slave.set(dc["plcslave"])
+        self.var_startpy.set(dc.get("plcprogram", "none.py"))
+        self.var_startargs.set(dc.get("plcarguments", ""))
+        self.var_pythonver.set(dc.get("pythonversion", "3"))
+        self.var_slave.set(dc.get("plcslave", "0"))
 
-        self.var_xmlon.set(dc["xmlrpc"] >= 1)
-        self.var_xmlmod2.set(dc["xmlrpc"] >= 2)
-        self.var_xmlmod3.set(dc["xmlrpc"] >= 3)
+        self.var_xmlon.set(dc.get("xmlrpc", 0) >= 1)
+        self.var_xmlmod2.set(dc.get("xmlrpc", 0) >= 2)
+        self.var_xmlmod3.set(dc.get("xmlrpc", 0) >= 3)
 
-        self.var_xmlport.set(dc["xmlrpcport"])
+        self.var_xmlport.set(dc.get("xmlrpcport", "55123"))
 
     def _setappdata(self):
         dc = {}
@@ -198,6 +208,7 @@ class RevPiOption(tkinter.Frame):
         dc["zeroonerror"] = int(self.var_zerr.get())
 
         dc["plcprogram"] = self.var_startpy.get()
+        dc["plcarguments"] = self.var_startargs.get()
         dc["pythonversion"] = self.var_pythonver.get()
         dc["plcslave"] = int(self.var_slave.get())
 
