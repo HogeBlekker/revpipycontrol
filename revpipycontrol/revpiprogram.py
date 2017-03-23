@@ -7,14 +7,26 @@
 # -*- coding: utf-8 -*-
 import gzip
 import os
+import pickle
 import tarfile
 import tkinter
 import tkinter.filedialog as tkfd
 import tkinter.messagebox as tkmsg
 import zipfile
+from os import environ
+from os import makedirs
 from shutil import rmtree
+from sys import platform
 from tempfile import mktemp, mkdtemp
 from xmlrpc.client import Binary
+
+
+# Systemwerte
+if platform == "linux":
+    homedir = environ["HOME"]
+else:
+    homedir = environ["APPDATA"]
+savefile = os.path.join(homedir, ".revpipyplc", "programpath.dat")
 
 
 class RevPiProgram(tkinter.Frame):
@@ -32,6 +44,9 @@ class RevPiProgram(tkinter.Frame):
         self.xmlcli = xmlcli
         self.xmlmode = xmlmode
         self.xmlstate = "normal" if xmlmode == 3 else "disabled"
+
+        # Letzte Einstellungen übernehmen
+        self.opt = self._loaddefault()
 
         # Fenster bauen
         self._createwidgets()
@@ -73,8 +88,10 @@ class RevPiProgram(tkinter.Frame):
 
         self.lst_typedown = ["Dateien", "Zip Archiv", "TGZ Archiv"]
         self.lst_typeup = ["Dateien", "Ordner", "Zip Archiv", "TGZ Archiv"]
-        self.var_typedown.set(self.lst_typedown[0])
-        self.var_typeup.set(self.lst_typeup[0])
+        self.var_picdown.set(self.opt.get("picdown", False))
+        self.var_picup.set(self.opt.get("picup", False))
+        self.var_typedown.set(self.opt.get("typedown", self.lst_typedown[0]))
+        self.var_typeup.set(self.opt.get("typeup", self.lst_typeup[0]))
 
         r = 0
         lbl = tkinter.Label(prog)
@@ -181,20 +198,35 @@ class RevPiProgram(tkinter.Frame):
         else:
             self.ckb_picup["state"] = "normal"
 
-    def _loaddefault(self):
-        # TODO: letzte Einstellungen laden
-        pass
+    def _loaddefault(self, full=False):
+        """Uebernimmt fuer den Pi die letzen Pfade."""
+        if os.path.exists(savefile):
+            fh = open(savefile, "rb")
+            dict_all = pickle.load(fh)
+            if full:
+                return dict_all
+            else:
+                return dict_all.get(self.revpi, {})
+        return {}
 
     def _savedefaults(self):
-        # TODO: Einstellungen sichern
-        pass
+        """Schreibt fuer den Pi die letzen Pfade."""
+        try:
+            makedirs(os.path.dirname(savefile), exist_ok=True)
+            dict_all = self._loaddefault(full=True)
+            dict_all[self.revpi] = self.opt
+            fh = open(savefile, "wb")
+            pickle.dump(dict_all, fh)
+            self.changes = False
+        except:
+            return False
+        return True
 
     def create_filelist(self, rootdir):
         """Erstellt eine Dateiliste von einem Verzeichnis.
         @param rootdir: Verzeichnis fuer das eine Liste erstellt werden soll
         @returns: Dateiliste"""
         filelist = []
-        print(rootdir)
         for tup_dir in os.walk(rootdir):
             for fname in tup_dir[2]:
                 filelist.append(os.path.join(tup_dir[0], fname))
@@ -210,7 +242,6 @@ class RevPiProgram(tkinter.Frame):
 
         """
         lst_dir = os.listdir(rootdir)
-        print(rootdir)
         if len(lst_dir) == 1 and \
                 os.path.isdir(os.path.join(rootdir, lst_dir[0])):
             return (os.path.join(rootdir, lst_dir[0]), None)
@@ -230,6 +261,7 @@ class RevPiProgram(tkinter.Frame):
             mode="wb", parent=self.master,
             confirmoverwrite=True,
             title="Speichern als...",
+            initialdir=self.opt.get("getpictoryrsc_dir", ""),
             initialfile=self.revpi + ".rsc",
             filetypes=(("piCtory Config", "*.rsc"), ("All Files", "*.*"))
         )
@@ -248,6 +280,9 @@ class RevPiProgram(tkinter.Frame):
                     message="Datei erfolgreich vom Revolution Pi geladen "
                     "und gespeichert.",
                 )
+                # Einstellungen speichern
+                self.opt["getpictoryrsc_dir"] = os.path.dirname(fh.name)
+                self._savedefaults()
             finally:
                 fh.close()
 
@@ -256,6 +291,7 @@ class RevPiProgram(tkinter.Frame):
             mode="wb", parent=self.master,
             confirmoverwrite=True,
             title="Speichern als...",
+            initialdir=self.opt.get("getprocimg_dir", ""),
             initialfile=self.revpi + ".img",
             filetypes=(("Imagefiles", "*.img"), ("All Files", "*.*"))
         )
@@ -274,6 +310,9 @@ class RevPiProgram(tkinter.Frame):
                     message="Datei erfolgreich vom Revolution Pi geladen "
                     "und gespeichert.",
                 )
+                # Einstellungen speichern
+                self.opt["getprocimg_dir"] = os.path.dirname(fh.name)
+                self._savedefaults()
             finally:
                 fh.close()
 
@@ -282,6 +321,7 @@ class RevPiProgram(tkinter.Frame):
             fh = tkfd.askopenfile(
                 mode="rb", parent=self.master,
                 title="piCtory Datei öffnen...",
+                initialdir=self.opt.get("setpictoryrsc_dir", ""),
                 initialfile=self.revpi + ".rsc",
                 filetypes=(("piCtory Config", "*.rsc"), ("All Files", "*.*"))
             )
@@ -309,6 +349,10 @@ class RevPiProgram(tkinter.Frame):
                         parent=self.master, title="Erfolgreich",
                         message="Die Übertragung der piCtory Konfiguration "
                         "wurde erfolgreich ausgeführt")
+
+                #Einstellungen speichern
+                self.opt["setpictoryrsc_dir"] = os.path.dirname(fh.name)
+                self._savedefaults()
             elif ec < 0:
                 tkmsg.showerror(
                     parent=self.master, title="Fehler",
@@ -331,8 +375,11 @@ class RevPiProgram(tkinter.Frame):
         if tdown == 0:
             # Ordner
             dirselect = tkfd.askdirectory(
-                parent=self.master, title="Verzeichnis zum Ablegen",
-                mustexist=False, initialdir=self.revpi)
+                parent=self.master,
+                title="Verzeichnis zum Ablegen",
+                mustexist=False,
+                initialdir=self.opt.get("plcdownload_dir", self.revpi)
+            )
 
             if type(dirselect) == str and dirselect != "":
                 fh = open(mktemp(), "wb")
@@ -343,6 +390,7 @@ class RevPiProgram(tkinter.Frame):
                 mode="wb", parent=self.master,
                 confirmoverwrite=True,
                 title="Speichern als...",
+                initialdir=self.opt.get("plcdownload_file", ""),
                 initialfile=self.revpi + ".zip",
                 filetypes=(("Zip Archiv", "*.zip"), ("All Files", "*.*"))
             )
@@ -353,6 +401,7 @@ class RevPiProgram(tkinter.Frame):
                 mode="wb", parent=self.master,
                 confirmoverwrite=True,
                 title="Speichern als...",
+                initialdir=self.opt.get("plcdownload_file", ""),
                 initialfile=self.revpi + ".tar.gz",
                 filetypes=(("Tar Archiv", "*.tar.gz"), ("All Files", "*.*"))
             )
@@ -383,6 +432,11 @@ class RevPiProgram(tkinter.Frame):
                             fh_pack.extract(taritem, dirselect)
 
                     fh_pack.close()
+                    self.opt["plcdownload_dir"] = dirselect
+                else:
+                    self.opt["plcdownload_file"] = os.path.dirname(fh.name)
+                self.opt["typedown"] = self.var_typedown.get()
+                self.opt["picdown"] = self.var_picdown.get()
 
             except:
                 raise
@@ -397,6 +451,9 @@ class RevPiProgram(tkinter.Frame):
                     message="Datei erfolgreich vom Revolution Pi geladen "
                     "und gespeichert.",
                 )
+
+                # Einstellungen speichern
+                self._savedefaults()
             finally:
                 fh.close()
 
@@ -405,12 +462,15 @@ class RevPiProgram(tkinter.Frame):
         dirselect = ""
         dirtmp = None
         filelist = []
+        fileselect = None
         rscfile = None
 
         if tup == 0:
             # Datei
             fileselect = tkfd.askopenfilenames(
-                parent=self.master, title="Python Programm übertragen...",
+                parent=self.master,
+                title="Python Programm übertragen...",
+                initialdir=self.opt.get("plcupload_dir", ""),
                 filetypes=(("Python", "*.py"), ("All Files", "*.*"))
             )
             if type(fileselect) == tuple and len(fileselect) > 0:
@@ -420,16 +480,20 @@ class RevPiProgram(tkinter.Frame):
         elif tup == 1:
             # Ordner
             dirselect = tkfd.askdirectory(
-                parent=self.master, title="Verzeichnis zum Hochladen",
-                mustexist=True, initialdir=self.revpi)
-
+                parent=self.master,
+                title="Verzeichnis zum Hochladen",
+                mustexist=True,
+                initialdir=self.opt.get("plcupload_dir", self.revpi)
+            )
             if type(dirselect) == str and dirselect != "":
                 filelist = self.create_filelist(dirselect)
 
         elif tup == 2:
             # Zip
             fileselect = tkfd.askopenfilename(
-                parent=self.master, title="Zip-Archive übertragen...",
+                parent=self.master,
+                title="Zip-Archive übertragen...",
+                initialdir=self.opt.get("plcupload_file", ""),
                 initialfile=self.revpi + ".zip",
                 filetypes=(("Zip Archiv", "*.zip"), ("All Files", "*.*"))
             )
@@ -453,7 +517,9 @@ class RevPiProgram(tkinter.Frame):
         elif tup == 3:
             # TarGz
             fileselect = tkfd.askopenfilename(
-                parent=self.master, title="TarGz-Archiv übertragen...",
+                parent=self.master,
+                title="TarGz-Archiv übertragen...",
+                initialdir=self.opt.get("plcupload_file", ""),
                 initialfile=self.revpi + ".tar.gz",
                 filetypes=(("Tar Archiv", "*.tar.gz"), ("All Files", "*.*"))
             )
@@ -530,6 +596,18 @@ class RevPiProgram(tkinter.Frame):
                         parent=self.master, title="Fehler",
                         message="Es wurde im Archiv keine piCtory "
                         "Konfiguration gefunden")
+
+            # Einstellungen speichern
+            if tup == 0:
+                self.opt["plcupload_dir"] = os.path.dirname(fileselect[0])
+            elif tup == 1:
+                self.opt["plcupload_dir"] = dirselect
+            else:
+                self.opt["plcupload_file"] = os.path.dirname(fileselect)
+
+            self.opt["typeup"] = self.var_typeup.get()
+            self.opt["picup"] = self.var_picup.get()
+            self._savedefaults()
 
         elif ec == -1:
             tkmsg.showerror(

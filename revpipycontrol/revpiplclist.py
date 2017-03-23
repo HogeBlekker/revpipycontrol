@@ -21,6 +21,7 @@ else:
 savefile = os.path.join(homedir, ".revpipyplc", "connections.dat")
 
 
+# Für andere Module zum Laden der Connections
 def get_connections():
     if os.path.exists(savefile):
         fh = open(savefile, "rb")
