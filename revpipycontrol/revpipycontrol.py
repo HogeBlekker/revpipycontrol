@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 #
 # RevPiPyControl
-# Version: 0.2.8
+# Version: 0.2.12
 #
 # Webpage: https://revpimodio.org/revpipyplc/
 # (c) Sven Sager, License: LGPLv3

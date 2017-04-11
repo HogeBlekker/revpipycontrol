@@ -5,6 +5,7 @@
 # (c) Sven Sager, License: LGPLv3
 #
 # -*- coding: utf-8 -*-
+import pickle
 import tkinter
 
 
@@ -76,7 +77,7 @@ class RevPiLogfile(tkinter.Frame):
     def get_applines(self):
         roll = self.applog.yview()[1] == 1.0
         try:
-            for line in self.xmlcli.get_applines():
+            for line in pickle.loads(self.xmlcli.get_applines().data):
                 self.applog.insert(tkinter.END, line)
         except:
             pass
@@ -86,13 +87,13 @@ class RevPiLogfile(tkinter.Frame):
 
     def get_applog(self):
         self.applog.delete(1.0, tkinter.END)
-        self.applog.insert(1.0, self.xmlcli.get_applog())
+        self.applog.insert(1.0, pickle.loads(self.xmlcli.get_applog().data))
         self.applog.see(tkinter.END)
 
     def get_plclines(self):
         roll = self.plclog.yview()[1] == 1.0
         try:
-            for line in self.xmlcli.get_plclines():
+            for line in pickle.loads(self.xmlcli.get_plclines().data):
                 self.plclog.insert(tkinter.END, line)
         except:
             pass
@@ -102,5 +103,5 @@ class RevPiLogfile(tkinter.Frame):
 
     def get_plclog(self):
         self.plclog.delete(1.0, tkinter.END)
-        self.plclog.insert(1.0, self.xmlcli.get_plclog())
+        self.plclog.insert(1.0, pickle.loads(self.xmlcli.get_plclog().data))
         self.plclog.see(tkinter.END)

@@ -178,6 +178,19 @@ class RevPiProgram(tkinter.Frame):
         btn["text"] = "Download"
         btn.grid(column=1, row=0, **cpad)
 
+        # Gruppe piControlReset
+        picon = tkinter.LabelFrame(self)
+        picon.columnconfigure(0, weight=1)
+        picon["text"] = "piControl Reset"
+        picon.grid(columnspan=2, pady=2, sticky="we")
+        lbl = tkinter.Label(picon)
+        lbl["text"] = "piControlReset ausführen"
+        lbl.grid(column=0, row=0, **cpadw)
+        btn = tkinter.Button(picon)
+        btn["command"] = self.picontrolreset
+        btn["text"] = "ausführen"
+        btn.grid(column=1, row=0, **cpad)
+
         # Beendenbutton
         btn = tkinter.Button(self)
         btn["command"] = self.master.destroy
@@ -366,6 +379,26 @@ class RevPiProgram(tkinter.Frame):
                     "Fehler auf!")
 
             fh.close()
+
+    def picontrolreset(self):
+        ask = tkmsg.askyesno(
+            parent=self.master, title="Frage...", 
+            message="Soll piControlReset wirklich durchgeführt werden? \n"
+            "Das Prozessabbild und die Steuerung werden dann unterbrochen!!!"
+        )
+        if ask:
+            ec = self.xmlcli.resetpicontrol()
+            if ec == 0:
+                tkmsg.showinfo(
+                    parent=self.master, title="Erfolgreich",
+                    message="piControlReset erfolgreich durchgeführt"
+                )
+            else:
+                tkmsg.showerror(
+                    parten=self.master, title="Fehler",
+                    message="piControlReset konnte nicht erfolgreich "
+                    "durchgeführt werden"
+                )
 
     def plcdownload(self):
         tdown = self.lst_typedown.index(self.var_typedown.get())
