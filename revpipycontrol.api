@@ -50,6 +50,7 @@ revpiprogram.RevPiProgram.create_filelist?4(rootdir)
 revpiprogram.RevPiProgram.getpictoryrsc?4()
 revpiprogram.RevPiProgram.getprocimg?4()
 revpiprogram.RevPiProgram.myapp?7
+revpiprogram.RevPiProgram.picontrolreset?4()
 revpiprogram.RevPiProgram.plcdownload?4()
 revpiprogram.RevPiProgram.plcupload?4()
 revpiprogram.RevPiProgram.root?7
