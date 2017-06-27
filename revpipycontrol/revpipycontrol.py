@@ -1,12 +1,13 @@
 #!/usr/bin/python3
 #
 # RevPiPyControl
-# Version: 0.2.12
+# Version: 0.4.0
 #
 # Webpage: https://revpimodio.org/revpipyplc/
 # (c) Sven Sager, License: LGPLv3
 #
 # -*- coding: utf-8 -*-
+import revpicheckclient
 import revpilogfile
 import revpioption
 import revpiplclist
@@ -50,6 +51,7 @@ class RevPiPyControl(tkinter.Frame):
         self.xmlmode = 0
 
         # Globale Fenster
+        self.tkcheckclient = None
         self.tklogs = None
         self.tkoptions = None
         self.tkprogram = None
@@ -124,7 +126,7 @@ class RevPiPyControl(tkinter.Frame):
         # PLC Menü
         self.mplc = tkinter.Menu(self.mbar, tearoff=False)
         self.mplc.add_command(label="PLC log...", command=self.plclogs)
-        #self.mplc.add_command(label="PLC monitor...", command=self.plcmonitor)
+        self.mplc.add_command(label="PLC monitor...", command=self.plcmonitor)
         self.mplc.add_command(label="PLC options...", command=self.plcoptions)
         self.mplc.add_command(label="PLC program...", command=self.plcprogram)
         self.mbar.add_cascade(label="PLC", menu=self.mplc, state="disabled")
@@ -167,6 +169,8 @@ class RevPiPyControl(tkinter.Frame):
             self.mbar.entryconfig("PLC", state="normal")
 
     def _closeall(self):
+        if self.tkcheckclient is not None:
+            self.tkcheckclient.destroy()
         if self.tklogs is not None:
             self.tklogs.master.destroy()
         if self.tkoptions is not None:
@@ -191,10 +195,17 @@ class RevPiPyControl(tkinter.Frame):
             self.tklogs.focus_set()
 
     def plcmonitor(self):
-        # TODO: Monitorfenster
-        pass
+        """Startet das Monitorfenster."""
+        if self.tkcheckclient is None or len(self.tkcheckclient.children) == 0:
+            win = tkinter.Toplevel(self)
+            self.tkcheckclient = revpicheckclient.RevPiCheckClient(
+                win, self.cli, self.xmlmode
+            )
+        else:
+            self.tkcheckclient.focus_set()
 
     def plcoptions(self):
+        """Startet das Optionsfenster."""
         if self.xmlmode < 2:
             tkmsg.showwarning(
                 parent=self.master, title="Warnung",

@@ -3,6 +3,6 @@ syntax: glob
 deb_dist/*
 dist/*
 revpipycontrol.egg-info/*
-doc/*
 deb/*
 .eric6project/*
+*.directory

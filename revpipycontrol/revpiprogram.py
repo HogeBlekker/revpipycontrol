@@ -17,7 +17,7 @@ from os import environ
 from os import makedirs
 from shutil import rmtree
 from sys import platform
-from tempfile import mktemp, mkdtemp
+from tempfile import mkstemp, mkdtemp
 from xmlrpc.client import Binary
 
 
@@ -363,7 +363,7 @@ class RevPiProgram(tkinter.Frame):
                         message="Die Übertragung der piCtory Konfiguration "
                         "wurde erfolgreich ausgeführt")
 
-                #Einstellungen speichern
+                # Einstellungen speichern
                 self.opt["setpictoryrsc_dir"] = os.path.dirname(fh.name)
                 self._savedefaults()
             elif ec < 0:
@@ -382,7 +382,7 @@ class RevPiProgram(tkinter.Frame):
 
     def picontrolreset(self):
         ask = tkmsg.askyesno(
-            parent=self.master, title="Frage...", 
+            parent=self.master, title="Frage...",
             message="Soll piControlReset wirklich durchgeführt werden? \n"
             "Das Prozessabbild und die Steuerung werden dann unterbrochen!!!"
         )
@@ -415,7 +415,7 @@ class RevPiProgram(tkinter.Frame):
             )
 
             if type(dirselect) == str and dirselect != "":
-                fh = open(mktemp(), "wb")
+                fh = open(mkstemp(), "wb")
 
         elif tdown == 1:
             # Zip

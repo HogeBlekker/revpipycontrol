@@ -1,15 +1,15 @@
-revpicheckclient.RevPiCheckClient._autorw?5()
+revpicheckclient.RevPiCheckClient.__hidewin?6(win, event=None)
+revpicheckclient.RevPiCheckClient.__showwin?6(win)
 revpicheckclient.RevPiCheckClient._createiogroup?5(device, frame, iotype)
 revpicheckclient.RevPiCheckClient._createwidgets?5()
-revpicheckclient.RevPiCheckClient._readvaluesdev?5(device, iotype)
-revpicheckclient.RevPiCheckClient._writevaluesdev?5(device)
-revpicheckclient.RevPiCheckClient.myapp?7
+revpicheckclient.RevPiCheckClient._readvalues?5()
+revpicheckclient.RevPiCheckClient.chval?4(device, io)
+revpicheckclient.RevPiCheckClient.cli?7
 revpicheckclient.RevPiCheckClient.onfrmconf?4(canvas)
 revpicheckclient.RevPiCheckClient.readvalues?4()
-revpicheckclient.RevPiCheckClient.root?7
+revpicheckclient.RevPiCheckClient.tk?7
 revpicheckclient.RevPiCheckClient.toggleauto?4()
-revpicheckclient.RevPiCheckClient.writevalues?4()
-revpicheckclient.RevPiCheckClient?1(master, xmlcli)
+revpicheckclient.RevPiCheckClient?1(master, xmlcli, xmlmode=0)
 revpilogfile.RevPiLogfile._createwidgets?5()
 revpilogfile.RevPiLogfile.btn_clearapp?4()
 revpilogfile.RevPiLogfile.btn_clearplc?4()
