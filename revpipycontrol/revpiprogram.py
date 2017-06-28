@@ -32,6 +32,7 @@ savefile = os.path.join(homedir, ".revpipyplc", "programpath.dat")
 class RevPiProgram(tkinter.Frame):
 
     def __init__(self, master, xmlcli, xmlmode, revpi):
+        u"""Init RevPiProgram-Class."""
         if xmlmode < 2:
             return None
 
@@ -223,7 +224,7 @@ class RevPiProgram(tkinter.Frame):
         return {}
 
     def _savedefaults(self):
-        """Schreibt fuer den Pi die letzen Pfade."""
+        u"""Schreibt fuer den Pi die letzen Pfade."""
         try:
             makedirs(os.path.dirname(savefile), exist_ok=True)
             dict_all = self._loaddefault(full=True)
@@ -236,7 +237,7 @@ class RevPiProgram(tkinter.Frame):
         return True
 
     def create_filelist(self, rootdir):
-        """Erstellt eine Dateiliste von einem Verzeichnis.
+        u"""Erstellt eine Dateiliste von einem Verzeichnis.
         @param rootdir: Verzeichnis fuer das eine Liste erstellt werden soll
         @returns: Dateiliste"""
         filelist = []
@@ -249,7 +250,7 @@ class RevPiProgram(tkinter.Frame):
         """Gibt das rootdir von einem entpackten Verzeichnis zurueck.
 
         Dabei wird geprueft, ob es sich um einen einzelnen Ordner handelt
-        und ob es eine piCtory Konfiguraiton im rootdir gibt.
+        und ob es eine piCtory Konfiguration im rootdir gibt.
         @param rootdir: Verzeichnis fuer Pruefung
         @returns: Abgeaendertes rootdir
 
@@ -270,6 +271,7 @@ class RevPiProgram(tkinter.Frame):
             return (rootdir, None)
 
     def getpictoryrsc(self):
+        u"""Läd die piCtory Konfiguration herunter."""
         fh = tkfd.asksaveasfile(
             mode="wb", parent=self.master,
             confirmoverwrite=True,
@@ -300,6 +302,7 @@ class RevPiProgram(tkinter.Frame):
                 fh.close()
 
     def getprocimg(self):
+        u"""Läd das aktuelle Prozessabbild herunter."""
         fh = tkfd.asksaveasfile(
             mode="wb", parent=self.master,
             confirmoverwrite=True,
@@ -330,6 +333,7 @@ class RevPiProgram(tkinter.Frame):
                 fh.close()
 
     def setpictoryrsc(self, filename=None):
+        u"""Überträgt die angegebene piCtory-Konfiguration."""
         if filename is None:
             fh = tkfd.askopenfile(
                 mode="rb", parent=self.master,
@@ -381,6 +385,7 @@ class RevPiProgram(tkinter.Frame):
             fh.close()
 
     def picontrolreset(self):
+        u"""Fürt ein Reset der piBridge durch."""
         ask = tkmsg.askyesno(
             parent=self.master, title="Frage...",
             message="Soll piControlReset wirklich durchgeführt werden? \n"
@@ -401,6 +406,7 @@ class RevPiProgram(tkinter.Frame):
                 )
 
     def plcdownload(self):
+        u"""Läd das aktuelle Projekt herunter."""
         tdown = self.lst_typedown.index(self.var_typedown.get())
         fh = None
         dirselect = ""
@@ -491,6 +497,7 @@ class RevPiProgram(tkinter.Frame):
                 fh.close()
 
     def plcupload(self):
+        u"""Lädt das angegebene Projekt auf den RevPi."""
         tup = self.lst_typeup.index(self.var_typeup.get())
         dirselect = ""
         dirtmp = None

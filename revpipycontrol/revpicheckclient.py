@@ -10,7 +10,7 @@
 import pickle
 import tkinter
 from threading import Lock
-from xmlrpc.client import ServerProxy
+from xmlrpc.client import ServerProxy, MultiCall
 
 
 class RevPiCheckClient(tkinter.Frame):
@@ -18,17 +18,20 @@ class RevPiCheckClient(tkinter.Frame):
     def __init__(self, master, xmlcli, xmlmode=0):
         """Instantiiert MyApp-Klasse."""
         super().__init__(master)
-        self.pack(fill="both", expand=True)
 
         # XML-Daten abrufen
         self.xmlmode = xmlmode
         self.cli = xmlcli
+
+        # FIXME: Fehlerabfang
         self.cli.psstart()
+
         self.lst_devices = self.cli.ps_devices()
         self.dict_inps = pickle.loads(self.cli.ps_inps().data)
         self.dict_outs = pickle.loads(self.cli.ps_outs().data)
 
         self.lk = Lock()
+        self.lst_wins = []
 
         self.autorw = tkinter.BooleanVar()
         self.dowrite = tkinter.BooleanVar()
@@ -37,10 +40,25 @@ class RevPiCheckClient(tkinter.Frame):
         self._createwidgets()
 
         # Aktuelle Werte einlesen
-        self.readvalues()
+        self.refreshvalues()
 
-    def onfrmconf(self, canvas):
-        canvas.configure(scrollregion=canvas.bbox("all"))
+    def __chval(self, device, io):
+        if self.dowrite.get():
+            with self.lk:
+                self.cli.ps_setvalue(device, io[0], io[5].get())
+
+            # Alles neu einlesen wenn nicht AutoRW aktiv ist
+            if not self.autorw.get():
+                self.refreshvalues()
+
+    def __hidewin(self, win, event=None):
+        win.withdraw()
+
+    def __showwin(self, win):
+        if win.winfo_viewable():
+            win.withdraw()
+        else:
+            win.deiconify()
 
     def _createiogroup(self, device, frame, iotype):
         """Erstellt IO-Gruppen."""
@@ -55,7 +73,7 @@ class RevPiCheckClient(tkinter.Frame):
 
         canvas.create_window((4, 4), window=s_frame, anchor="nw")
         s_frame.bind(
-            "<Configure>", lambda event, canvas=canvas: self.onfrmconf(canvas)
+            "<Configure>", lambda event, canvas=canvas: self._onfrmconf(canvas)
         )
 
         rowcount = 0
@@ -76,7 +94,7 @@ class RevPiCheckClient(tkinter.Frame):
                 var = tkinter.BooleanVar()
                 check = tkinter.Checkbutton(s_frame)
                 check["command"] = \
-                    lambda device=device, io=io: self.chval(device, io)
+                    lambda device=device, io=io: self.__chval(device, io)
                 check["state"] = "disabled" if iotype == "inp" else "normal"
                 check["text"] = ""
                 check["variable"] = var
@@ -86,7 +104,7 @@ class RevPiCheckClient(tkinter.Frame):
                 # FIXME: Mehrere Bytes möglich
                 txt = tkinter.Spinbox(s_frame, to=255 * io[1])
                 txt["command"] = \
-                    lambda device=device, io=io: self.chval(device, io)
+                    lambda device=device, io=io: self.__chval(device, io)
                 txt["state"] = "disabled" if iotype == "inp" else "normal"
                 txt["width"] = 4
                 txt["textvariable"] = var
@@ -97,19 +115,8 @@ class RevPiCheckClient(tkinter.Frame):
 
             rowcount += 1
 
-    def __hidewin(self, win, event=None):
-        win.withdraw()
-
-    def __showwin(self, win):
-        if win.winfo_viewable():
-            win.withdraw()
-        else:
-            win.deiconify()
-
     def _createwidgets(self):
         """Erstellt den Fensterinhalt."""
-        # Hauptfenster
-        self.master.wm_title("RevPi Onlineview")
 
         devgrp = tkinter.LabelFrame(self)
         devgrp["text"] = "Devices of RevPi"
@@ -123,6 +130,7 @@ class RevPiCheckClient(tkinter.Frame):
                 lambda win=win: self.__hidewin(win)
             )
             win.withdraw()
+            self.lst_wins.append(win)
 
             # Devicegruppe erstellen
             group = tkinter.LabelFrame(win)
@@ -145,44 +153,56 @@ class RevPiCheckClient(tkinter.Frame):
         cntgrp["text"] = "Control"
         cntgrp.pack(fill="y", side="right")
 
+        self.btn_refresh = tkinter.Button(cntgrp)
+        self.btn_refresh["text"] = "Alle IOs lesen"
+        self.btn_refresh["command"] = self.refreshvalues
+        self.btn_refresh.pack(fill="x")
+
         self.btn_read = tkinter.Button(cntgrp)
-        self.btn_read["text"] = "LESEN"
+        self.btn_read["text"] = "Inputs einlesen"
         self.btn_read["command"] = self.readvalues
         self.btn_read.pack(fill="x")
 
+        self.btn_write = tkinter.Button(cntgrp)
+        self.btn_write["text"] = "Outputs schreiben"
+        self.btn_write["command"] = self.writevalues
+        self.btn_write.pack(fill="x")
+
         check = tkinter.Checkbutton(cntgrp)
         check["command"] = self.toggleauto
-        check["text"] = "autorefresh processimage"
+        check["text"] = "Autorefresh values"
         check["variable"] = self.autorw
         check.pack(anchor="w")
 
         check = tkinter.Checkbutton(cntgrp)
         check["state"] = "disabled" if self.xmlmode < 3 else "normal"
-        check["text"] = "write values to processimage"
+        check["text"] = "Write values to RevPi"
         check["variable"] = self.dowrite
         check.pack(anchor="w")
 
-    def chval(self, device, io):
-        if self.dowrite.get():
-            with self.lk:
-                self.cli.ps_setvalue(device, io[0], io[5].get())
+    def _onfrmconf(self, canvas):
+        canvas.configure(scrollregion=canvas.bbox("all"))
 
-            # Alles neu einlesen wenn nicht AutoRW aktiv ist
-            if not self.autorw.get():
-                self.readvalues()
-
-    def _readvalues(self):
+    def _workvalues(self, io_dicts=None, writeout=False):
         """Alle Werte der Inputs und Outputs abrufen."""
+
+        # Abfragelisten vorbereiten
+        if io_dicts is None:
+            io_dicts = [self.dict_inps, self.dict_outs]
 
         # Werte abrufen
         with self.lk:
             ba_values = bytearray(self.cli.ps_values().data)
 
+        # Multicall zum Schreiben vorbereiten
+        if writeout:
+            xmlmc = MultiCall(self.cli)
+
         for dev in self.lst_devices:
             # io = [name,bytelen,byteaddr,bmk,bitaddress,(tkinter_var)]
 
             # IO Typ verarbeiten
-            for iotype in [self.dict_inps, self.dict_outs]:
+            for iotype in io_dicts:
                 # ios verarbeiten
                 for io in iotype[dev[0]]:
 
@@ -192,22 +212,50 @@ class RevPiCheckClient(tkinter.Frame):
                     )
                     if io[4] >= 0:
                         # Bit-IO
-                        io[5].set(bool(int_byte & 1 << io[4]))
+                        new_val = bool(int_byte & 1 << io[4])
+                        if writeout and new_val != io[5].get():
+                            xmlmc.ps_setvalue(dev[0], io[0], io[5].get())
+                        else:
+                            io[5].set(new_val)
                     else:
                         # Byte-IO
-                        io[5].set(int_byte)
+                        if writeout and int_byte != io[5].get():
+                            xmlmc.ps_setvalue(dev[0], io[0], io[5].get())
+                        else:
+                            io[5].set(int_byte)
+
+        # Werte per Multicall schreiben
+        if writeout:
+            with self.lk:
+                xmlmc()
 
         if self.autorw.get():
-            self.master.after(200, self._readvalues)
+            self.master.after(200, self._workvalues)
+
+    def hideallwindows(self):
+        for win in self.lst_wins:
+            win.withdraw()
 
     def readvalues(self):
         if not self.autorw.get():
-            self._readvalues()
+            self._workvalues([self.dict_inps])
+
+    def refreshvalues(self):
+        if not self.autorw.get():
+            self._workvalues()
 
     def toggleauto(self):
-        self.btn_read["state"] = "disabled" if self.autorw.get() else "normal"
+        stateval = "disabled" if self.autorw.get() else "normal"
+        self.btn_refresh["state"] = stateval
+        self.btn_read["state"] = stateval
+        self.btn_write["state"] = stateval
+
         if self.autorw.get():
-            self._readvalues()
+            self._workvalues()
+
+    def writevalues(self):
+        if not self.autorw.get():
+            self._workvalues([self.dict_outs], True)
 
 
 # Testdrive

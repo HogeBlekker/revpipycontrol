@@ -41,6 +41,8 @@ def addroot(filename):
 class RevPiPyControl(tkinter.Frame):
 
     def __init__(self, master=None):
+        u"""Init RevPiPyControl-Class.
+        @param master: tkinter master"""
         super().__init__(master)
         self.pack(fill="both", expand=True)
 
@@ -48,7 +50,11 @@ class RevPiPyControl(tkinter.Frame):
         self.dict_conn = revpiplclist.get_connections()
         self.errcount = 0
         self.revpiname = None
+        self.xmlfuncs = []
         self.xmlmode = 0
+
+        # Debugger vorbereiten
+        self.debugframe = None
 
         # Globale Fenster
         self.tkcheckclient = None
@@ -63,14 +69,30 @@ class RevPiPyControl(tkinter.Frame):
         self.tmr_plcrunning()
 
     def _btnstate(self):
+        u"""Setzt den state der Buttons."""
         stateval = "disabled" if self.cli is None else "normal"
         self.btn_plclogs["state"] = stateval
         self.btn_plcstart["state"] = stateval
         self.btn_plcstop["state"] = stateval
         self.btn_plcrestart["state"] = stateval
+        self.btn_debug["state"] = stateval
+
+    def _closeall(self):
+        u"""Schließt alle Fenster."""
+        if self.tkcheckclient is not None:
+            self.tkcheckclient.destroy()
+        if self.tklogs is not None:
+            self.tklogs.master.destroy()
+        if self.tkoptions is not None:
+            self.tkoptions.destroy()
+        if self.tkprogram is not None:
+            self.tkprogram.destroy()
+        if self.debugframe is not None:
+            self.debugframe.destroy()
+            self.debugframe = None
 
     def _createwidgets(self):
-        """Erstellt den Fensterinhalt."""
+        u"""Erstellt den Fensterinhalt."""
         # Hauptfenster
         self.master.wm_title("RevPi Python PLC Loader")
         self.master.wm_iconphoto(
@@ -122,25 +144,38 @@ class RevPiPyControl(tkinter.Frame):
         self.txt_status["textvariable"] = self.var_status
         self.txt_status.pack(fill="x")
 
-    def _fillmbar(self):
-        # PLC Menü
-        self.mplc = tkinter.Menu(self.mbar, tearoff=False)
-        self.mplc.add_command(label="PLC log...", command=self.plclogs)
-        self.mplc.add_command(label="PLC monitor...", command=self.plcmonitor)
-        self.mplc.add_command(label="PLC options...", command=self.plcoptions)
-        self.mplc.add_command(label="PLC program...", command=self.plcprogram)
-        self.mbar.add_cascade(label="PLC", menu=self.mplc, state="disabled")
-
-        # Connection Menü
-        self.mconn = tkinter.Menu(self.mbar, tearoff=False)
-        self.mbar.add_cascade(label="Connect", menu=self.mconn)
+        self.btn_debug = tkinter.Button(self)
+        self.btn_debug["text"] = "PLC Debugmodus"
+        self.btn_debug["command"] = self.plcdebug
+        self.btn_debug.pack(fill="x")
 
     def _fillconnbar(self):
+        u"""Generiert Menüeinträge für Verbindungen."""
         self.mconn.delete(0, "end")
         for con in sorted(self.dict_conn.keys(), key=lambda x: x.lower()):
             self.mconn.add_command(
                 label=con, command=partial(self._opt_conn, con)
             )
+
+    def _fillmbar(self):
+        u"""Generiert Menüeinträge."""
+        # PLC Menü
+        self.mplc = tkinter.Menu(self.mbar, tearoff=False)
+        self.mplc.add_command(
+            label="PLC log...", command=self.plclogs)
+        self.mplc.add_command(
+            label="PLC options...", command=self.plcoptions)
+        self.mplc.add_command(
+            label="PLC program...", command=self.plcprogram)
+        self.mplc.add_separator()
+
+        self.mplc.add_command(
+            label="Disconnect", command=self.serverdisconnect)
+        self.mbar.add_cascade(label="PLC", menu=self.mplc, state="disabled")
+
+        # Connection Menü
+        self.mconn = tkinter.Menu(self.mbar, tearoff=False)
+        self.mbar.add_cascade(label="Connect", menu=self.mconn)
 
     def _opt_conn(self, text):
         socket.setdefaulttimeout(2)
@@ -151,6 +186,7 @@ class RevPiPyControl(tkinter.Frame):
         )
         # Server prüfen
         try:
+            self.xmlfuncs = sp.system.listMethods()
             self.xmlmode = sp.xmlmodus()
         except:
             self.servererror()
@@ -168,17 +204,30 @@ class RevPiPyControl(tkinter.Frame):
             ))
             self.mbar.entryconfig("PLC", state="normal")
 
-    def _closeall(self):
-        if self.tkcheckclient is not None:
-            self.tkcheckclient.destroy()
-        if self.tklogs is not None:
-            self.tklogs.master.destroy()
-        if self.tkoptions is not None:
-            self.tkoptions.destroy()
-        if self.tkprogram is not None:
-            self.tkprogram.destroy()
+    def plcdebug(self):
+        u"""Baut den Debugframe und packt ihn."""
+        self.btn_debug["state"] = "disabled"
+
+        # Debugfenster laden
+        if self.debugframe is None:
+            self.debugframe = revpicheckclient.RevPiCheckClient(
+                self, self.cli, self.xmlmode
+            )
+
+        # Show/Hide wechseln
+        if self.debugframe.winfo_viewable():
+            self.debugframe.hideallwindows()
+            self.debugframe.autorw.set(False)
+            self.debugframe.toggleauto()
+            self.debugframe.dowrite.set(False)
+            self.debugframe.pack_forget()
+        else:
+            self.debugframe.pack(fill="y")
+
+        self.btn_debug["state"] = "normal"
 
     def plclist(self):
+        u"""Öffnet das Fenster für die Verbindungen."""
         win = tkinter.Toplevel(self)
         revpiplclist.RevPiPlcList(win)
         win.focus_set()
@@ -188,24 +237,15 @@ class RevPiPyControl(tkinter.Frame):
         self._fillconnbar()
 
     def plclogs(self):
+        u"""Öffnet das Fenster für Logdateien."""
         if self.tklogs is None or len(self.tklogs.children) == 0:
             win = tkinter.Toplevel(self)
             self.tklogs = revpilogfile.RevPiLogfile(win, self.cli)
         else:
             self.tklogs.focus_set()
 
-    def plcmonitor(self):
-        """Startet das Monitorfenster."""
-        if self.tkcheckclient is None or len(self.tkcheckclient.children) == 0:
-            win = tkinter.Toplevel(self)
-            self.tkcheckclient = revpicheckclient.RevPiCheckClient(
-                win, self.cli, self.xmlmode
-            )
-        else:
-            self.tkcheckclient.focus_set()
-
     def plcoptions(self):
-        """Startet das Optionsfenster."""
+        u"""Startet das Optionsfenster."""
         if self.xmlmode < 2:
             tkmsg.showwarning(
                 parent=self.master, title="Warnung",
@@ -222,6 +262,7 @@ class RevPiPyControl(tkinter.Frame):
             self.xmlmode = self.tkoptions.xmlmode
 
     def plcprogram(self):
+        u"""Startet das Programmfenster."""
         if self.xmlmode < 2:
             tkmsg.showwarning(
                 parent=self.master, title="Warnung",
@@ -237,23 +278,30 @@ class RevPiPyControl(tkinter.Frame):
             self.wait_window(win)
 
     def plcstart(self):
+        u"""Startet das PLC Programm."""
         self.cli.plcstart()
 
     def plcstop(self):
+        u"""Beendet das PLC Programm."""
         self.cli.plcstop()
 
     def plcrestart(self):
+        u"""Startet das PLC Programm neu."""
         self.cli.plcstop()
         self.cli.plcstart()
 
-    def servererror(self):
-        """Setzt alles auf NULL."""
+    def serverdisconnect(self):
+        u"""Trennt eine bestehende Verbindung."""
         socket.setdefaulttimeout(2)
         self.cli = None
         self._btnstate()
         self.mbar.entryconfig("PLC", state="disabled")
         self.var_conn.set("")
         self._closeall()
+
+    def servererror(self):
+        u"""Setzt alles zurück für neue Verbindungen."""
+        self.serverdisconnect()
         tkmsg.showerror("Fehler", "Server ist nicht erreichbar!")
 
     def tmr_plcrunning(self):
