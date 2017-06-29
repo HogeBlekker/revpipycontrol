@@ -39,6 +39,7 @@ class RevPiPlcList(tkinter.Frame):
 
     def __init__(self, master):
         super().__init__(master)
+        self.master.bind("<KeyPress-Escape>", self._checkclose)
         self.pack()
 
         self.changes = False
@@ -50,10 +51,23 @@ class RevPiPlcList(tkinter.Frame):
         self._createwidgets()
         self._loadappdata()
 
+    def _checkclose(self, event=None):
+        ask = True
+        if self.changes:
+            ask = tkmsg.askyesno(
+                _("Question"),
+                _("Do you really want to quit? \nUnsaved changes will "
+                    "be lost"),
+                parent=self.master
+            )
+
+        if ask:
+            self.master.destroy()
+
     def _createwidgets(self):
         self.master.wm_title(_("RevPi Python PLC connections"))
         self.master.wm_resizable(width=False, height=False)
-        self.master.protocol("WM_DELETE_WINDOW", self.evt_btnclose)
+        self.master.protocol("WM_DELETE_WINDOW", self._checkclose)
 
         # Listbox mit vorhandenen Verbindungen
         self.scr_conn = tkinter.Scrollbar(self)
@@ -111,7 +125,7 @@ class RevPiPlcList(tkinter.Frame):
             self, text=_("Save"), command=self.evt_btnsave)
         self.btn_save.grid(column=3, row=9, sticky="se")
         self.btn_close = tkinter.Button(
-            self, text=_("Close"), command=self.evt_btnclose)
+            self, text=_("Close"), command=self._checkclose)
         self.btn_close.grid(column=4, row=9, sticky="se")
 
     def _loadappdata(self):
@@ -143,20 +157,6 @@ class RevPiPlcList(tkinter.Frame):
         self.build_listconn()
         self.evt_btnnew()
         self.changes = True
-
-    def evt_btnclose(self):
-        if self.changes:
-            ask = tkmsg.askyesno(
-                _("Question"),
-                _("Do you really want to quit? \nUnsaved changes will "
-                    "be lost"),
-                parent=self.master
-            )
-        else:
-            ask = True
-
-        if ask:
-            self.master.destroy()
 
     def evt_btnnew(self):
         self.list_conn.select_clear(0, "end")

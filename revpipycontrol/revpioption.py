@@ -16,10 +16,14 @@ _ = gettrans()
 class RevPiOption(tkinter.Frame):
 
     def __init__(self, master, xmlcli, xmlmode):
+        u"""Init RevPiOption-Class.
+        @returns: None"""
         if xmlmode < 2:
             return None
 
         super().__init__(master)
+        self.master.bind("<KeyPress-Escape>", self._checkclose)
+        self.master.protocol("WM_DELETE_WINDOW", self._checkclose)
         self.pack(expand=True, fill="both")
 
         self.xmlcli = xmlcli
@@ -30,7 +34,41 @@ class RevPiOption(tkinter.Frame):
         self._createwidgets()
         self._loadappdata()
 
+    def _changesdone(self):
+        u"""Prüft ob sich die Einstellungen geändert haben.
+        @returns: True, wenn min. eine Einstellung geändert wurde"""
+        return (
+            self.var_start.get() != self.dc.get("autostart", "1")
+            or self.var_reload.get() != self.dc.get("autoreload", "1")
+            or self.var_zexit.get() != self.dc.get("zeroonexit", "0")
+            or self.var_zerr.get() != self.dc.get("zeroonerror", "0")
+            or self.var_startpy.get() != self.dc.get("plcprogram", "none.py")
+            or self.var_startargs.get() != self.dc.get("plcarguments", "")
+            or self.var_pythonver.get() != self.dc.get("pythonversion", "3")
+            or self.var_slave.get() != self.dc.get("plcslave", "0")
+            or self.var_xmlon.get() != (self.dc.get("xmlrpc", 0) >= 1)
+            or self.var_xmlmod2.get() != (self.dc.get("xmlrpc", 0) >= 2)
+            or self.var_xmlmod3.get() != (self.dc.get("xmlrpc", 0) >= 3)
+            or self.var_xmlport.get() != self.dc.get("xmlrpcport", "55123")
+        )
+
+    def _checkclose(self, event=None):
+        u"""Prüft ob Fenster beendet werden soll.
+        @param event: tkinter-Event"""
+        ask = True
+        if self._changesdone():
+            ask = tkmsg.askyesno(
+                _("Question"),
+                _("Do you really want to quit? \nUnsaved changes will "
+                    "be lost"),
+                parent=self.master
+            )
+
+        if ask:
+            self.master.destroy()
+
     def _createwidgets(self):
+        u"""Erstellt Widgets."""
         self.master.wm_title(_("RevPi Python PLC Options"))
         self.master.wm_resizable(width=False, height=False)
 
@@ -183,30 +221,32 @@ class RevPiOption(tkinter.Frame):
         btn_save.grid(column=0, row=3)
 
         btn_close = tkinter.Button(self)
-        btn_close["command"] = self.master.destroy
+        btn_close["command"] = self._checkclose
         btn_close["text"] = _("Close")
         btn_close.grid(column=1, row=3)
 
     def _loadappdata(self):
-        dc = self.xmlcli.get_config()
+        u"""Läd aktuelle Einstellungen vom RevPi."""
+        self.dc = self.xmlcli.get_config()
 
-        self.var_start.set(dc.get("autostart", "1"))
-        self.var_reload.set(dc.get("autoreload", "1"))
-        self.var_zexit.set(dc.get("zeroonexit", "0"))
-        self.var_zerr.set(dc.get("zeroonerror", "0"))
+        self.var_start.set(self.dc.get("autostart", "1"))
+        self.var_reload.set(self.dc.get("autoreload", "1"))
+        self.var_zexit.set(self.dc.get("zeroonexit", "0"))
+        self.var_zerr.set(self.dc.get("zeroonerror", "0"))
 
-        self.var_startpy.set(dc.get("plcprogram", "none.py"))
-        self.var_startargs.set(dc.get("plcarguments", ""))
-        self.var_pythonver.set(dc.get("pythonversion", "3"))
-        self.var_slave.set(dc.get("plcslave", "0"))
+        self.var_startpy.set(self.dc.get("plcprogram", "none.py"))
+        self.var_startargs.set(self.dc.get("plcarguments", ""))
+        self.var_pythonver.set(self.dc.get("pythonversion", "3"))
+        self.var_slave.set(self.dc.get("plcslave", "0"))
 
-        self.var_xmlon.set(dc.get("xmlrpc", 0) >= 1)
-        self.var_xmlmod2.set(dc.get("xmlrpc", 0) >= 2)
-        self.var_xmlmod3.set(dc.get("xmlrpc", 0) >= 3)
+        self.var_xmlon.set(self.dc.get("xmlrpc", 0) >= 1)
+        self.var_xmlmod2.set(self.dc.get("xmlrpc", 0) >= 2)
+        self.var_xmlmod3.set(self.dc.get("xmlrpc", 0) >= 3)
 
-        self.var_xmlport.set(dc.get("xmlrpcport", "55123"))
+        self.var_xmlport.set(self.dc.get("xmlrpcport", "55123"))
 
     def _setappdata(self):
+        u"""Speichert geänderte Einstellungen auf RevPi."""
         dc = {}
         dc["autostart"] = int(self.var_start.get())
         dc["autoreload"] = int(self.var_reload.get())
@@ -252,6 +292,7 @@ class RevPiOption(tkinter.Frame):
                 )
 
     def askxmlon(self):
+        u"""Fragt Nuter, ob wirklicht abgeschaltet werden soll."""
         if not self.var_xmlon.get():
             ask = tkmsg.askyesno(
                 _("Question"),
@@ -266,6 +307,7 @@ class RevPiOption(tkinter.Frame):
         self.xmlmods()
 
     def xmlmods(self):
+        u"""Passt XML-Optionszugriff an."""
         self.ckb_xmlmod2["state"] = \
             "normal" if self.var_xmlon.get() else "disabled"
         self.ckb_xmlmod3["state"] = \

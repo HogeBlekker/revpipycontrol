@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: RevPiPyControl 0.4.0\n"
-"POT-Creation-Date: 2017-06-29 12:59+0200\n"
-"PO-Revision-Date: 2017-06-29 13:03+0200\n"
+"POT-Creation-Date: 2017-06-29 20:10+0200\n"
+"PO-Revision-Date: 2017-06-29 20:10+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
@@ -43,39 +43,56 @@ msgstr "Aktualisiere automatisch"
 msgid "Write values to RevPi"
 msgstr "Schreibe Werte auf RevPi"
 
-#: revpilogfile.py:27
+#: revpilogfile.py:37
 msgid "RevPi Python PLC Logs"
 msgstr "RevPi Python PLC Logdaten"
 
-#: revpilogfile.py:40
+#: revpilogfile.py:50
 msgid "RevPiPyLoad - Logfile"
 msgstr "RevPiPyLoad - Logdatei"
 
-#: revpilogfile.py:44 revpilogfile.py:59
+#: revpilogfile.py:54 revpilogfile.py:69
 msgid "Clear screen"
 msgstr "Leere Ansicht"
 
-#: revpilogfile.py:55
+#: revpilogfile.py:65
 msgid "Python PLC program - Logfile"
 msgstr "Python PLC Programm - Logdatei"
 
-#: revpioption.py:33
+#: revpilogfile.py:145
+msgid "Can not access log file on the RevPi"
+msgstr "RevPi kann auf Logdatei nicht zugreifen"
+
+#: revpioption.py:61 revpioption.py:273 revpioption.py:298 revpiplclist.py:58
+#: revpiplclist.py:175 revpiprogram.py:370 revpiprogram.py:418
+msgid "Question"
+msgstr "Frage"
+
+#: revpioption.py:62 revpiplclist.py:59
+msgid ""
+"Do you really want to quit? \n"
+"Unsaved changes will be lost"
+msgstr ""
+"Wollen Sie wirklich beenden? \n"
+"Nicht gespeicherte Änderungen gehen verloren"
+
+#: revpioption.py:72
 msgid "RevPi Python PLC Options"
 msgstr "RevPi Python PLC Einstellungen"
 
-#: revpioption.py:41
+#: revpioption.py:80
 msgid "Start / Stop behavior"
 msgstr "Start / Stop Verhalten"
 
-#: revpioption.py:50
+#: revpioption.py:89
 msgid "Start program automatically"
 msgstr "Starte Programm automatisch"
 
-#: revpioption.py:56
+#: revpioption.py:95
 msgid "Restart program after exit"
 msgstr "Starte Programm nach Beenden neu"
 
-#: revpioption.py:63
+#: revpioption.py:103
 msgid ""
 "Set process image to NULL if program\n"
 "terminates successfully"
@@ -83,7 +100,7 @@ msgstr ""
 "\"Prozessabbild auf NULL setzen, wenn Programm\n"
 "\"erfolgreich beendet wird\""
 
-#: revpioption.py:70
+#: revpioption.py:111
 msgid ""
 "Set process image to NULL if program\n"
 "terminates with errors"
@@ -91,35 +108,35 @@ msgstr ""
 "Prozessabbild auf NULL setzen, wenn Programm\n"
 "fehlerhaft beendet wird"
 
-#: revpioption.py:77
+#: revpioption.py:118
 msgid "PLC program"
 msgstr "PLC Programm"
 
-#: revpioption.py:88
+#: revpioption.py:129
 msgid "Python version"
 msgstr "Python Version"
 
-#: revpioption.py:105
+#: revpioption.py:146
 msgid "Python PLC program name"
 msgstr "Python PLC Programmname"
 
-#: revpioption.py:117
+#: revpioption.py:158
 msgid "Program arguments"
 msgstr "Programmargumente"
 
-#: revpioption.py:126
+#: revpioption.py:167
 msgid "Use RevPi as PLC-Slave"
 msgstr "RevPi als PLC-Slave verwenden"
 
-#: revpioption.py:133
+#: revpioption.py:174
 msgid "XML-RPC server"
 msgstr "XML-RPC Server"
 
-#: revpioption.py:145
+#: revpioption.py:186
 msgid "Activate XML-RPC server on RevPi"
 msgstr "Aktiviere XML-RPC Server auf RevPi"
 
-#: revpioption.py:153
+#: revpioption.py:194
 msgid ""
 "Allow download of piCtory configuration and\n"
 "PLC programm"
@@ -127,7 +144,7 @@ msgstr ""
 "Download von piCtroy Konfiguration und\n"
 "PLC Programm zulassen"
 
-#: revpioption.py:160
+#: revpioption.py:201
 msgid ""
 "Allow upload of piCtory configuration and\n"
 "PLC programm"
@@ -135,24 +152,19 @@ msgstr ""
 "Hochladen von piCtroy Konfiguration und\n"
 "PLC Programm zulassen"
 
-#: revpioption.py:165
+#: revpioption.py:206
 msgid "XML-RPC server port"
 msgstr "XML-RPC Serverport"
 
-#: revpioption.py:179 revpiplclist.py:111
+#: revpioption.py:220 revpiplclist.py:125
 msgid "Save"
 msgstr "Speichern"
 
-#: revpioption.py:184 revpiplclist.py:114
+#: revpioption.py:225 revpiplclist.py:128
 msgid "Close"
 msgstr "Schließen"
 
-#: revpioption.py:230 revpioption.py:254 revpiplclist.py:150
-#: revpiplclist.py:175 revpiprogram.py:370 revpiprogram.py:418
-msgid "Question"
-msgstr "Frage"
-
-#: revpioption.py:231
+#: revpioption.py:274
 msgid ""
 "The settings are now saved on the Revolution Pi. \n"
 "\n"
@@ -164,29 +176,29 @@ msgstr ""
 "Sollen die neuen Einstellungen sofort in Kraft treten?\n"
 "Dies bedeutet einen Neustart des Dienstes und des laufenden PLC-Programms!"
 
-#: revpioption.py:239 revpiplclist.py:190 revpiprogram.py:65
+#: revpioption.py:282 revpiplclist.py:190 revpiprogram.py:65
 msgid "Information"
 msgstr "Information"
 
-#: revpioption.py:240
+#: revpioption.py:283
 msgid "Settings saved"
 msgstr "Einstellungen gespeichert"
 
-#: revpioption.py:245 revpiplclist.py:198 revpiprogram.py:306
+#: revpioption.py:288 revpiplclist.py:198 revpiprogram.py:306
 #: revpiprogram.py:337 revpiprogram.py:400 revpiprogram.py:433
-#: revpiprogram.py:517 revpiprogram.py:589 revpiprogram.py:620
-#: revpiprogram.py:633 revpiprogram.py:682 revpiprogram.py:702
-#: revpiprogram.py:710 revpipycontrol.py:307
+#: revpiprogram.py:515 revpiprogram.py:587 revpiprogram.py:618
+#: revpiprogram.py:631 revpiprogram.py:686 revpiprogram.py:706
+#: revpiprogram.py:714 revpipycontrol.py:325
 msgid "Error"
 msgstr "Fehler"
 
-#: revpioption.py:246
+#: revpioption.py:289
 msgid "The settings could not be saved. This can happen if values are wrong!"
 msgstr ""
 "Die Einstellungen konnten nicht gesichert werden. Dies kann passieren, wenn "
 "Werte falsch sind!"
 
-#: revpioption.py:255
+#: revpioption.py:299
 msgid ""
 "Are you sure you want to deactivate the XML-RPC server? You will NOT be able "
 "to access the Revolution Pi with this program."
@@ -194,41 +206,33 @@ msgstr ""
 "Soll der XML-RPC Server wirklich beendet werden? Sie können dann NICHT mehr "
 "mit diesem Programm auf den Revolution Pi zugreifen."
 
-#: revpiplclist.py:54
+#: revpiplclist.py:68
 msgid "RevPi Python PLC connections"
 msgstr "RevPi Python PLC Verbindungen"
 
-#: revpiplclist.py:74
+#: revpiplclist.py:88
 msgid "Name"
 msgstr "Name"
 
-#: revpiplclist.py:81
+#: revpiplclist.py:95
 msgid "IP address"
 msgstr "IP Adresse"
 
-#: revpiplclist.py:89
+#: revpiplclist.py:103
 msgid "Port"
 msgstr "Port"
 
-#: revpiplclist.py:98
+#: revpiplclist.py:112
 msgid "New"
 msgstr "Neu"
 
-#: revpiplclist.py:101
+#: revpiplclist.py:115
 msgid "Apply"
 msgstr "Übernehmen"
 
-#: revpiplclist.py:105
+#: revpiplclist.py:119
 msgid "Remove"
 msgstr "Entfernen"
-
-#: revpiplclist.py:151
-msgid ""
-"Do you really want to quit? \n"
-"Unsaved changes will be lost"
-msgstr ""
-"Wollen Sie wirklich beenden? \n"
-"Nicht gespeicherte Änderungen gehen verloren"
 
 #: revpiplclist.py:176
 msgid "Do you really want to delete the selected connection '{}'"
@@ -268,12 +272,12 @@ msgid "Files"
 msgstr "Dateien"
 
 #: revpiprogram.py:98 revpiprogram.py:100 revpiprogram.py:465
-#: revpiprogram.py:573
+#: revpiprogram.py:571
 msgid "Zip archive"
 msgstr "Zip Archiv"
 
 #: revpiprogram.py:98 revpiprogram.py:100 revpiprogram.py:478
-#: revpiprogram.py:603
+#: revpiprogram.py:601
 msgid "TGZ archive"
 msgstr "TGZ Archiv"
 
@@ -341,7 +345,7 @@ msgstr "piControlReset ausführen"
 msgid "execute"
 msgstr "ausführen"
 
-#: revpiprogram.py:216 revpipycontrol.py:96
+#: revpiprogram.py:216 revpipycontrol.py:95
 msgid "Exit"
 msgstr "Beenden"
 
@@ -355,22 +359,22 @@ msgid "piCtory config"
 msgstr "piCtory Konfiguration"
 
 #: revpiprogram.py:299 revpiprogram.py:330 revpiprogram.py:362
-#: revpiprogram.py:465 revpiprogram.py:478 revpiprogram.py:548
-#: revpiprogram.py:573 revpiprogram.py:603
+#: revpiprogram.py:465 revpiprogram.py:478 revpiprogram.py:546
+#: revpiprogram.py:571 revpiprogram.py:601
 msgid "All files"
 msgstr "Alle Dateien"
 
-#: revpiprogram.py:307 revpiprogram.py:338 revpiprogram.py:518
+#: revpiprogram.py:307 revpiprogram.py:338 revpiprogram.py:516
 msgid "Could not load and save file!"
 msgstr "Datei konnte nicht geladen und gespeichert werden!"
 
 #: revpiprogram.py:312 revpiprogram.py:343 revpiprogram.py:381
-#: revpiprogram.py:389 revpiprogram.py:427 revpiprogram.py:523
-#: revpiprogram.py:672
+#: revpiprogram.py:389 revpiprogram.py:427 revpiprogram.py:521
+#: revpiprogram.py:676
 msgid "Success"
 msgstr "Erfolgreich"
 
-#: revpiprogram.py:313 revpiprogram.py:344 revpiprogram.py:524
+#: revpiprogram.py:313 revpiprogram.py:344 revpiprogram.py:522
 msgid "File successfully loaded and saved."
 msgstr "Dateien erfolgreich übertragen und gespeichert."
 
@@ -408,8 +412,8 @@ msgstr ""
 "Die piCtory Konfiguration konnte auf dem Revolution Pi nicht geschrieben "
 "werden."
 
-#: revpiprogram.py:407 revpipycontrol.py:199 revpipycontrol.py:246
-#: revpipycontrol.py:266
+#: revpiprogram.py:407 revpipycontrol.py:211 revpipycontrol.py:250
+#: revpipycontrol.py:268 revpipycontrol.py:286
 msgid "Warning"
 msgstr "Warnung"
 
@@ -441,104 +445,124 @@ msgstr "piControl Reset konnte nicht erfolgreich durchgeführt werden"
 msgid "Directory to save"
 msgstr "Verzeichnis zum Ablegen"
 
-#: revpiprogram.py:558
+#: revpiprogram.py:556
 msgid "Folder to upload"
 msgstr "Verzeichnis zum Hochladen"
 
-#: revpiprogram.py:569
+#: revpiprogram.py:567
 msgid "Upload Zip archive..."
 msgstr "Zip Archiv hochladen..."
 
-#: revpiprogram.py:590
+#: revpiprogram.py:588
 msgid "The specified file is not a ZIP archive."
 msgstr "Die angegebene Datei ist kein ZIP Archiv"
 
-#: revpiprogram.py:599
+#: revpiprogram.py:597
 msgid "Upload TarGz archiv..."
 msgstr "TarGz Archiv hochladen..."
 
-#: revpiprogram.py:621
+#: revpiprogram.py:619
 msgid "The specified file is not a TAR archive."
 msgstr "Die angegebene Datei ist kein TAR Archiv."
 
-#: revpiprogram.py:634
+#: revpiprogram.py:632
 msgid "There was an error deleting the files on the Revolution Pi."
 msgstr ""
 "Beim Löschen der Dateien auf dem Revolution Pi ist ein Fehler aufgetreten."
 
-#: revpiprogram.py:673
+#: revpiprogram.py:677
 msgid "The transfer was successful."
 msgstr "Die Übertragung war erfolgreich."
 
-#: revpiprogram.py:683
+#: revpiprogram.py:687
 msgid "There is no piCtory configuration in this archive."
 msgstr "Es wurde keine piCtory Konfiguration im Archiv gefunden."
 
-#: revpiprogram.py:703
+#: revpiprogram.py:707
 msgid "The Revolution Pi could not process some parts of the transmission."
 msgstr "Der Revoluton Pi konnte Teile der Übertragung nicht verarbeiten."
 
-#: revpiprogram.py:711
+#: revpiprogram.py:715
 msgid "Errors occurred during transmission"
 msgstr "Bei der Übertragung traten Fehler auf"
 
-#: revpipycontrol.py:94
+#: revpipycontrol.py:93
 msgid "Connections..."
 msgstr "Verbindungen..."
 
-#: revpipycontrol.py:97
+#: revpipycontrol.py:96
 msgid "Main"
 msgstr "Datei"
 
+#: revpipycontrol.py:104
+msgid "Visit website..."
+msgstr "Webseite besuchen..."
+
+#: revpipycontrol.py:106
+msgid "Info..."
+msgstr "Info..."
+
 #: revpipycontrol.py:108
+msgid "Help"
+msgstr "Hilfe"
+
+#: revpipycontrol.py:116
 msgid "PLC start"
 msgstr "PLC Start"
 
-#: revpipycontrol.py:113
+#: revpipycontrol.py:121
 msgid "PLC stop"
 msgstr "PLC Stopp"
 
-#: revpipycontrol.py:118
+#: revpipycontrol.py:126
 msgid "PLC restart"
 msgstr "PLC Neustart"
 
-#: revpipycontrol.py:123
+#: revpipycontrol.py:131
 msgid "PLC logs"
 msgstr "PLC Logs"
 
-#: revpipycontrol.py:134
+#: revpipycontrol.py:142
 msgid "PLC watch mode"
 msgstr "PLC watch Modus"
 
-#: revpipycontrol.py:151
+#: revpipycontrol.py:159
 msgid "PLC log..."
 msgstr "PLC Log..."
 
-#: revpipycontrol.py:153
+#: revpipycontrol.py:161
 msgid "PLC options..."
 msgstr "PLC Optionen..."
 
-#: revpipycontrol.py:155
+#: revpipycontrol.py:163
 msgid "PLC program..."
 msgstr "PLC Programm..."
 
-#: revpipycontrol.py:159
+#: revpipycontrol.py:167
 msgid "Disconnect"
 msgstr "Trennen"
 
-#: revpipycontrol.py:164
+#: revpipycontrol.py:172
 msgid "Connect"
 msgstr "Verbinden"
 
-#: revpipycontrol.py:200
+#: revpipycontrol.py:212
 msgid ""
 "The watch mode ist not supported in version {} of RevPiPyLoad on your RevPi! "
 "You need at least version 0.4.0."
 msgstr ""
-"Die Debug-Funktion wird von der RevPiPyLoad Version {} auf dem RevPi nicht "
+"Der Watch-Modus wird von der RevPiPyLoad Version {} auf dem RevPi nicht "
 "unterstützt! Sie benötigen mindestens Version 0.4.0."
 
-#: revpipycontrol.py:248 revpipycontrol.py:268
+#: revpipycontrol.py:251
+msgid ""
+"This version of Logviewer ist not supported in version {} of RevPiPyLoad on "
+"your RevPi! You need at least version 0.4.1."
+msgstr ""
+"Diese Version vom Logbetrachter wird in der RevPiPyLoad Version {} auf Ihrem "
+"RevPi nicht unterstützt! Sie benötigen mindestens Version 0.4.1."
+
+#: revpipycontrol.py:269 revpipycontrol.py:287
 msgid ""
 "XML-RPC access mode in the RevPiPyLoad configuration is to small to access "
 "this dialog"
@@ -546,6 +570,6 @@ msgstr ""
 "Der XML-RPC Modus ist beim RevPiPyLoad nicht hoch genug eingestellt, um "
 "diesen Dialog zu verwenden!"
 
-#: revpipycontrol.py:308
+#: revpipycontrol.py:326
 msgid "Can not reach server!"
 msgstr "Server ist nicht erreichbar!"

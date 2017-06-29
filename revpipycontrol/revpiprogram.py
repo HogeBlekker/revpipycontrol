@@ -40,8 +40,8 @@ class RevPiProgram(tkinter.Frame):
             return None
 
         super().__init__(master)
-        # FIXME: Warnung kann nerven
-        # self.master.protocol("WM_DELETE_WINDOW", self._checkclose)
+        self.master.protocol("WM_DELETE_WINDOW", self._checkclose)
+        self.master.bind("<KeyPress-Escape>", self._checkclose)
         self.pack(expand=True, fill="both")
 
         self.uploaded = False
@@ -59,8 +59,8 @@ class RevPiProgram(tkinter.Frame):
         self._evt_optdown()
         self._evt_optup()
 
-    def _checkclose(self):
-        if True or self.uploaded:
+    def _checkclose(self, event=None):
+        if self.uploaded:
             tkmsg.showinfo(
                 _("Information"),
                 _("A PLC program has been uploaded. Please check the "
@@ -212,7 +212,7 @@ class RevPiProgram(tkinter.Frame):
 
         # Beendenbutton
         btn = tkinter.Button(self)
-        btn["command"] = self.master.destroy
+        btn["command"] = self._checkclose
         btn["text"] = _("Exit")
         btn.grid()
 
@@ -374,7 +374,7 @@ class RevPiProgram(tkinter.Frame):
             )
 
             ec = self.xmlcli.set_pictoryrsc(Binary(fh.read()), ask)
-            print(ec)
+
             if ec == 0:
                 if ask:
                     tkmsg.showinfo(
@@ -496,9 +496,7 @@ class RevPiProgram(tkinter.Frame):
                     fh_pack = tarfile.open(fh.name)
 
                     # Unterverzeichnis streichen
-                    rootname = ""
                     for taritem in fh_pack.getmembers():
-                        print(rootname)
                         if not taritem.name == "revpipyload":
                             taritem.name = \
                                 taritem.name.replace("revpipyload/", "")
@@ -637,7 +635,9 @@ class RevPiProgram(tkinter.Frame):
             )
             return False
 
-        # Flag setzen, weil ab hier Veränderungen existieren
+        # Aktuell konfiguriertes Programm lesen (für uploaded Flag)
+        opt_program = self.xmlcli.get_config()
+        opt_program = opt_program.get("plcprogram", "none.py")
         self.uploaded = True
         ec = 0
 
@@ -654,6 +654,10 @@ class RevPiProgram(tkinter.Frame):
                     sendname = os.path.basename(fname)
                 else:
                     sendname = fname.replace(dirselect, "")[1:]
+
+                # Prüfen ob Dateiname bereits als Startprogramm angegeben ist
+                if sendname == opt_program:
+                    self.uploaded = False
 
                 # Datei übertragen
                 try:

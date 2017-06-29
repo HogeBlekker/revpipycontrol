@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 #
 # RevPiPyControl
-# Version: 0.4.0
+# Version: 0.4.1
 #
 # Webpage: https://revpimodio.org/revpipyplc/
 # (c) Sven Sager, License: LGPLv3
@@ -18,7 +18,6 @@ import tkinter.messagebox as tkmsg
 from functools import partial
 from mytools import addroot, gettrans
 from xmlrpc.client import ServerProxy
-
 
 # Übersetzung laden
 _ = gettrans()
@@ -98,6 +97,15 @@ class RevPiPyControl(tkinter.Frame):
 
         self._fillmbar()
         self._fillconnbar()
+
+        # Hilfe Menü
+        menu1 = tkinter.Menu(self.mbar, tearoff=False)
+        menu1.add_command(
+            label=_("Visit website..."), command=self.visitwebsite)
+        menu1.add_separator()
+        menu1.add_command(label=_("Info..."), command=self.infowindow)
+        # TODO: Menü einbauen
+        self.mbar.add_cascade(label=_("Help"), menu=menu1)
 
         self.var_conn = tkinter.StringVar(self)
         self.txt_connect = tkinter.Entry(
@@ -190,6 +198,10 @@ class RevPiPyControl(tkinter.Frame):
             ))
             self.mbar.entryconfig("PLC", state="normal")
 
+    def infowindow(self):
+        # TODO: Infofenster aufrufen
+        pass
+
     def plcdebug(self):
         u"""Baut den Debugframe und packt ihn."""
         self.btn_debug["state"] = "disabled"
@@ -233,6 +245,16 @@ class RevPiPyControl(tkinter.Frame):
 
     def plclogs(self):
         u"""Öffnet das Fenster für Logdateien."""
+        if "load_plclog" not in self.xmlfuncs:
+            tkmsg.showwarning(
+                _("Warning"),
+                _("This version of Logviewer ist not supported in version {} "
+                    "of RevPiPyLoad on your RevPi! You need at least version "
+                    "0.4.1.").format(self.cli.version()),
+                parent=self.master
+            )
+            return None
+
         if self.tklogs is None or len(self.tklogs.children) == 0:
             win = tkinter.Toplevel(self)
             self.tklogs = revpilogfile.RevPiLogfile(win, self.cli)
@@ -244,10 +266,8 @@ class RevPiPyControl(tkinter.Frame):
         if self.xmlmode < 2:
             tkmsg.showwarning(
                 _("Warning"),
-                _(
-                    "XML-RPC access mode in the RevPiPyLoad "
-                    "configuration is to small to access this dialog"
-                ),
+                _("XML-RPC access mode in the RevPiPyLoad "
+                    "configuration is to small to access this dialog"),
                 parent=self.master
             )
         else:
@@ -264,10 +284,8 @@ class RevPiPyControl(tkinter.Frame):
         if self.xmlmode < 2:
             tkmsg.showwarning(
                 _("Warning"),
-                _(
-                    "XML-RPC access mode in the RevPiPyLoad "
-                    "configuration is to small to access this dialog"
-                ),
+                _("XML-RPC access mode in the RevPiPyLoad "
+                    "configuration is to small to access this dialog"),
                 parent=self.master
             )
         else:
@@ -343,6 +361,9 @@ class RevPiPyControl(tkinter.Frame):
 
         self.master.after(1000, self.tmr_plcrunning)
 
+    def visitwebsite(self):
+        # TODO: Webseite besuchen
+        pass
 
 if __name__ == "__main__":
     root = tkinter.Tk()
