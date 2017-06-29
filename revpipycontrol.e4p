@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project revpipycontrol -->
-<!-- Saved: 2017-06-27, 16:07:48 -->
+<!-- Saved: 2017-06-28, 17:00:06 -->
 <!-- Copyright (C) 2017 Sven Sager, akira@narux.de -->
 <Project version="5.1">
   <Language>en_US</Language>
@@ -21,6 +21,7 @@
     <Source>revpipycontrol/revpilogfile.py</Source>
     <Source>revpipycontrol/revpioption.py</Source>
     <Source>revpipycontrol/revpiprogram.py</Source>
+    <Source>revpipycontrol/mytools.py</Source>
   </Sources>
   <Forms/>
   <Translations/>

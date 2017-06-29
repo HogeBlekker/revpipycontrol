@@ -13,29 +13,15 @@ import revpioption
 import revpiplclist
 import revpiprogram
 import socket
-import sys
 import tkinter
 import tkinter.messagebox as tkmsg
 from functools import partial
-from os.path import dirname
-from os.path import join as pathjoin
+from mytools import addroot, gettrans
 from xmlrpc.client import ServerProxy
 
 
-def addroot(filename):
-    u"""Hängt root-dir der Anwendung vor Dateinamen.
-
-        Je nach Ausführungsart der Anwendung muss das root-dir über
-        andere Arten abgerufen werden.
-
-        @param filename: Datei oder Ordnername
-        @returns: root dir
-
-    """
-    if getattr(sys, "frozen", False):
-        return pathjoin(dirname(sys.executable), filename)
-    else:
-        return pathjoin(dirname(__file__), filename)
+# Übersetzung laden
+_ = gettrans()
 
 
 class RevPiPyControl(tkinter.Frame):
@@ -105,10 +91,10 @@ class RevPiPyControl(tkinter.Frame):
         self.master.config(menu=self.mbar)
 
         menu1 = tkinter.Menu(self.mbar, tearoff=False)
-        menu1.add_command(label="Connections...", command=self.plclist)
+        menu1.add_command(label=_("Connections..."), command=self.plclist)
         menu1.add_separator()
-        menu1.add_command(label="Exit", command=self.master.destroy)
-        self.mbar.add_cascade(label="Main", menu=menu1)
+        menu1.add_command(label=_("Exit"), command=self.master.destroy)
+        self.mbar.add_cascade(label=_("Main"), menu=menu1)
 
         self._fillmbar()
         self._fillconnbar()
@@ -119,22 +105,22 @@ class RevPiPyControl(tkinter.Frame):
         self.txt_connect.pack(fill="x")
 
         self.btn_plcstart = tkinter.Button(self)
-        self.btn_plcstart["text"] = "PLC Start"
+        self.btn_plcstart["text"] = _("PLC start")
         self.btn_plcstart["command"] = self.plcstart
         self.btn_plcstart.pack(fill="x")
 
         self.btn_plcstop = tkinter.Button(self)
-        self.btn_plcstop["text"] = "PLC Stop"
+        self.btn_plcstop["text"] = _("PLC stop")
         self.btn_plcstop["command"] = self.plcstop
         self.btn_plcstop.pack(fill="x")
 
         self.btn_plcrestart = tkinter.Button(self)
-        self.btn_plcrestart["text"] = "PLC Restart"
+        self.btn_plcrestart["text"] = _("PLC restart")
         self.btn_plcrestart["command"] = self.plcrestart
         self.btn_plcrestart.pack(fill="x")
 
         self.btn_plclogs = tkinter.Button(self)
-        self.btn_plclogs["text"] = "PLC Logs"
+        self.btn_plclogs["text"] = _("PLC logs")
         self.btn_plclogs["command"] = self.plclogs
         self.btn_plclogs.pack(fill="x")
 
@@ -145,7 +131,7 @@ class RevPiPyControl(tkinter.Frame):
         self.txt_status.pack(fill="x")
 
         self.btn_debug = tkinter.Button(self)
-        self.btn_debug["text"] = "PLC Debugmodus"
+        self.btn_debug["text"] = _("PLC watch mode")
         self.btn_debug["command"] = self.plcdebug
         self.btn_debug.pack(fill="x")
 
@@ -162,20 +148,20 @@ class RevPiPyControl(tkinter.Frame):
         # PLC Menü
         self.mplc = tkinter.Menu(self.mbar, tearoff=False)
         self.mplc.add_command(
-            label="PLC log...", command=self.plclogs)
+            label=_("PLC log..."), command=self.plclogs)
         self.mplc.add_command(
-            label="PLC options...", command=self.plcoptions)
+            label=_("PLC options..."), command=self.plcoptions)
         self.mplc.add_command(
-            label="PLC program...", command=self.plcprogram)
+            label=_("PLC program..."), command=self.plcprogram)
         self.mplc.add_separator()
 
         self.mplc.add_command(
-            label="Disconnect", command=self.serverdisconnect)
+            label=_("Disconnect"), command=self.serverdisconnect)
         self.mbar.add_cascade(label="PLC", menu=self.mplc, state="disabled")
 
         # Connection Menü
         self.mconn = tkinter.Menu(self.mbar, tearoff=False)
-        self.mbar.add_cascade(label="Connect", menu=self.mconn)
+        self.mbar.add_cascade(label=_("Connect"), menu=self.mconn)
 
     def _opt_conn(self, text):
         socket.setdefaulttimeout(2)
@@ -208,23 +194,33 @@ class RevPiPyControl(tkinter.Frame):
         u"""Baut den Debugframe und packt ihn."""
         self.btn_debug["state"] = "disabled"
 
-        # Debugfenster laden
-        if self.debugframe is None:
-            self.debugframe = revpicheckclient.RevPiCheckClient(
-                self, self.cli, self.xmlmode
+        if "psstart" not in self.xmlfuncs:
+            tkmsg.showwarning(
+                parent=self.master, title=_("Warning"),
+                message=_(
+                    "The watch mode ist not supported in version {} "
+                    "of RevPiPyLoad on your RevPi! You need at least version "
+                    "0.4.0."
+                ).format(self.cli.version())
             )
-
-        # Show/Hide wechseln
-        if self.debugframe.winfo_viewable():
-            self.debugframe.hideallwindows()
-            self.debugframe.autorw.set(False)
-            self.debugframe.toggleauto()
-            self.debugframe.dowrite.set(False)
-            self.debugframe.pack_forget()
         else:
-            self.debugframe.pack(fill="y")
+            # Debugfenster laden
+            if self.debugframe is None:
+                self.debugframe = revpicheckclient.RevPiCheckClient(
+                    self, self.cli, self.xmlmode
+                )
 
-        self.btn_debug["state"] = "normal"
+            # Show/Hide wechseln
+            if self.debugframe.winfo_viewable():
+                self.debugframe.hideallwindows()
+                self.debugframe.autorw.set(False)
+                self.debugframe.toggleauto()
+                self.debugframe.dowrite.set(False)
+                self.debugframe.pack_forget()
+            else:
+                self.debugframe.pack(fill="y")
+
+            self.btn_debug["state"] = "normal"
 
     def plclist(self):
         u"""Öffnet das Fenster für die Verbindungen."""
@@ -249,8 +245,10 @@ class RevPiPyControl(tkinter.Frame):
         if self.xmlmode < 2:
             tkmsg.showwarning(
                 parent=self.master, title="Warnung",
-                message="Der XML-RPC Modus ist beim RevPiPyLoad nicht hoch "
-                "genug eingestellt, um diesen Dialog zu verwenden!"
+                message=_(
+                    "XML-RPC access mode in the RevPiPyLoad "
+                    "configuration is to small to access this dialog"
+                )
             )
         else:
             win = tkinter.Toplevel(self)
@@ -266,8 +264,10 @@ class RevPiPyControl(tkinter.Frame):
         if self.xmlmode < 2:
             tkmsg.showwarning(
                 parent=self.master, title="Warnung",
-                message="Der XML-RPC Modus ist beim RevPiPyLoad nicht hoch "
-                "genug eingestellt, um diesen Dialog zu verwenden!"
+                message=_(
+                    "XML-RPC access mode in the RevPiPyLoad "
+                    "configuration is to small to access this dialog"
+                )
             )
         else:
             win = tkinter.Toplevel(self)
@@ -302,20 +302,20 @@ class RevPiPyControl(tkinter.Frame):
     def servererror(self):
         u"""Setzt alles zurück für neue Verbindungen."""
         self.serverdisconnect()
-        tkmsg.showerror("Fehler", "Server ist nicht erreichbar!")
+        tkmsg.showerror(_("Fehler"), _("Server ist nicht erreichbar!"))
 
     def tmr_plcrunning(self):
         self._btnstate()
         if self.cli is None:
             self.txt_status["readonlybackground"] = "lightblue"
-            self.var_status.set("NOT CONNECTED")
+            self.var_status.set(_("NOT CONNECTED"))
         else:
             try:
                 plcec = self.cli.plcexitcode()
             except:
                 self.errcount += 1
                 if self.errcount >= 5:
-                    self.var_status.set("SERVER ERROR")
+                    self.var_status.set(_("SERVER ERROR"))
                     self.servererror()
             else:
                 self.errcount = 0
@@ -323,15 +323,17 @@ class RevPiPyControl(tkinter.Frame):
                     "green" if plcec == -1 else "red"
 
                 if plcec == -1:
-                    plcec = "RUNNING"
+                    plcec = _("RUNNING")
                 elif plcec == -2:
-                    plcec = "FILE NOT FOUND"
+                    plcec = _("FILE NOT FOUND")
+                elif plcec == -3:
+                    plcec = _("NOT RUNNING (NO STATUS)")
                 elif plcec == -9:
-                    plcec = "PROGRAM KILLED"
+                    plcec = _("PROGRAM KILLED")
                 elif plcec == -15:
-                    plcec = "PROGRAMS TERMED"
+                    plcec = _("PROGRAM TERMED")
                 elif plcec == 0:
-                    plcec = "NOT RUNNING"
+                    plcec = _("NOT RUNNING")
                 self.var_status.set(plcec)
 
         self.master.after(1000, self.tmr_plcrunning)

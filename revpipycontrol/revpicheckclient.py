@@ -22,10 +22,7 @@ class RevPiCheckClient(tkinter.Frame):
         # XML-Daten abrufen
         self.xmlmode = xmlmode
         self.cli = xmlcli
-
-        # FIXME: Fehlerabfang
         self.cli.psstart()
-
         self.lst_devices = self.cli.ps_devices()
         self.dict_inps = pickle.loads(self.cli.ps_inps().data)
         self.dict_outs = pickle.loads(self.cli.ps_outs().data)
@@ -62,11 +59,34 @@ class RevPiCheckClient(tkinter.Frame):
 
     def _createiogroup(self, device, frame, iotype):
         """Erstellt IO-Gruppen."""
-        # IOs generieren
-        canvas = tkinter.Canvas(frame, borderwidth=0, width=180, heigh=800)
+
+        # IO-Typen festlegen
+        if iotype == "inp":
+            lst_io = self.dict_inps[device]
+        else:
+            lst_io = self.dict_outs[device]
+
+        # Fensterinhalt aufbauen
+        calc_heigh = len(lst_io) * 21
+        canvas = tkinter.Canvas(
+            frame,
+            borderwidth=0,
+            width=180,
+            heigh=calc_heigh if calc_heigh <= 600 else 600
+        )
         s_frame = tkinter.Frame(canvas)
         vsb = tkinter.Scrollbar(frame, orient="vertical", command=canvas.yview)
         canvas.configure(yscrollcommand=vsb.set)
+
+        # Scrollrad Linux
+        canvas.bind(
+            "<ButtonPress-4>",
+            lambda x: canvas.yview_scroll(-1, "units")
+        )
+        canvas.bind(
+            "<ButtonPress-5>",
+            lambda x: canvas.yview_scroll(1, "units")
+        )
 
         vsb.pack(side="right", fill="y")
         canvas.pack(side="left", fill="both", expand=True)
@@ -76,13 +96,8 @@ class RevPiCheckClient(tkinter.Frame):
             "<Configure>", lambda event, canvas=canvas: self._onfrmconf(canvas)
         )
 
+        # IOs generieren
         rowcount = 0
-
-        if iotype == "inp":
-            lst_io = self.dict_inps[device]
-        else:
-            lst_io = self.dict_outs[device]
-
         for io in lst_io:
             # io = [name,bytelen,byteaddr,bmk,bitaddress,(tkinter_var)]
 
@@ -101,8 +116,10 @@ class RevPiCheckClient(tkinter.Frame):
                 check.grid(column=1, row=rowcount)
             else:
                 var = tkinter.IntVar()
+
                 # FIXME: Mehrere Bytes möglich
                 txt = tkinter.Spinbox(s_frame, to=255 * io[1])
+
                 txt["command"] = \
                     lambda device=device, io=io: self.__chval(device, io)
                 txt["state"] = "disabled" if iotype == "inp" else "normal"
@@ -129,6 +146,7 @@ class RevPiCheckClient(tkinter.Frame):
                 "WM_DELETE_WINDOW",
                 lambda win=win: self.__hidewin(win)
             )
+            win.resizable(False, True)
             win.withdraw()
             self.lst_wins.append(win)
 
