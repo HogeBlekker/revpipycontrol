@@ -12,6 +12,7 @@ from mytools import gettrans
 # Übersetzung laden
 _ = gettrans()
 
+
 class RevPiOption(tkinter.Frame):
 
     def __init__(self, master, xmlcli, xmlmode):
@@ -60,14 +61,16 @@ class RevPiOption(tkinter.Frame):
 
         ckb_zexit = tkinter.Checkbutton(stst, justify="left")
         ckb_zexit["state"] = self.xmlstate
-        ckb_zexit["text"] = _("Set process image to NULL if program\n"
+        ckb_zexit["text"] = _(
+            "Set process image to NULL if program\n"
             "terminates successfully")
         ckb_zexit["variable"] = self.var_zexit
         ckb_zexit.grid(**cpadw)
 
         ckb_zerr = tkinter.Checkbutton(stst, justify="left")
         ckb_zerr["state"] = self.xmlstate
-        ckb_zerr["text"] = _("Set process image to NULL if program\n"
+        ckb_zerr["text"] = _(
+            "Set process image to NULL if program\n"
             "terminates with errors")
         ckb_zerr["variable"] = self.var_zerr
         ckb_zerr.grid(**cpadw)

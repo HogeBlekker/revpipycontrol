@@ -196,12 +196,11 @@ class RevPiPyControl(tkinter.Frame):
 
         if "psstart" not in self.xmlfuncs:
             tkmsg.showwarning(
-                parent=self.master, title=_("Warning"),
-                message=_(
-                    "The watch mode ist not supported in version {} "
+                _("Warning"),
+                _("The watch mode ist not supported in version {} "
                     "of RevPiPyLoad on your RevPi! You need at least version "
-                    "0.4.0."
-                ).format(self.cli.version())
+                    "0.4.0.").format(self.cli.version()),
+                parent=self.master
             )
         else:
             # Debugfenster laden

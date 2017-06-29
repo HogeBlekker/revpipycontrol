@@ -63,11 +63,9 @@ class RevPiProgram(tkinter.Frame):
         if True or self.uploaded:
             tkmsg.showinfo(
                 _("Information"),
-                _(
-                    "A PLC program has been uploaded. Please check the "
+                _("A PLC program has been uploaded. Please check the "
                     "PLC options to see if the correct program is specified "
-                    "as the start program."
-                ),
+                    "as the start program."),
                 parent=self.master
             )
         self.master.destroy()
@@ -305,13 +303,15 @@ class RevPiProgram(tkinter.Frame):
                 fh.write(self.xmlcli.get_pictoryrsc().data)
             except:
                 tkmsg.showerror(
-                    parent=self.master, title=_("Error"),
-                    message=_("Could not load and save file!")
+                    _("Error"),
+                    _("Could not load and save file!"),
+                    parent=self.master,
                 )
             else:
                 tkmsg.showinfo(
-                    parent=self.master, title=_("Success"),
-                    message=_("File successfully loaded and saved.")
+                    _("Success"),
+                    _("File successfully loaded and saved."),
+                    parent=self.master
                 )
                 # Einstellungen speichern
                 self.opt["getpictoryrsc_dir"] = os.path.dirname(fh.name)
@@ -334,13 +334,15 @@ class RevPiProgram(tkinter.Frame):
                 fh.write(self.xmlcli.get_procimg().data)
             except:
                 tkmsg.showerror(
-                    parent=self.master, title=_("Error"),
-                    message=_("Could not load and save file!")
+                    _("Error"),
+                    _("Could not load and save file!"),
+                    parent=self.master
                 )
             else:
                 tkmsg.showinfo(
-                    parent=self.master, title=_("Success"),
-                    message=_("File successfully loaded and saved.")
+                    _("Success"),
+                    _("File successfully loaded and saved."),
+                    parent=self.master
                 )
                 # Einstellungen speichern
                 self.opt["getprocimg_dir"] = os.path.dirname(fh.name)
@@ -365,11 +367,10 @@ class RevPiProgram(tkinter.Frame):
 
         if fh is not None:
             ask = tkmsg.askyesno(
-                parent=self.master, title=_("Question"),
-                message=_(
-                    "Should the piControl driver be reset after "
-                    "uploading the piCtory configuration?"
-                )
+                _("Question"),
+                _("Should the piControl driver be reset after "
+                    "uploading the piCtory configuration?"),
+                parent=self.master
             )
 
             ec = self.xmlcli.set_pictoryrsc(Binary(fh.read()), ask)
@@ -377,20 +378,18 @@ class RevPiProgram(tkinter.Frame):
             if ec == 0:
                 if ask:
                     tkmsg.showinfo(
-                        parent=self.master, title=_("Success"),
-                        message=_(
-                            "The transfer of the piCtory configuration "
+                        _("Success"),
+                        _("The transfer of the piCtory configuration "
                             "and the reset of piControl have been "
-                            "successfully executed"
-                        )
+                            "successfully executed"),
+                        parent=self.master
                     )
                 else:
                     tkmsg.showinfo(
-                        parent=self.master, title=_("Success"),
-                        message=_(
-                            "The piCtory configuration was "
-                            "successfully transferred"
-                        )
+                        _("Success"),
+                        _("The piCtory configuration was "
+                            "successfully transferred"),
+                        parent=self.master
                     )
 
                 # Einstellungen speichern
@@ -398,19 +397,17 @@ class RevPiProgram(tkinter.Frame):
                 self._savedefaults()
             elif ec < 0:
                 tkmsg.showerror(
-                    parent=self.master, title=_("Error"),
-                    message=_(
-                        "The piCtory configuration could not be "
-                        "written on the Revolution Pi."
-                    )
+                    _("Error"),
+                    _("The piCtory configuration could not be "
+                        "written on the Revolution Pi."),
+                    parent=self.master
                 )
             elif ec > 0:
                 tkmsg.showwarning(
-                    parent=self.master, title=_("Warning"),
-                    message=_(
-                        "The piCtroy configuration has been saved "
-                        "successfully. \nAn error occurred on piControl reset!"
-                    )
+                    _("Warning"),
+                    _("The piCtroy configuration has been saved successfully."
+                        " \nAn error occurred on piControl reset!"),
+                    parent=self.master
                 )
 
             fh.close()
@@ -418,25 +415,24 @@ class RevPiProgram(tkinter.Frame):
     def picontrolreset(self):
         u"""Fürt ein Reset der piBridge durch."""
         ask = tkmsg.askyesno(
-            parent=self.master, title=_("Question"),
-            message=_(
-                "Are you sure to reset piControl? \nThe process image "
-                "and the piBridge are interrupted !!!"
-            )
+            _("Question"),
+            _("Are you sure to reset piControl? \nThe process image "
+                "and the piBridge are interrupted !!!"),
+            parent=self.master
         )
         if ask:
             ec = self.xmlcli.resetpicontrol()
             if ec == 0:
                 tkmsg.showinfo(
-                    parent=self.master, title=_("Success"),
-                    message=_("piControlReset executed successfully")
+                    _("Success"),
+                    _("piControlReset executed successfully"),
+                    parent=self.master
                 )
             else:
                 tkmsg.showerror(
-                    parten=self.master, title=_("Error"),
-                    message=_(
-                        "piControl reset could not be executed successfully"
-                    )
+                    _("Error"),
+                    _("piControl reset could not be executed successfully"),
+                    parten=self.master
                 )
 
     def plcdownload(self):
@@ -518,13 +514,15 @@ class RevPiProgram(tkinter.Frame):
             except:
                 raise
                 tkmsg.showerror(
-                    parent=self.master, title=_("Error"),
-                    message=_("Could not load and save file!")
+                    _("Error"),
+                    _("Could not load and save file!"),
+                    parent=self.master
                 )
             else:
                 tkmsg.showinfo(
-                    parent=self.master, title=_("Success"),
-                    message=_("File successfully loaded and saved.")
+                    _("Success"),
+                    _("File successfully loaded and saved."),
+                    parent=self.master
                 )
 
                 # Einstellungen speichern
@@ -588,8 +586,9 @@ class RevPiProgram(tkinter.Frame):
 
                 else:
                     tkmsg.showerror(
-                        parent=self.master, title=_("Error"),
-                        message=_("The specified file is not a ZIP archive.")
+                        _("Error"),
+                        _("The specified file is not a ZIP archive."),
+                        parent=self.master
                     )
                     return False
 
@@ -618,8 +617,9 @@ class RevPiProgram(tkinter.Frame):
 
                 else:
                     tkmsg.showerror(
-                        parent=self.master, title=_("Error"),
-                        message=_("The specified file is not a TAR archive.")
+                        _("Error"),
+                        _("The specified file is not a TAR archive."),
+                        parent=self.master
                     )
                     return False
 
@@ -630,11 +630,10 @@ class RevPiProgram(tkinter.Frame):
         # Vor Übertragung aufräumen wenn ausgewählt
         if self.var_cleanup.get() and not self.xmlcli.plcuploadclean():
             tkmsg.showerror(
-                parent=self.masger, title=_("Error"),
-                message=_(
-                    "There was an error deleting the files on the "
-                    "Revolution Pi."
-                )
+                _("Error"),
+                _("There was an error deleting the files on the "
+                    "Revolution Pi."),
+                parent=self.master
             )
             return False
 
@@ -670,8 +669,9 @@ class RevPiProgram(tkinter.Frame):
 
         if ec == 0:
             tkmsg.showinfo(
-                parent=self.master, title=_("Success"),
-                message=_("The transfer was successful.")
+                _("Success"),
+                _("The transfer was successful."),
+                parent=self.master
             )
 
             if self.var_picup.get():
@@ -679,11 +679,10 @@ class RevPiProgram(tkinter.Frame):
                     self.setpictoryrsc(rscfile)
                 else:
                     tkmsg.showerror(
-                        parent=self.master, title=_("Error"),
-                        message=_(
-                            "There is no piCtory configuration in this "
-                            "archive."
-                        )
+                        _("Error"),
+                        _("There is no piCtory configuration in this "
+                            "archive."),
+                        parent=self.master
                     )
 
             # Einstellungen speichern
@@ -700,17 +699,17 @@ class RevPiProgram(tkinter.Frame):
 
         elif ec == -1:
             tkmsg.showerror(
-                parent=self.master, title=_("Error"),
-                message=_(
-                    "The Revolution Pi could not process some parts of the "
-                    "transmission."
-                )
+                _("Error"),
+                _("The Revolution Pi could not process some parts of the "
+                    "transmission."),
+                parent=self.master
             )
 
         elif ec == -2:
             tkmsg.showerror(
-                parent=self.master, title=_("Error"),
-                message=_("Errors occurred during transmission")
+                _("Error"),
+                _("Errors occurred during transmission"),
+                parent=self.master
             )
 
         # Temp-Dir aufräumen
