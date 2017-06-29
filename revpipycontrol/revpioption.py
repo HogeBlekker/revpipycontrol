@@ -7,7 +7,10 @@
 # -*- coding: utf-8 -*-
 import tkinter
 import tkinter.messagebox as tkmsg
+from mytools import gettrans
 
+# Übersetzung laden
+_ = gettrans()
 
 class RevPiOption(tkinter.Frame):
 
@@ -27,7 +30,7 @@ class RevPiOption(tkinter.Frame):
         self._loadappdata()
 
     def _createwidgets(self):
-        self.master.wm_title("RevPi Python PLC Options")
+        self.master.wm_title(_("RevPi Python PLC Options"))
         self.master.wm_resizable(width=False, height=False)
 
         cpadw = {"padx": 4, "pady": 2, "sticky": "w"}
@@ -35,7 +38,7 @@ class RevPiOption(tkinter.Frame):
 
         # Gruppe Start/Stop
         stst = tkinter.LabelFrame(self)
-        stst["text"] = "Start / Stopp Verhalten"
+        stst["text"] = _("Start / Stop behavior")
         stst.grid(columnspan=2, pady=2, sticky="we")
 
         self.var_start = tkinter.BooleanVar(stst)
@@ -44,34 +47,34 @@ class RevPiOption(tkinter.Frame):
         self.var_zerr = tkinter.BooleanVar(stst)
 
         ckb_start = tkinter.Checkbutton(stst)
-        ckb_start["text"] = "Programm automatisch starten"
+        ckb_start["text"] = _("Start program automatically")
         ckb_start["state"] = self.xmlstate
         ckb_start["variable"] = self.var_start
         ckb_start.grid(**cpadw)
 
         ckb_reload = tkinter.Checkbutton(stst)
-        ckb_reload["text"] = "Programm nach Beenden neu starten"
+        ckb_reload["text"] = _("Restart program after exit")
         ckb_reload["state"] = self.xmlstate
         ckb_reload["variable"] = self.var_reload
         ckb_reload.grid(**cpadw)
 
         ckb_zexit = tkinter.Checkbutton(stst, justify="left")
         ckb_zexit["state"] = self.xmlstate
-        ckb_zexit["text"] = "Prozessabbild auf NULL setzen, wenn " \
-            "Programm\nerfolgreich beendet wird"
+        ckb_zexit["text"] = _("Set process image to NULL if program\n"
+            "terminates successfully")
         ckb_zexit["variable"] = self.var_zexit
         ckb_zexit.grid(**cpadw)
 
         ckb_zerr = tkinter.Checkbutton(stst, justify="left")
         ckb_zerr["state"] = self.xmlstate
-        ckb_zerr["text"] = "Prozessabbild auf NULL setzen, wenn " \
-            "Programm\ndurch Absturz beendet wird"
+        ckb_zerr["text"] = _("Set process image to NULL if program\n"
+            "terminates with errors")
         ckb_zerr["variable"] = self.var_zerr
         ckb_zerr.grid(**cpadw)
 
         # Gruppe Programm
         prog = tkinter.LabelFrame(self)
-        prog["text"] = "PLC Programm"
+        prog["text"] = _("PLC program")
         prog.grid(columnspan=2, pady=2, sticky="we")
 
         self.var_pythonver = tkinter.IntVar(prog)
@@ -82,7 +85,7 @@ class RevPiOption(tkinter.Frame):
         self.var_pythonver.set(3)
 
         lbl = tkinter.Label(prog)
-        lbl["text"] = "Python Version"
+        lbl["text"] = _("Python version")
         lbl.grid(columnspan=2, row=0, **cpadw)
         rbn = tkinter.Radiobutton(prog)
         rbn["state"] = self.xmlstate
@@ -99,7 +102,7 @@ class RevPiOption(tkinter.Frame):
         rbn.grid(column=1, row=1, **cpadw)
 
         lbl = tkinter.Label(prog)
-        lbl["text"] = "Python PLC Programname"
+        lbl["text"] = _("Python PLC program name")
         lbl.grid(columnspan=2, **cpadw)
 
         lst = self.xmlcli.get_filelist()
@@ -111,7 +114,7 @@ class RevPiOption(tkinter.Frame):
         opt_startpy.grid(columnspan=2, **cpadwe)
 
         lbl = tkinter.Label(prog)
-        lbl["text"] = "Programm Argumente"
+        lbl["text"] = _("Program arguments")
         lbl.grid(columnspan=2, **cpadw)
 
         txt = tkinter.Entry(prog)
@@ -120,14 +123,14 @@ class RevPiOption(tkinter.Frame):
 
         ckb_slave = tkinter.Checkbutton(prog, justify="left")
         ckb_slave["state"] = self.xmlstate
-        ckb_slave["text"] = "RevPi als PLC-Slave verwenden"
+        ckb_slave["text"] = _("Use RevPi as PLC-Slave")
         ckb_slave["state"] = "disabled"
         ckb_slave["variable"] = self.var_slave
         ckb_slave.grid(columnspan=2, **cpadw)
 
         # Gruppe XMLRPC
         xmlrpc = tkinter.LabelFrame(self)
-        xmlrpc["text"] = "XML-RPC Server"
+        xmlrpc["text"] = _("XML-RPC server")
         xmlrpc.grid(columnspan=2, pady=2, sticky="we")
 
         self.var_xmlon = tkinter.BooleanVar(xmlrpc)
@@ -139,7 +142,7 @@ class RevPiOption(tkinter.Frame):
         ckb_xmlon = tkinter.Checkbutton(xmlrpc)
         ckb_xmlon["command"] = self.askxmlon
         ckb_xmlon["state"] = self.xmlstate
-        ckb_xmlon["text"] = "XML-RPC Server aktiv auf RevPi"
+        ckb_xmlon["text"] = _("Activate XML-RPC server on RevPi")
         ckb_xmlon["variable"] = self.var_xmlon
         ckb_xmlon.grid(**cpadw)
 
@@ -147,19 +150,19 @@ class RevPiOption(tkinter.Frame):
         self.ckb_xmlmod2["command"] = self.xmlmods
         self.ckb_xmlmod2["state"] = self.xmlstate
         self.ckb_xmlmod2["text"] = \
-            "Download von piCtory Konfiguration und\nPLC Programm zulassen"
+            _("Allow download of piCtory configuration and\nPLC programm")
         self.ckb_xmlmod2["variable"] = self.var_xmlmod2
         self.ckb_xmlmod2.grid(**cpadw)
 
         self.ckb_xmlmod3 = tkinter.Checkbutton(xmlrpc, justify="left")
         self.ckb_xmlmod3["state"] = self.xmlstate
         self.ckb_xmlmod3["text"] = \
-            "Upload von piCtory Konfiguration und\nPLC Programm zualssen"
+            _("Allow upload of piCtory configuration and\nPLC programm")
         self.ckb_xmlmod3["variable"] = self.var_xmlmod3
         self.ckb_xmlmod3.grid(**cpadw)
 
         lbl = tkinter.Label(xmlrpc)
-        lbl["text"] = "XML-RPC Serverport"
+        lbl["text"] = _("XML-RPC server port")
         lbl.grid(**cpadw)
 
         spb_xmlport = tkinter.Spinbox(xmlrpc)
@@ -173,12 +176,12 @@ class RevPiOption(tkinter.Frame):
         btn_save = tkinter.Button(self)
         btn_save["command"] = self._setappdata
         btn_save["state"] = self.xmlstate
-        btn_save["text"] = "Speichern"
+        btn_save["text"] = _("Save")
         btn_save.grid(column=0, row=3)
 
         btn_close = tkinter.Button(self)
         btn_close["command"] = self.master.destroy
-        btn_close["text"] = "Schließen"
+        btn_close["text"] = _("Close")
         btn_close.grid(column=1, row=3)
 
     def _loadappdata(self):
@@ -224,30 +227,35 @@ class RevPiOption(tkinter.Frame):
         self.xmlmode = dc["xmlrpc"]
 
         ask = tkmsg.askyesnocancel(
-            "Frage", "Die Einstellungen werden jetzt auf dem Revolution Pi "
-            "gespeichert. \n\nSollen die neuen Einstellungen sofort in Kraft "
-            "treten? \nDies bedeutet einen Neustart des Dienstes und des ggf. "
-            "laufenden PLC-Programms!", parent=self.master
+            _("Question"),
+            _("The settings are now saved on the Revolution Pi. \n\n"
+                "Should the new settings take effect immediately? \nThis "
+                "means a restart of the service and the PLC program!"),
+            parent=self.master
         )
         if ask is not None:
             if self.xmlcli.set_config(dc, ask):
                 tkmsg.showinfo(
-                    "Information", "Einstellungen gespeichert.",
+                    _("Information"),
+                    _("Settings saved"),
                     parent=self.master
                 )
             else:
                 tkmsg.showerror(
-                    "Fehler", "Die Einstellungen konnten nicht gesichert"
-                    "werden. Dies kann passieren, wenn Werte falsch sind!",
+                    _("Error"),
+                    _("The settings could not be saved. This can happen if "
+                        "values are wrong!"),
                     parent=self.master
                 )
 
     def askxmlon(self):
         if not self.var_xmlon.get():
             ask = tkmsg.askyesno(
-                "Frage", "Soll der XML-RPC Server wirklich beendet werden? "
-                "Sie können dann NICHT mehr mit diesem Programm auf den "
-                "Revolution Pi zugreifen.", parent=self.master
+                _("Question"),
+                _("Are you sure you want to deactivate the XML-RPC server? "
+                    "You will NOT be able to access the Revolution Pi with "
+                    "this program."),
+                parent=self.master
             )
             if not ask:
                 self.var_xmlon.set(True)

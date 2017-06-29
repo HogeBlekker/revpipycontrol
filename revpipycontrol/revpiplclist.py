@@ -9,9 +9,13 @@ import os.path
 import pickle
 import tkinter
 import tkinter.messagebox as tkmsg
+from mytools import gettrans
 from os import environ
 from os import makedirs
 from sys import platform
+
+# Übersetzungen laden
+_ = gettrans()
 
 # Systemwerte
 if platform == "linux":
@@ -47,8 +51,9 @@ class RevPiPlcList(tkinter.Frame):
         self._loadappdata()
 
     def _createwidgets(self):
-        self.master.wm_title("RevPi Python PLC Connections")
+        self.master.wm_title(_("RevPi Python PLC connections"))
         self.master.wm_resizable(width=False, height=False)
+        self.master.protocol("WM_DELETE_WINDOW", self.evt_btnclose)
 
         # Listbox mit vorhandenen Verbindungen
         self.scr_conn = tkinter.Scrollbar(self)
@@ -66,14 +71,14 @@ class RevPiPlcList(tkinter.Frame):
         self.var_port.set("55123")
 
         # Eingabefelder für Adresse und Namen
-        tkinter.Label(self, text="Name").grid(
+        tkinter.Label(self, text=_("Name")).grid(
             column=2, row=0, sticky="wn", padx=5, pady=5)
         self.txt_name = tkinter.Entry(self, textvariable=self.var_name)
         self.txt_name.bind("<KeyRelease>", self.evt_keypress)
         self.txt_name.grid(
             column=3, row=0, columnspan=3, sticky="n", padx=5, pady=5)
 
-        tkinter.Label(self, text="IP-Adresse").grid(
+        tkinter.Label(self, text=_("IP address")).grid(
             column=2, row=1, sticky="wn", padx=5, pady=5
         )
         self.txt_address = tkinter.Entry(self, textvariable=self.var_address)
@@ -81,7 +86,7 @@ class RevPiPlcList(tkinter.Frame):
         self.txt_address.grid(
             column=3,  row=1, columnspan=3, sticky="n", padx=5, pady=5)
 
-        tkinter.Label(self, text="Port").grid(
+        tkinter.Label(self, text=_("Port")).grid(
             column=2, row=2, sticky="wn", padx=5, pady=5)
         self.txt_port = tkinter.Entry(self, textvariable=self.var_port)
         self.txt_port.bind("<KeyRelease>", self.evt_keypress)
@@ -90,23 +95,23 @@ class RevPiPlcList(tkinter.Frame):
 
         # Listenbutton
         self.btn_new = tkinter.Button(
-            self, text="Neu", command=self.evt_btnnew)
+            self, text=_("New"), command=self.evt_btnnew)
         self.btn_new.grid(column=2, row=3, sticky="s")
         self.btn_add = tkinter.Button(
-            self, text="Übernehmen", command=self.evt_btnadd,
+            self, text=_("Apply"), command=self.evt_btnadd,
             state="disabled")
         self.btn_add.grid(column=3, row=3, sticky="s")
         self.btn_remove = tkinter.Button(
-            self, text="Entfernen", command=self.evt_btnremove,
+            self, text=_("Remove"), command=self.evt_btnremove,
             state="disabled")
         self.btn_remove.grid(column=4, row=3, sticky="s")
 
         # Fensterbuttons
         self.btn_save = tkinter.Button(
-            self, text="Speichern", command=self.evt_btnsave)
+            self, text=_("Save"), command=self.evt_btnsave)
         self.btn_save.grid(column=3, row=9, sticky="se")
         self.btn_close = tkinter.Button(
-            self, text="Schließen", command=self.evt_btnclose)
+            self, text=_("Close"), command=self.evt_btnclose)
         self.btn_close.grid(column=4, row=9, sticky="se")
 
     def _loadappdata(self):
@@ -142,9 +147,10 @@ class RevPiPlcList(tkinter.Frame):
     def evt_btnclose(self):
         if self.changes:
             ask = tkmsg.askyesno(
-                parent=self.master, title="Frage...",
-                message="Wollen Sie wirklich beenden?\n"
-                "Nicht gespeicherte Änderungen gehen verloren",
+                _("Question"),
+                _("Do you really want to quit? \nUnsaved changes will "
+                    "be lost"),
+                parent=self.master
             )
         else:
             ask = True
@@ -166,9 +172,9 @@ class RevPiPlcList(tkinter.Frame):
         if len(item_index) == 1:
             item = self.list_conn.get(item_index[0])
             ask = tkmsg.askyesno(
-                "Frage",
-                "Wollen Sie die Ausgewählte Verbindung '{}' wirklich "
-                "löschen?".format(item),
+                _("Question"),
+                _("Do you really want to delete the selected connection '{}'"
+                    "").format(item),
                 parent=self.master
             )
             if ask:
@@ -181,15 +187,16 @@ class RevPiPlcList(tkinter.Frame):
     def evt_btnsave(self):
         if self._saveappdata():
             ask = tkmsg.askyesno(
-                "Information", "Verbindungen erfolgreich gespeichert.\n"
-                "Möchten Sie dieses Fenster jetzt schließen?",
+                _("Information"),
+                _("Successfully saved. \nDo you want to close this window?"),
                 parent=self.master
             )
             if ask:
                 self.master.destroy()
         else:
             tkmsg.showerror(
-                "Fehler", "Verbindungen konnten nicht gespeichert werden",
+                _("Error"),
+                _("Failed to save connections"),
                 parent=self.master
             )
 

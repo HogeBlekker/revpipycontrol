@@ -62,17 +62,18 @@ class RevPiProgram(tkinter.Frame):
     def _checkclose(self):
         if True or self.uploaded:
             tkmsg.showinfo(
-                parent=self.master, title=_("Information"),
-                message=_(
+                _("Information"),
+                _(
                     "A PLC program has been uploaded. Please check the "
                     "PLC options to see if the correct program is specified "
                     "as the start program."
-                )
+                ),
+                parent=self.master
             )
         self.master.destroy()
 
     def _createwidgets(self):
-        self.master.wm_title(_("RevPi python PLC programm"))
+        self.master.wm_title(_("RevPi Python PLC program"))
         self.master.wm_resizable(width=False, height=False)
 
         self.rowconfigure(0, weight=1)
@@ -86,7 +87,7 @@ class RevPiProgram(tkinter.Frame):
         # Gruppe Programm
         prog = tkinter.LabelFrame(self)
         prog.columnconfigure(0, weight=1)
-        prog["text"] = _("PLC python programm")
+        prog["text"] = _("PLC python program")
         prog.grid(columnspan=2, pady=2, sticky="we")
 
         # Variablen vorbereiten
@@ -297,7 +298,7 @@ class RevPiProgram(tkinter.Frame):
             title=_("Save as..."),
             initialdir=self.opt.get("getpictoryrsc_dir", ""),
             initialfile=self.revpi + ".rsc",
-            filetypes=((_("piCtory Config"), "*.rsc"), (_("All files"), "*.*"))
+            filetypes=((_("piCtory config"), "*.rsc"), (_("All files"), "*.*"))
         )
         if fh is not None:
             try:

@@ -10,7 +10,11 @@
 import pickle
 import tkinter
 from threading import Lock
+from mytools import gettrans
 from xmlrpc.client import ServerProxy, MultiCall
+
+# Übersetzung laden
+_ = gettrans()
 
 
 class RevPiCheckClient(tkinter.Frame):
@@ -136,7 +140,7 @@ class RevPiCheckClient(tkinter.Frame):
         """Erstellt den Fensterinhalt."""
 
         devgrp = tkinter.LabelFrame(self)
-        devgrp["text"] = "Devices of RevPi"
+        devgrp["text"] = _("Devices of RevPi")
         devgrp.pack(fill="y", side="left")
 
         for dev in self.lst_devices:
@@ -168,33 +172,33 @@ class RevPiCheckClient(tkinter.Frame):
 
         # Steuerungsfunktionen
         cntgrp = tkinter.LabelFrame(self)
-        cntgrp["text"] = "Control"
+        cntgrp["text"] = _("Control")
         cntgrp.pack(fill="y", side="right")
 
         self.btn_refresh = tkinter.Button(cntgrp)
-        self.btn_refresh["text"] = "Alle IOs lesen"
+        self.btn_refresh["text"] = _("Read all IOs")
         self.btn_refresh["command"] = self.refreshvalues
         self.btn_refresh.pack(fill="x")
 
         self.btn_read = tkinter.Button(cntgrp)
-        self.btn_read["text"] = "Inputs einlesen"
+        self.btn_read["text"] = _("Read just Inputs")
         self.btn_read["command"] = self.readvalues
         self.btn_read.pack(fill="x")
 
         self.btn_write = tkinter.Button(cntgrp)
-        self.btn_write["text"] = "Outputs schreiben"
+        self.btn_write["text"] = _("Write Outputs")
         self.btn_write["command"] = self.writevalues
         self.btn_write.pack(fill="x")
 
         check = tkinter.Checkbutton(cntgrp)
         check["command"] = self.toggleauto
-        check["text"] = "Autorefresh values"
+        check["text"] = _("Autorefresh values")
         check["variable"] = self.autorw
         check.pack(anchor="w")
 
         check = tkinter.Checkbutton(cntgrp)
         check["state"] = "disabled" if self.xmlmode < 3 else "normal"
-        check["text"] = "Write values to RevPi"
+        check["text"] = _("Write values to RevPi")
         check["variable"] = self.dowrite
         check.pack(anchor="w")
 

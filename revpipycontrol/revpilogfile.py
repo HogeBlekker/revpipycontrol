@@ -7,6 +7,10 @@
 # -*- coding: utf-8 -*-
 import pickle
 import tkinter
+from mytools import gettrans
+
+# Übersetzung laden
+_ = gettrans()
 
 
 class RevPiLogfile(tkinter.Frame):
@@ -20,7 +24,7 @@ class RevPiLogfile(tkinter.Frame):
         self._createwidgets()
 
     def _createwidgets(self):
-        self.master.wm_title("RevPi Python PLC Logs")
+        self.master.wm_title(_("RevPi Python PLC Logs"))
 
         self.rowconfigure(0, weight=0)
         self.rowconfigure(1, weight=1)
@@ -33,11 +37,11 @@ class RevPiLogfile(tkinter.Frame):
 
         # PLC Log
         self.lblapplog = tkinter.Label(self)
-        self.lblapplog["text"] = "RevPyPyLoad - Logfile"
+        self.lblapplog["text"] = _("RevPiPyLoad - Logfile")
         self.lblapplog.grid(column=0, row=0, sticky="w")
         self.btnapplog = tkinter.Button(self)
         self.btnapplog["command"] = self.btn_clearplc
-        self.btnapplog["text"] = "Clear screen"
+        self.btnapplog["text"] = _("Clear screen")
         self.btnapplog.grid(column=1, row=0, sticky="e")
         self.plclog = tkinter.Text(self)
         self.plcscr = tkinter.Scrollbar(self)
@@ -48,11 +52,11 @@ class RevPiLogfile(tkinter.Frame):
 
         # APP Log
         self.lblapplog = tkinter.Label(self)
-        self.lblapplog["text"] = "Python PLC program - Logfile"
+        self.lblapplog["text"] = _("Python PLC program - Logfile")
         self.lblapplog.grid(column=3, row=0, sticky="w")
         self.btnapplog = tkinter.Button(self)
         self.btnapplog["command"] = self.btn_clearapp
-        self.btnapplog["text"] = "Clear screen"
+        self.btnapplog["text"] = _("Clear screen")
         self.btnapplog.grid(column=4, row=0, sticky="e")
         self.applog = tkinter.Text(self)
         self.appscr = tkinter.Scrollbar(self)

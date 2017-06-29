@@ -244,11 +244,12 @@ class RevPiPyControl(tkinter.Frame):
         u"""Startet das Optionsfenster."""
         if self.xmlmode < 2:
             tkmsg.showwarning(
-                parent=self.master, title="Warnung",
-                message=_(
+                _("Warning"),
+                _(
                     "XML-RPC access mode in the RevPiPyLoad "
                     "configuration is to small to access this dialog"
-                )
+                ),
+                parent=self.master
             )
         else:
             win = tkinter.Toplevel(self)
@@ -263,11 +264,12 @@ class RevPiPyControl(tkinter.Frame):
         u"""Startet das Programmfenster."""
         if self.xmlmode < 2:
             tkmsg.showwarning(
-                parent=self.master, title="Warnung",
-                message=_(
+                _("Warning"),
+                _(
                     "XML-RPC access mode in the RevPiPyLoad "
                     "configuration is to small to access this dialog"
-                )
+                ),
+                parent=self.master
             )
         else:
             win = tkinter.Toplevel(self)
@@ -302,20 +304,24 @@ class RevPiPyControl(tkinter.Frame):
     def servererror(self):
         u"""Setzt alles zurück für neue Verbindungen."""
         self.serverdisconnect()
-        tkmsg.showerror(_("Fehler"), _("Server ist nicht erreichbar!"))
+        tkmsg.showerror(
+            _("Error"),
+            _("Can not reach server!"),
+            parent=self.master
+        )
 
     def tmr_plcrunning(self):
         self._btnstate()
         if self.cli is None:
             self.txt_status["readonlybackground"] = "lightblue"
-            self.var_status.set(_("NOT CONNECTED"))
+            self.var_status.set("NOT CONNECTED")
         else:
             try:
                 plcec = self.cli.plcexitcode()
             except:
                 self.errcount += 1
                 if self.errcount >= 5:
-                    self.var_status.set(_("SERVER ERROR"))
+                    self.var_status.set("SERVER ERROR")
                     self.servererror()
             else:
                 self.errcount = 0
@@ -323,17 +329,17 @@ class RevPiPyControl(tkinter.Frame):
                     "green" if plcec == -1 else "red"
 
                 if plcec == -1:
-                    plcec = _("RUNNING")
+                    plcec = "RUNNING"
                 elif plcec == -2:
-                    plcec = _("FILE NOT FOUND")
+                    plcec = "FILE NOT FOUND"
                 elif plcec == -3:
-                    plcec = _("NOT RUNNING (NO STATUS)")
+                    plcec = "NOT RUNNING (NO STATUS)"
                 elif plcec == -9:
-                    plcec = _("PROGRAM KILLED")
+                    plcec = "PROGRAM KILLED"
                 elif plcec == -15:
-                    plcec = _("PROGRAM TERMED")
+                    plcec = "PROGRAM TERMED"
                 elif plcec == 0:
-                    plcec = _("NOT RUNNING")
+                    plcec = "NOT RUNNING"
                 self.var_status.set(plcec)
 
         self.master.after(1000, self.tmr_plcrunning)
