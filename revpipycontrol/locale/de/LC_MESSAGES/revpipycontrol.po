@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: RevPiPyControl 0.4.0\n"
-"POT-Creation-Date: 2017-06-29 20:10+0200\n"
-"PO-Revision-Date: 2017-06-29 20:10+0200\n"
+"POT-Creation-Date: 2017-06-30 13:50+0200\n"
+"PO-Revision-Date: 2017-06-30 13:50+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
@@ -15,33 +15,71 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: revpicheckclient.py:143
+#: revpicheckclient.py:103 revpicheckclient.py:395 revpioption.py:288
+#: revpiplclist.py:198 revpiprogram.py:306 revpiprogram.py:337
+#: revpiprogram.py:400 revpiprogram.py:433 revpiprogram.py:515
+#: revpiprogram.py:587 revpiprogram.py:618 revpiprogram.py:631
+#: revpiprogram.py:686 revpiprogram.py:706 revpiprogram.py:714
+#: revpipycontrol.py:342
+msgid "Error"
+msgstr "Fehler"
+
+#: revpicheckclient.py:104
+msgid ""
+"Given value for Output '{}' is not valid! \n"
+"Reset to '{}'"
+msgstr ""
+"Angegebener Wert bei Output '{}' ist nicht gültig! \n"
+"Setze auf '{}' zurück"
+
+#: revpicheckclient.py:202
 msgid "Devices of RevPi"
 msgstr "Devices vom RevPi"
 
-#: revpicheckclient.py:175
+#: revpicheckclient.py:234
 msgid "Control"
 msgstr "Kontrolle"
 
-#: revpicheckclient.py:179
+#: revpicheckclient.py:238
 msgid "Read all IOs"
 msgstr "IOs aktualisieren"
 
-#: revpicheckclient.py:184
+#: revpicheckclient.py:243
 msgid "Read just Inputs"
 msgstr "Inputs lesen"
 
-#: revpicheckclient.py:189
+#: revpicheckclient.py:248
 msgid "Write Outputs"
 msgstr "Outputs schreiben"
 
-#: revpicheckclient.py:195
+#: revpicheckclient.py:254
 msgid "Autorefresh values"
 msgstr "Aktualisiere automatisch"
 
-#: revpicheckclient.py:201
+#: revpicheckclient.py:262
 msgid "Write values to RevPi"
 msgstr "Schreibe Werte auf RevPi"
+
+#: revpicheckclient.py:276 revpiprogram.py:407 revpipycontrol.py:228
+#: revpipycontrol.py:267 revpipycontrol.py:285 revpipycontrol.py:303
+msgid "Warning"
+msgstr "Warnung"
+
+#: revpicheckclient.py:277
+msgid ""
+"You want to set outputs on the RevPi! Note that these are set "
+"IMMEDIATELY!!! \n"
+"If another control program is running on the RevPi, it could interfere and "
+"reset the outputs."
+msgstr ""
+"Sie wollen Outputs auf dem RevPi setzen! Beachten Sie, dass diese SOFORT "
+"gesetzt werden!!! \n"
+"Wenn auf dem RevPi ein anderes Programm zur Steuerung läuft, könnte dies "
+"gestört werden und die Ausgänge wieder zurücksetzen."
+
+#: revpicheckclient.py:392
+msgid "Error set value of device '{}' Output '{}': {} \n"
+msgstr "Fehler beim Setzen auf Device '{}' bei Output '{}': {}\n"
 
 #: revpilogfile.py:37
 msgid "RevPi Python PLC Logs"
@@ -183,14 +221,6 @@ msgstr "Information"
 #: revpioption.py:283
 msgid "Settings saved"
 msgstr "Einstellungen gespeichert"
-
-#: revpioption.py:288 revpiplclist.py:198 revpiprogram.py:306
-#: revpiprogram.py:337 revpiprogram.py:400 revpiprogram.py:433
-#: revpiprogram.py:515 revpiprogram.py:587 revpiprogram.py:618
-#: revpiprogram.py:631 revpiprogram.py:686 revpiprogram.py:706
-#: revpiprogram.py:714 revpipycontrol.py:325
-msgid "Error"
-msgstr "Fehler"
 
 #: revpioption.py:289
 msgid "The settings could not be saved. This can happen if values are wrong!"
@@ -345,7 +375,7 @@ msgstr "piControlReset ausführen"
 msgid "execute"
 msgstr "ausführen"
 
-#: revpiprogram.py:216 revpipycontrol.py:95
+#: revpiprogram.py:216 revpipycontrol.py:107
 msgid "Exit"
 msgstr "Beenden"
 
@@ -411,11 +441,6 @@ msgid "The piCtory configuration could not be written on the Revolution Pi."
 msgstr ""
 "Die piCtory Konfiguration konnte auf dem Revolution Pi nicht geschrieben "
 "werden."
-
-#: revpiprogram.py:407 revpipycontrol.py:211 revpipycontrol.py:250
-#: revpipycontrol.py:268 revpipycontrol.py:286
-msgid "Warning"
-msgstr "Warnung"
 
 #: revpiprogram.py:408
 msgid ""
@@ -486,67 +511,67 @@ msgstr "Der Revoluton Pi konnte Teile der Übertragung nicht verarbeiten."
 msgid "Errors occurred during transmission"
 msgstr "Bei der Übertragung traten Fehler auf"
 
-#: revpipycontrol.py:93
+#: revpipycontrol.py:105
 msgid "Connections..."
 msgstr "Verbindungen..."
 
-#: revpipycontrol.py:96
+#: revpipycontrol.py:108
 msgid "Main"
 msgstr "Datei"
 
-#: revpipycontrol.py:104
+#: revpipycontrol.py:116
 msgid "Visit website..."
 msgstr "Webseite besuchen..."
 
-#: revpipycontrol.py:106
+#: revpipycontrol.py:118
 msgid "Info..."
 msgstr "Info..."
 
-#: revpipycontrol.py:108
+#: revpipycontrol.py:119
 msgid "Help"
 msgstr "Hilfe"
 
-#: revpipycontrol.py:116
+#: revpipycontrol.py:127
 msgid "PLC start"
 msgstr "PLC Start"
 
-#: revpipycontrol.py:121
+#: revpipycontrol.py:132
 msgid "PLC stop"
 msgstr "PLC Stopp"
 
-#: revpipycontrol.py:126
+#: revpipycontrol.py:137
 msgid "PLC restart"
 msgstr "PLC Neustart"
 
-#: revpipycontrol.py:131
+#: revpipycontrol.py:142
 msgid "PLC logs"
 msgstr "PLC Logs"
 
-#: revpipycontrol.py:142
+#: revpipycontrol.py:153
 msgid "PLC watch mode"
 msgstr "PLC watch Modus"
 
-#: revpipycontrol.py:159
+#: revpipycontrol.py:170
 msgid "PLC log..."
 msgstr "PLC Log..."
 
-#: revpipycontrol.py:161
+#: revpipycontrol.py:172
 msgid "PLC options..."
 msgstr "PLC Optionen..."
 
-#: revpipycontrol.py:163
+#: revpipycontrol.py:174
 msgid "PLC program..."
 msgstr "PLC Programm..."
 
-#: revpipycontrol.py:167
+#: revpipycontrol.py:178
 msgid "Disconnect"
 msgstr "Trennen"
 
-#: revpipycontrol.py:172
+#: revpipycontrol.py:183
 msgid "Connect"
 msgstr "Verbinden"
 
-#: revpipycontrol.py:212
+#: revpipycontrol.py:229
 msgid ""
 "The watch mode ist not supported in version {} of RevPiPyLoad on your RevPi! "
 "You need at least version 0.4.0."
@@ -554,7 +579,7 @@ msgstr ""
 "Der Watch-Modus wird von der RevPiPyLoad Version {} auf dem RevPi nicht "
 "unterstützt! Sie benötigen mindestens Version 0.4.0."
 
-#: revpipycontrol.py:251
+#: revpipycontrol.py:268
 msgid ""
 "This version of Logviewer ist not supported in version {} of RevPiPyLoad on "
 "your RevPi! You need at least version 0.4.1."
@@ -562,7 +587,7 @@ msgstr ""
 "Diese Version vom Logbetrachter wird in der RevPiPyLoad Version {} auf Ihrem "
 "RevPi nicht unterstützt! Sie benötigen mindestens Version 0.4.1."
 
-#: revpipycontrol.py:269 revpipycontrol.py:287
+#: revpipycontrol.py:286 revpipycontrol.py:304
 msgid ""
 "XML-RPC access mode in the RevPiPyLoad configuration is to small to access "
 "this dialog"
@@ -570,6 +595,10 @@ msgstr ""
 "Der XML-RPC Modus ist beim RevPiPyLoad nicht hoch genug eingestellt, um "
 "diesen Dialog zu verwenden!"
 
-#: revpipycontrol.py:326
+#: revpipycontrol.py:343
 msgid "Can not reach server!"
 msgstr "Server ist nicht erreichbar!"
+
+#~ msgid "Given value for Output '{}' is not valid! Reset to '{}'"
+#~ msgstr ""
+#~ "Angegebener Wert bei Output '{}' ist nicht gültig! Setze auf '{}' zurück"

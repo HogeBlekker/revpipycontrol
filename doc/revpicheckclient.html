@@ -10,7 +10,7 @@ revpicheckclient</h1>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 Global Attributes</h3>
 <table>
-<tr><td>None</td></tr>
+<tr><td>_</td></tr>
 </table>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 Classes</h3>
@@ -35,7 +35,7 @@ tkinter.Frame
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 Class Attributes</h3>
 <table>
-<tr><td>cli</td></tr><tr><td>tk</td></tr>
+<tr><td>None</td></tr>
 </table>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 Class Methods</h3>
@@ -49,11 +49,20 @@ Methods</h3>
 <td><a style="color:#0000FF" href="#RevPiCheckClient.__init__">RevPiCheckClient</a></td>
 <td>Instantiiert MyApp-Klasse.</td>
 </tr><tr>
+<td><a style="color:#0000FF" href="#RevPiCheckClient.__chval">__chval</a></td>
+<td>Schreibt neuen Output Wert auf den RevPi.</td>
+</tr><tr>
 <td><a style="color:#0000FF" href="#RevPiCheckClient.__hidewin">__hidewin</a></td>
-<td></td>
+<td>Verbergt &#252;bergebenes Fenster.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiCheckClient.__saveoldvalue">__saveoldvalue</a></td>
+<td>Speichert bei Keypress aktuellen Wert f&#252;r wiederherstellung.</td>
 </tr><tr>
 <td><a style="color:#0000FF" href="#RevPiCheckClient.__showwin">__showwin</a></td>
-<td></td>
+<td>Zeigt oder verbergt &#252;bergebenes Fenster.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiCheckClient.__spinboxkey">__spinboxkey</a></td>
+<td>Pr&#252;ft die Eingabe auf plausibilit&#228;t.</td>
 </tr><tr>
 <td><a style="color:#0000FF" href="#RevPiCheckClient._createiogroup">_createiogroup</a></td>
 <td>Erstellt IO-Gruppen.</td>
@@ -61,20 +70,35 @@ Methods</h3>
 <td><a style="color:#0000FF" href="#RevPiCheckClient._createwidgets">_createwidgets</a></td>
 <td>Erstellt den Fensterinhalt.</td>
 </tr><tr>
-<td><a style="color:#0000FF" href="#RevPiCheckClient._readvalues">_readvalues</a></td>
+<td><a style="color:#0000FF" href="#RevPiCheckClient._onfrmconf">_onfrmconf</a></td>
+<td>Erstellt Fenster in einem Canvas.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiCheckClient._warnwrite">_warnwrite</a></td>
+<td>Warnung f&#252;r Benutzer &#252;ber Schreibfunktion einmal fragen.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiCheckClient._workvalues">_workvalues</a></td>
 <td>Alle Werte der Inputs und Outputs abrufen.</td>
 </tr><tr>
-<td><a style="color:#0000FF" href="#RevPiCheckClient.chval">chval</a></td>
-<td></td>
-</tr><tr>
-<td><a style="color:#0000FF" href="#RevPiCheckClient.onfrmconf">onfrmconf</a></td>
-<td></td>
+<td><a style="color:#0000FF" href="#RevPiCheckClient.hideallwindows">hideallwindows</a></td>
+<td>Versteckt alle Fenster.</td>
 </tr><tr>
 <td><a style="color:#0000FF" href="#RevPiCheckClient.readvalues">readvalues</a></td>
-<td></td>
+<td>Ruft nur Input Werte von RevPi ab und aktualisiert Fenster.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiCheckClient.refreshvalues">refreshvalues</a></td>
+<td>Ruft alle IO Werte von RevPi ab und aktualisiert Fenster.</td>
 </tr><tr>
 <td><a style="color:#0000FF" href="#RevPiCheckClient.toggleauto">toggleauto</a></td>
-<td></td>
+<td>Schaltet zwischen Autorefresh um und aktualisiert Widgets.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiCheckClient.togglewrite">togglewrite</a></td>
+<td>Schaltet zwischen DoWrite um und aktiviert Schreibfunktion.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiCheckClient.validatereturn">validatereturn</a></td>
+<td>&#220;berpr&#252;ft die R&#252;ckgaben der setvalue Funktion.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiCheckClient.writevalues">writevalues</a></td>
+<td>Schreibt ge&#228;nderte Outputs auf den RevPi.</td>
 </tr>
 </table>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
@@ -88,49 +112,147 @@ RevPiCheckClient (Constructor)</h3>
 <b>RevPiCheckClient</b>(<i>master, xmlcli, xmlmode=0</i>)
 <p>
 Instantiiert MyApp-Klasse.
+</p><a NAME="RevPiCheckClient.__chval" ID="RevPiCheckClient.__chval"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiCheckClient.__chval</h3>
+<b>__chval</b>(<i>device, io, event=None</i>)
+<p>
+Schreibt neuen Output Wert auf den RevPi.
 </p><a NAME="RevPiCheckClient.__hidewin" ID="RevPiCheckClient.__hidewin"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiCheckClient.__hidewin</h3>
 <b>__hidewin</b>(<i>win, event=None</i>)
-<a NAME="RevPiCheckClient.__showwin" ID="RevPiCheckClient.__showwin"></a>
+<p>
+Verbergt &#252;bergebenes Fenster.
+</p><dl>
+<dt><i>win:</i></dt>
+<dd>
+Fenster zum verbergen
+</dd><dt><i>event:</i></dt>
+<dd>
+Tkinter Event
+</dd>
+</dl><a NAME="RevPiCheckClient.__saveoldvalue" ID="RevPiCheckClient.__saveoldvalue"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiCheckClient.__saveoldvalue</h3>
+<b>__saveoldvalue</b>(<i>event, tkvar</i>)
+<p>
+Speichert bei Keypress aktuellen Wert f&#252;r wiederherstellung.
+</p><a NAME="RevPiCheckClient.__showwin" ID="RevPiCheckClient.__showwin"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiCheckClient.__showwin</h3>
 <b>__showwin</b>(<i>win</i>)
-<a NAME="RevPiCheckClient._createiogroup" ID="RevPiCheckClient._createiogroup"></a>
-<h3 style="background-color:#FFFFFF;color:#FF0000">
-RevPiCheckClient._createiogroup</h3>
-<b>_createiogroup</b>(<i>device, frame, iotype</i>)
 <p>
-Erstellt IO-Gruppen.
-</p><a NAME="RevPiCheckClient._createwidgets" ID="RevPiCheckClient._createwidgets"></a>
+Zeigt oder verbergt &#252;bergebenes Fenster.
+</p><dl>
+<dt><i>win:</i></dt>
+<dd>
+Fenster zum anzeigen/verbergen
+</dd>
+</dl><a NAME="RevPiCheckClient.__spinboxkey" ID="RevPiCheckClient.__spinboxkey"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiCheckClient.__spinboxkey</h3>
+<b>__spinboxkey</b>(<i>device, io, event=None</i>)
+<p>
+Pr&#252;ft die Eingabe auf plausibilit&#228;t.
+</p><dl>
+<dt><i>event:</i></dt>
+<dd>
+tkinter Event
+</dd><dt><i>io:</i></dt>
+<dd>
+IO Liste mit tkinter Variable
+</dd>
+</dl><a NAME="RevPiCheckClient._createwidgets" ID="RevPiCheckClient._createwidgets"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiCheckClient._createwidgets</h3>
 <b>_createwidgets</b>(<i></i>)
 <p>
 Erstellt den Fensterinhalt.
-</p><a NAME="RevPiCheckClient._readvalues" ID="RevPiCheckClient._readvalues"></a>
+</p><a NAME="RevPiCheckClient._onfrmconf" ID="RevPiCheckClient._onfrmconf"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
-RevPiCheckClient._readvalues</h3>
-<b>_readvalues</b>(<i></i>)
+RevPiCheckClient._onfrmconf</h3>
+<b>_onfrmconf</b>(<i>canvas</i>)
+<p>
+Erstellt Fenster in einem Canvas.
+</p><dl>
+<dt><i>canvas:</i></dt>
+<dd>
+Canvas in dem Objekte erstellt werden sollen
+</dd>
+</dl><a NAME="RevPiCheckClient._warnwrite" ID="RevPiCheckClient._warnwrite"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiCheckClient._warnwrite</h3>
+<b>_warnwrite</b>(<i></i>)
+<p>
+Warnung f&#252;r Benutzer &#252;ber Schreibfunktion einmal fragen.
+</p><dl>
+<dt>Returns:</dt>
+<dd>
+True, wenn Warnung einmal mit OK best&#228;tigt wurde
+</dd>
+</dl><a NAME="RevPiCheckClient._workvalues" ID="RevPiCheckClient._workvalues"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiCheckClient._workvalues</h3>
+<b>_workvalues</b>(<i>io_dicts=None, writeout=False</i>)
 <p>
 Alle Werte der Inputs und Outputs abrufen.
-</p><a NAME="RevPiCheckClient.chval" ID="RevPiCheckClient.chval"></a>
+</p><dl>
+<dt><i>io_dicts:</i></dt>
+<dd>
+Arbeit nur f&#252;r dieses Dict()
+</dd><dt><i>writeout:</i></dt>
+<dd>
+&#196;nderungen auf RevPi schreiben
+</dd>
+</dl><a NAME="RevPiCheckClient.hideallwindows" ID="RevPiCheckClient.hideallwindows"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
-RevPiCheckClient.chval</h3>
-<b>chval</b>(<i>device, io</i>)
-<a NAME="RevPiCheckClient.onfrmconf" ID="RevPiCheckClient.onfrmconf"></a>
-<h3 style="background-color:#FFFFFF;color:#FF0000">
-RevPiCheckClient.onfrmconf</h3>
-<b>onfrmconf</b>(<i>canvas</i>)
-<a NAME="RevPiCheckClient.readvalues" ID="RevPiCheckClient.readvalues"></a>
+RevPiCheckClient.hideallwindows</h3>
+<b>hideallwindows</b>(<i></i>)
+<p>
+Versteckt alle Fenster.
+</p><a NAME="RevPiCheckClient.readvalues" ID="RevPiCheckClient.readvalues"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiCheckClient.readvalues</h3>
 <b>readvalues</b>(<i></i>)
-<a NAME="RevPiCheckClient.toggleauto" ID="RevPiCheckClient.toggleauto"></a>
+<p>
+Ruft nur Input Werte von RevPi ab und aktualisiert Fenster.
+</p><a NAME="RevPiCheckClient.refreshvalues" ID="RevPiCheckClient.refreshvalues"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiCheckClient.refreshvalues</h3>
+<b>refreshvalues</b>(<i></i>)
+<p>
+Ruft alle IO Werte von RevPi ab und aktualisiert Fenster.
+</p><a NAME="RevPiCheckClient.toggleauto" ID="RevPiCheckClient.toggleauto"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiCheckClient.toggleauto</h3>
 <b>toggleauto</b>(<i></i>)
-
+<p>
+Schaltet zwischen Autorefresh um und aktualisiert Widgets.
+</p><a NAME="RevPiCheckClient.togglewrite" ID="RevPiCheckClient.togglewrite"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiCheckClient.togglewrite</h3>
+<b>togglewrite</b>(<i></i>)
+<p>
+Schaltet zwischen DoWrite um und aktiviert Schreibfunktion.
+</p><a NAME="RevPiCheckClient.validatereturn" ID="RevPiCheckClient.validatereturn"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiCheckClient.validatereturn</h3>
+<b>validatereturn</b>(<i>returnlist</i>)
+<p>
+&#220;berpr&#252;ft die R&#252;ckgaben der setvalue Funktion.
+</p><dl>
+<dt><i>returnlist:</i></dt>
+<dd>
+list() der xml R&#252;ckgabe
+</dd>
+</dl><a NAME="RevPiCheckClient.writevalues" ID="RevPiCheckClient.writevalues"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiCheckClient.writevalues</h3>
+<b>writevalues</b>(<i></i>)
+<p>
+Schreibt ge&#228;nderte Outputs auf den RevPi.
+</p>
 <div align="right"><a style="color:#0000FF" href="#top">Up</a></div>
 <hr />
 </body></html>

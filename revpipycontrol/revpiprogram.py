@@ -646,7 +646,7 @@ class RevPiProgram(tkinter.Frame):
             if fname == rscfile:
                 continue
 
-            # TODO: Fehlerabfang bei Dateilesen
+            # FIXME: Fehlerabfang bei Dateilesen
             with open(fname, "rb") as fh:
 
                 # Dateinamen ermitteln
@@ -719,9 +719,3 @@ class RevPiProgram(tkinter.Frame):
         # Temp-Dir aufräumen
         if dirtmp is not None:
             rmtree(dirtmp)
-
-
-if __name__ == "__main__":
-    root = tkinter.Tk()
-    myapp = RevPiProgram(root, None, "test")
-    root.mainloop()

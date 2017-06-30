@@ -10,7 +10,7 @@ revpioption</h1>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 Global Attributes</h3>
 <table>
-<tr><td>None</td></tr>
+<tr><td>_</td></tr>
 </table>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 Classes</h3>
@@ -47,22 +47,28 @@ Methods</h3>
 <table>
 <tr>
 <td><a style="color:#0000FF" href="#RevPiOption.__init__">RevPiOption</a></td>
-<td></td>
+<td>Init RevPiOption-Class.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiOption._changesdone">_changesdone</a></td>
+<td>Pr&#252;ft ob sich die Einstellungen ge&#228;ndert haben.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiOption._checkclose">_checkclose</a></td>
+<td>Pr&#252;ft ob Fenster beendet werden soll.</td>
 </tr><tr>
 <td><a style="color:#0000FF" href="#RevPiOption._createwidgets">_createwidgets</a></td>
-<td></td>
+<td>Erstellt Widgets.</td>
 </tr><tr>
 <td><a style="color:#0000FF" href="#RevPiOption._loadappdata">_loadappdata</a></td>
-<td></td>
+<td>L&#228;d aktuelle Einstellungen vom RevPi.</td>
 </tr><tr>
 <td><a style="color:#0000FF" href="#RevPiOption._setappdata">_setappdata</a></td>
-<td></td>
+<td>Speichert ge&#228;nderte Einstellungen auf RevPi.</td>
 </tr><tr>
 <td><a style="color:#0000FF" href="#RevPiOption.askxmlon">askxmlon</a></td>
-<td></td>
+<td>Fragt Nuter, ob wirklicht abgeschaltet werden soll.</td>
 </tr><tr>
 <td><a style="color:#0000FF" href="#RevPiOption.xmlmods">xmlmods</a></td>
-<td></td>
+<td>Passt XML-Optionszugriff an.</td>
 </tr>
 </table>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
@@ -74,27 +80,66 @@ Static Methods</h3>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiOption (Constructor)</h3>
 <b>RevPiOption</b>(<i>master, xmlcli, xmlmode</i>)
-<a NAME="RevPiOption._createwidgets" ID="RevPiOption._createwidgets"></a>
+<p>
+Init RevPiOption-Class.
+</p><dl>
+<dt>Returns:</dt>
+<dd>
+None
+</dd>
+</dl><a NAME="RevPiOption._changesdone" ID="RevPiOption._changesdone"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiOption._changesdone</h3>
+<b>_changesdone</b>(<i></i>)
+<p>
+Pr&#252;ft ob sich die Einstellungen ge&#228;ndert haben.
+</p><dl>
+<dt>Returns:</dt>
+<dd>
+True, wenn min. eine Einstellung ge&#228;ndert wurde
+</dd>
+</dl><a NAME="RevPiOption._checkclose" ID="RevPiOption._checkclose"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiOption._checkclose</h3>
+<b>_checkclose</b>(<i>event=None</i>)
+<p>
+Pr&#252;ft ob Fenster beendet werden soll.
+</p><dl>
+<dt><i>event:</i></dt>
+<dd>
+tkinter-Event
+</dd>
+</dl><a NAME="RevPiOption._createwidgets" ID="RevPiOption._createwidgets"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiOption._createwidgets</h3>
 <b>_createwidgets</b>(<i></i>)
-<a NAME="RevPiOption._loadappdata" ID="RevPiOption._loadappdata"></a>
+<p>
+Erstellt Widgets.
+</p><a NAME="RevPiOption._loadappdata" ID="RevPiOption._loadappdata"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiOption._loadappdata</h3>
 <b>_loadappdata</b>(<i></i>)
-<a NAME="RevPiOption._setappdata" ID="RevPiOption._setappdata"></a>
+<p>
+L&#228;d aktuelle Einstellungen vom RevPi.
+</p><a NAME="RevPiOption._setappdata" ID="RevPiOption._setappdata"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiOption._setappdata</h3>
 <b>_setappdata</b>(<i></i>)
-<a NAME="RevPiOption.askxmlon" ID="RevPiOption.askxmlon"></a>
+<p>
+Speichert ge&#228;nderte Einstellungen auf RevPi.
+</p><a NAME="RevPiOption.askxmlon" ID="RevPiOption.askxmlon"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiOption.askxmlon</h3>
 <b>askxmlon</b>(<i></i>)
-<a NAME="RevPiOption.xmlmods" ID="RevPiOption.xmlmods"></a>
+<p>
+Fragt Nuter, ob wirklicht abgeschaltet werden soll.
+</p><a NAME="RevPiOption.xmlmods" ID="RevPiOption.xmlmods"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiOption.xmlmods</h3>
 <b>xmlmods</b>(<i></i>)
-
+<p>
+Passt XML-Optionszugriff an.
+</p>
 <div align="right"><a style="color:#0000FF" href="#top">Up</a></div>
 <hr />
 </body></html>

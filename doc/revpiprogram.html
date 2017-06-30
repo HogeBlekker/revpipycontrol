@@ -10,7 +10,7 @@ revpiprogram</h1>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 Global Attributes</h3>
 <table>
-<tr><td>savefile</td></tr>
+<tr><td>_</td></tr><tr><td>savefile</td></tr>
 </table>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 Classes</h3>
@@ -35,7 +35,7 @@ tkinter.Frame
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 Class Attributes</h3>
 <table>
-<tr><td>myapp</td></tr><tr><td>root</td></tr>
+<tr><td>None</td></tr>
 </table>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 Class Methods</h3>
@@ -47,6 +47,9 @@ Methods</h3>
 <table>
 <tr>
 <td><a style="color:#0000FF" href="#RevPiProgram.__init__">RevPiProgram</a></td>
+<td>Init RevPiProgram-Class.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiProgram._checkclose">_checkclose</a></td>
 <td></td>
 </tr><tr>
 <td><a style="color:#0000FF" href="#RevPiProgram._createwidgets">_createwidgets</a></td>
@@ -71,22 +74,22 @@ Methods</h3>
 <td>Erstellt eine Dateiliste von einem Verzeichnis.</td>
 </tr><tr>
 <td><a style="color:#0000FF" href="#RevPiProgram.getpictoryrsc">getpictoryrsc</a></td>
-<td></td>
+<td>L&#228;d die piCtory Konfiguration herunter.</td>
 </tr><tr>
 <td><a style="color:#0000FF" href="#RevPiProgram.getprocimg">getprocimg</a></td>
-<td></td>
+<td>L&#228;d das aktuelle Prozessabbild herunter.</td>
 </tr><tr>
 <td><a style="color:#0000FF" href="#RevPiProgram.picontrolreset">picontrolreset</a></td>
-<td></td>
+<td>F&#252;rt ein Reset der piBridge durch.</td>
 </tr><tr>
 <td><a style="color:#0000FF" href="#RevPiProgram.plcdownload">plcdownload</a></td>
-<td></td>
+<td>L&#228;d das aktuelle Projekt herunter.</td>
 </tr><tr>
 <td><a style="color:#0000FF" href="#RevPiProgram.plcupload">plcupload</a></td>
-<td></td>
+<td>L&#228;dt das angegebene Projekt auf den RevPi.</td>
 </tr><tr>
 <td><a style="color:#0000FF" href="#RevPiProgram.setpictoryrsc">setpictoryrsc</a></td>
-<td></td>
+<td>&#220;bertr&#228;gt die angegebene piCtory-Konfiguration.</td>
 </tr>
 </table>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
@@ -98,6 +101,12 @@ Static Methods</h3>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiProgram (Constructor)</h3>
 <b>RevPiProgram</b>(<i>master, xmlcli, xmlmode, revpi</i>)
+<p>
+Init RevPiProgram-Class.
+</p><a NAME="RevPiProgram._checkclose" ID="RevPiProgram._checkclose"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiProgram._checkclose</h3>
+<b>_checkclose</b>(<i>event=None</i>)
 <a NAME="RevPiProgram._createwidgets" ID="RevPiProgram._createwidgets"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiProgram._createwidgets</h3>
@@ -130,7 +139,7 @@ RevPiProgram.check_replacedir</h3>
 Gibt das rootdir von einem entpackten Verzeichnis zurueck.
 </p><p>
         Dabei wird geprueft, ob es sich um einen einzelnen Ordner handelt
-        und ob es eine piCtory Konfiguraiton im rootdir gibt.
+        und ob es eine piCtory Konfiguration im rootdir gibt.
 </p><dl>
 <dt><i>rootdir:</i></dt>
 <dd>
@@ -161,27 +170,39 @@ Dateiliste
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiProgram.getpictoryrsc</h3>
 <b>getpictoryrsc</b>(<i></i>)
-<a NAME="RevPiProgram.getprocimg" ID="RevPiProgram.getprocimg"></a>
+<p>
+L&#228;d die piCtory Konfiguration herunter.
+</p><a NAME="RevPiProgram.getprocimg" ID="RevPiProgram.getprocimg"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiProgram.getprocimg</h3>
 <b>getprocimg</b>(<i></i>)
-<a NAME="RevPiProgram.picontrolreset" ID="RevPiProgram.picontrolreset"></a>
+<p>
+L&#228;d das aktuelle Prozessabbild herunter.
+</p><a NAME="RevPiProgram.picontrolreset" ID="RevPiProgram.picontrolreset"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiProgram.picontrolreset</h3>
 <b>picontrolreset</b>(<i></i>)
-<a NAME="RevPiProgram.plcdownload" ID="RevPiProgram.plcdownload"></a>
+<p>
+F&#252;rt ein Reset der piBridge durch.
+</p><a NAME="RevPiProgram.plcdownload" ID="RevPiProgram.plcdownload"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiProgram.plcdownload</h3>
 <b>plcdownload</b>(<i></i>)
-<a NAME="RevPiProgram.plcupload" ID="RevPiProgram.plcupload"></a>
+<p>
+L&#228;d das aktuelle Projekt herunter.
+</p><a NAME="RevPiProgram.plcupload" ID="RevPiProgram.plcupload"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiProgram.plcupload</h3>
 <b>plcupload</b>(<i></i>)
-<a NAME="RevPiProgram.setpictoryrsc" ID="RevPiProgram.setpictoryrsc"></a>
+<p>
+L&#228;dt das angegebene Projekt auf den RevPi.
+</p><a NAME="RevPiProgram.setpictoryrsc" ID="RevPiProgram.setpictoryrsc"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiProgram.setpictoryrsc</h3>
 <b>setpictoryrsc</b>(<i>filename=None</i>)
-
+<p>
+&#220;bertr&#228;gt die angegebene piCtory-Konfiguration.
+</p>
 <div align="right"><a style="color:#0000FF" href="#top">Up</a></div>
 <hr />
 </body></html>

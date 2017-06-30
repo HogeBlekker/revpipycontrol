@@ -6,3 +6,4 @@ revpipycontrol.egg-info/*
 deb/*
 .eric6project/*
 *.directory
+*.mo

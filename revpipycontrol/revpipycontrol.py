@@ -1,13 +1,14 @@
 #!/usr/bin/python3
 #
 # RevPiPyControl
-# Version: 0.4.1
+# Version: see global var pycontrolverion
 #
 # Webpage: https://revpimodio.org/revpipyplc/
 # (c) Sven Sager, License: LGPLv3
 #
 # -*- coding: utf-8 -*-
 import revpicheckclient
+import revpiinfo
 import revpilogfile
 import revpioption
 import revpiplclist
@@ -15,12 +16,15 @@ import revpiprogram
 import socket
 import tkinter
 import tkinter.messagebox as tkmsg
+import webbrowser
 from functools import partial
 from mytools import addroot, gettrans
 from xmlrpc.client import ServerProxy
 
 # Übersetzung laden
 _ = gettrans()
+
+pycontrolversion = "0.4.1"
 
 
 class RevPiPyControl(tkinter.Frame):
@@ -29,6 +33,7 @@ class RevPiPyControl(tkinter.Frame):
         u"""Init RevPiPyControl-Class.
         @param master: tkinter master"""
         super().__init__(master)
+        self.master.protocol("WM_DELETE_WINDOW", self._closeapp)
         self.pack(fill="both", expand=True)
 
         self.cli = None
@@ -74,7 +79,14 @@ class RevPiPyControl(tkinter.Frame):
             self.tkprogram.destroy()
         if self.debugframe is not None:
             self.debugframe.destroy()
+            self.cli.psstop()
             self.debugframe = None
+
+    def _closeapp(self, event=None):
+        u"""Räumt auf und beendet Programm.
+        @param event: tkinter Event"""
+        self._closeall()
+        self.master.destroy()
 
     def _createwidgets(self):
         u"""Erstellt den Fensterinhalt."""
@@ -104,7 +116,6 @@ class RevPiPyControl(tkinter.Frame):
             label=_("Visit website..."), command=self.visitwebsite)
         menu1.add_separator()
         menu1.add_command(label=_("Info..."), command=self.infowindow)
-        # TODO: Menü einbauen
         self.mbar.add_cascade(label=_("Help"), menu=menu1)
 
         self.var_conn = tkinter.StringVar(self)
@@ -199,8 +210,14 @@ class RevPiPyControl(tkinter.Frame):
             self.mbar.entryconfig("PLC", state="normal")
 
     def infowindow(self):
-        # TODO: Infofenster aufrufen
-        pass
+        u"""Öffnet das Fenster für die Verbindungen."""
+        win = tkinter.Toplevel(self)
+        revpiinfo.RevPiInfo(win)
+        win.focus_set()
+        win.grab_set()
+        self.wait_window(win)
+        self.dict_conn = revpiplclist.get_connections()
+        self._fillconnbar()
 
     def plcdebug(self):
         u"""Baut den Debugframe und packt ihn."""
@@ -362,8 +379,9 @@ class RevPiPyControl(tkinter.Frame):
         self.master.after(1000, self.tmr_plcrunning)
 
     def visitwebsite(self):
-        # TODO: Webseite besuchen
-        pass
+        u"""Öffnet auf dem System einen Webbrowser zur Projektseite."""
+        webbrowser.open("https://revpimodio.org")
+
 
 if __name__ == "__main__":
     root = tkinter.Tk()
