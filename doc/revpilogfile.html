@@ -49,8 +49,8 @@ Methods</h3>
 <td><a style="color:#0000FF" href="#RevPiLogfile.__init__">RevPiLogfile</a></td>
 <td>Init RevPiLogfile-Class.</td>
 </tr><tr>
-<td><a style="color:#0000FF" href="#RevPiLogfile._closewin">_closewin</a></td>
-<td></td>
+<td><a style="color:#0000FF" href="#RevPiLogfile._checkclose">_checkclose</a></td>
+<td>Pr&#252;ft ob Fenster beendet werden soll.</td>
 </tr><tr>
 <td><a style="color:#0000FF" href="#RevPiLogfile._createwidgets">_createwidgets</a></td>
 <td>Erstellt alle Widgets.</td>
@@ -82,11 +82,18 @@ RevPiLogfile (Constructor)</h3>
 <b>RevPiLogfile</b>(<i>master, xmlcli</i>)
 <p>
 Init RevPiLogfile-Class.
-</p><a NAME="RevPiLogfile._closewin" ID="RevPiLogfile._closewin"></a>
+</p><a NAME="RevPiLogfile._checkclose" ID="RevPiLogfile._checkclose"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
-RevPiLogfile._closewin</h3>
-<b>_closewin</b>(<i>event</i>)
-<a NAME="RevPiLogfile._createwidgets" ID="RevPiLogfile._createwidgets"></a>
+RevPiLogfile._checkclose</h3>
+<b>_checkclose</b>(<i>event=None</i>)
+<p>
+Pr&#252;ft ob Fenster beendet werden soll.
+</p><dl>
+<dt><i>event:</i></dt>
+<dd>
+tkinter-Event
+</dd>
+</dl><a NAME="RevPiLogfile._createwidgets" ID="RevPiLogfile._createwidgets"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiLogfile._createwidgets</h3>
 <b>_createwidgets</b>(<i></i>)

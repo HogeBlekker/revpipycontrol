@@ -25,8 +25,8 @@ else:
 savefile = os.path.join(homedir, ".revpipyplc", "connections.dat")
 
 
-# Für andere Module zum Laden der Connections
 def get_connections():
+    u"""Verbindungen aus Datei laden."""
     if os.path.exists(savefile):
         fh = open(savefile, "rb")
         connections = pickle.load(fh)
@@ -38,6 +38,8 @@ def get_connections():
 class RevPiPlcList(tkinter.Frame):
 
     def __init__(self, master):
+        u"""Init RevPiPlcList-class.
+        @param master: tkinter master"""
         super().__init__(master)
         self.master.bind("<KeyPress-Escape>", self._checkclose)
         self.pack()
@@ -45,13 +47,15 @@ class RevPiPlcList(tkinter.Frame):
         self.changes = False
 
         # Daten laden
-        self._connections = {}
+        self._connections = get_connections()
 
         # Fenster bauen
         self._createwidgets()
-        self._loadappdata()
+        self.build_listconn()
 
     def _checkclose(self, event=None):
+        u"""Prüft ob Fenster beendet werden soll.
+        @param event: tkinter-Event"""
         ask = True
         if self.changes:
             ask = tkmsg.askyesno(
@@ -65,6 +69,7 @@ class RevPiPlcList(tkinter.Frame):
             self.master.destroy()
 
     def _createwidgets(self):
+        u"""Erstellt alle Widgets."""
         self.master.wm_title(_("RevPi Python PLC connections"))
         self.master.wm_resizable(width=False, height=False)
         self.master.protocol("WM_DELETE_WINDOW", self._checkclose)
@@ -128,13 +133,8 @@ class RevPiPlcList(tkinter.Frame):
             self, text=_("Close"), command=self._checkclose)
         self.btn_close.grid(column=4, row=9, sticky="se")
 
-    def _loadappdata(self):
-        if os.path.exists(savefile):
-            fh = open(savefile, "rb")
-            self._connections = pickle.load(fh)
-        self.build_listconn()
-
     def _saveappdata(self):
+        u"""Speichert Verbindungen im home Dir."""
         try:
             makedirs(os.path.dirname(savefile), exist_ok=True)
             fh = open(savefile, "wb")
@@ -145,6 +145,7 @@ class RevPiPlcList(tkinter.Frame):
         return True
 
     def build_listconn(self):
+        u"""Füllt Verbindungsliste."""
         self.list_conn.delete(0, "end")
         lst_conns = sorted(self._connections.keys(), key=lambda x: x.lower())
         self.list_conn.insert("end", *lst_conns)

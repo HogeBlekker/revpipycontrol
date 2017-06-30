@@ -210,9 +210,9 @@ class RevPiPyControl(tkinter.Frame):
             self.mbar.entryconfig("PLC", state="normal")
 
     def infowindow(self):
-        u"""Öffnet das Fenster für die Verbindungen."""
+        u"""Öffnet das Fenster für die Info."""
         win = tkinter.Toplevel(self)
-        revpiinfo.RevPiInfo(win)
+        revpiinfo.RevPiInfo(win, self.cli, pycontrolversion)
         win.focus_set()
         win.grab_set()
         self.wait_window(win)

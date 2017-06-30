@@ -17,7 +17,7 @@ class RevPiLogfile(tkinter.Frame):
     def __init__(self, master, xmlcli):
         u"""Init RevPiLogfile-Class."""
         super().__init__(master)
-        self.master.bind("<KeyPress-Escape>", self._closewin)
+        self.master.bind("<KeyPress-Escape>", self._checkclose)
         self.pack(fill="both", expand=True)
         self.xmlcli = xmlcli
 
@@ -29,7 +29,9 @@ class RevPiLogfile(tkinter.Frame):
         # Fenster bauen
         self._createwidgets()
 
-    def _closewin(self, event):
+    def _checkclose(self, event=None):
+        u"""Prüft ob Fenster beendet werden soll.
+        @param event: tkinter-Event"""
         self.master.destroy()
 
     def _createwidgets(self):

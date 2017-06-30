@@ -12,7 +12,7 @@ import tkinter
 import tkinter.messagebox as tkmsg
 from mytools import gettrans
 from threading import Lock
-from xmlrpc.client import ServerProxy, MultiCall
+from xmlrpc.client import MultiCall
 
 # Übersetzung laden
 _ = gettrans()

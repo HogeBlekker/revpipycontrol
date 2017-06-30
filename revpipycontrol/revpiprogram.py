@@ -374,6 +374,7 @@ class RevPiProgram(tkinter.Frame):
             )
 
             ec = self.xmlcli.set_pictoryrsc(Binary(fh.read()), ask)
+            print(ec)
 
             if ec == 0:
                 if ask:
@@ -381,20 +382,46 @@ class RevPiProgram(tkinter.Frame):
                         _("Success"),
                         _("The transfer of the piCtory configuration "
                             "and the reset of piControl have been "
-                            "successfully executed"),
+                            "successfully executed."),
                         parent=self.master
                     )
                 else:
                     tkmsg.showinfo(
                         _("Success"),
                         _("The piCtory configuration was "
-                            "successfully transferred"),
+                            "successfully transferred."),
                         parent=self.master
                     )
 
                 # Einstellungen speichern
                 self.opt["setpictoryrsc_dir"] = os.path.dirname(fh.name)
                 self._savedefaults()
+            elif ec == -1:
+                tkmsg.showerror(
+                    _("Error"),
+                    _("Can not process the transferred file."),
+                    parent=self.master
+                )
+            elif ec == -2:
+                tkmsg.showerror(
+                    _("Error"),
+                    _("Can not find main elements in piCtory file."),
+                    parent=self.master
+                )
+            elif ec == -4:
+                tkmsg.showerror(
+                    _("Error"),
+                    _("Contained devices could not be found on Revolution "
+                        "Pi. The configuration may be from a newer piCtory "
+                        "version!"),
+                    parent=self.master
+                )
+            elif ec == -5:
+                tkmsg.showerror(
+                    _("Error"),
+                    _("Could not load RAP catalog on Revolution Pi."),
+                    parent=self.master
+                )
             elif ec < 0:
                 tkmsg.showerror(
                     _("Error"),
@@ -451,7 +478,7 @@ class RevPiProgram(tkinter.Frame):
             )
 
             if type(dirselect) == str and dirselect != "":
-                fh = open(mkstemp(), "wb")
+                fh = open(mkstemp()[1], "wb")
 
         elif tdown == 1:
             # Zip
@@ -482,10 +509,12 @@ class RevPiProgram(tkinter.Frame):
         if fh is not None:
             if tdown == 1:
                 plcfile = self.xmlcli.plcdownload(
-                    "zip", self.var_picdown.get())
+                    "zip", self.var_picdown.get()
+                )
             else:
                 plcfile = self.xmlcli.plcdownload(
-                    "tar", self.var_picdown.get())
+                    "tar", self.var_picdown.get()
+                )
 
             try:
                 fh.write(plcfile.data)
@@ -674,7 +703,7 @@ class RevPiProgram(tkinter.Frame):
         if ec == 0:
             tkmsg.showinfo(
                 _("Success"),
-                _("The transfer was successful."),
+                _("The PLC program was transferred successfully."),
                 parent=self.master
             )
 
