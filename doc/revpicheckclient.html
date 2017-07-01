@@ -125,10 +125,10 @@ RevPiCheckClient.__hidewin</h3>
 <p>
 Verbergt &#252;bergebenes Fenster.
 </p><dl>
-<dt><i>win:</i></dt>
+<dt><i>win</i></dt>
 <dd>
 Fenster zum verbergen
-</dd><dt><i>event:</i></dt>
+</dd><dt><i>event</i></dt>
 <dd>
 Tkinter Event
 </dd>
@@ -145,7 +145,7 @@ RevPiCheckClient.__showwin</h3>
 <p>
 Zeigt oder verbergt &#252;bergebenes Fenster.
 </p><dl>
-<dt><i>win:</i></dt>
+<dt><i>win</i></dt>
 <dd>
 Fenster zum anzeigen/verbergen
 </dd>
@@ -156,12 +156,29 @@ RevPiCheckClient.__spinboxkey</h3>
 <p>
 Pr&#252;ft die Eingabe auf plausibilit&#228;t.
 </p><dl>
-<dt><i>event:</i></dt>
+<dt><i>event</i></dt>
 <dd>
 tkinter Event
-</dd><dt><i>io:</i></dt>
+</dd><dt><i>io</i></dt>
 <dd>
 IO Liste mit tkinter Variable
+</dd>
+</dl><a NAME="RevPiCheckClient._createiogroup" ID="RevPiCheckClient._createiogroup"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiCheckClient._createiogroup</h3>
+<b>_createiogroup</b>(<i>device, frame, iotype</i>)
+<p>
+Erstellt IO-Gruppen.
+</p><dl>
+<dt><i>device</i></dt>
+<dd>
+Deviceposition
+</dd><dt><i>frame</i></dt>
+<dd>
+tkinter Frame
+</dd><dt><i>iotype</i></dt>
+<dd>
+'inp' oder 'out' als str()
 </dd>
 </dl><a NAME="RevPiCheckClient._createwidgets" ID="RevPiCheckClient._createwidgets"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
@@ -176,7 +193,7 @@ RevPiCheckClient._onfrmconf</h3>
 <p>
 Erstellt Fenster in einem Canvas.
 </p><dl>
-<dt><i>canvas:</i></dt>
+<dt><i>canvas</i></dt>
 <dd>
 Canvas in dem Objekte erstellt werden sollen
 </dd>
@@ -198,10 +215,10 @@ RevPiCheckClient._workvalues</h3>
 <p>
 Alle Werte der Inputs und Outputs abrufen.
 </p><dl>
-<dt><i>io_dicts:</i></dt>
+<dt><i>io_dicts</i></dt>
 <dd>
 Arbeit nur f&#252;r dieses Dict()
-</dd><dt><i>writeout:</i></dt>
+</dd><dt><i>writeout</i></dt>
 <dd>
 &#196;nderungen auf RevPi schreiben
 </dd>
@@ -242,7 +259,7 @@ RevPiCheckClient.validatereturn</h3>
 <p>
 &#220;berpr&#252;ft die R&#252;ckgaben der setvalue Funktion.
 </p><dl>
-<dt><i>returnlist:</i></dt>
+<dt><i>returnlist</i></dt>
 <dd>
 list() der xml R&#252;ckgabe
 </dd>

@@ -35,7 +35,8 @@ savefile = os.path.join(homedir, ".revpipyplc", "programpath.dat")
 class RevPiProgram(tkinter.Frame):
 
     def __init__(self, master, xmlcli, xmlmode, revpi):
-        u"""Init RevPiProgram-Class."""
+        u"""Init RevPiProgram-Class.
+        @return None"""
         if xmlmode < 2:
             return None
 
@@ -60,6 +61,8 @@ class RevPiProgram(tkinter.Frame):
         self._evt_optup()
 
     def _checkclose(self, event=None):
+        u"""Prüft ob Fenster beendet werden soll.
+        @param event tkinter-Event"""
         if self.uploaded:
             tkmsg.showinfo(
                 _("Information"),
@@ -71,6 +74,7 @@ class RevPiProgram(tkinter.Frame):
         self.master.destroy()
 
     def _createwidgets(self):
+        u"""Erstellt alle Widgets."""
         self.master.wm_title(_("RevPi Python PLC program"))
         self.master.wm_resizable(width=False, height=False)
 
@@ -217,6 +221,7 @@ class RevPiProgram(tkinter.Frame):
         btn.grid()
 
     def _evt_optdown(self, text=""):
+        u"""Passt je nach gewählter Option den Status der Widgets an."""
         if self.lst_typedown.index(self.var_typedown.get()) == 0:
             self.var_picdown.set(False)
             self.ckb_picdown["state"] = "disable"
@@ -224,6 +229,7 @@ class RevPiProgram(tkinter.Frame):
             self.ckb_picdown["state"] = "normal"
 
     def _evt_optup(self, text=""):
+        u"""Passt je nach gewählter Option den Status der Widgets an."""
         if self.lst_typeup.index(self.var_typeup.get()) <= 1:
             self.var_picup.set(False)
             self.ckb_picup["state"] = "disable"
@@ -231,7 +237,9 @@ class RevPiProgram(tkinter.Frame):
             self.ckb_picup["state"] = "normal"
 
     def _loaddefault(self, full=False):
-        """Uebernimmt fuer den Pi die letzen Pfade."""
+        u"""Übernimmt für den Pi die letzen Pfade.
+        @param full Einstellungen für alle Verbindungen laden
+        @return dict() mit Einstellungen"""
         if os.path.exists(savefile):
             fh = open(savefile, "rb")
             dict_all = pickle.load(fh)
@@ -242,7 +250,8 @@ class RevPiProgram(tkinter.Frame):
         return {}
 
     def _savedefaults(self):
-        u"""Schreibt fuer den Pi die letzen Pfade."""
+        u"""Schreibt fuer den Pi die letzen Pfade.
+        @return True, bei erfolgreicher Verarbeitung"""
         try:
             makedirs(os.path.dirname(savefile), exist_ok=True)
             dict_all = self._loaddefault(full=True)
@@ -256,8 +265,8 @@ class RevPiProgram(tkinter.Frame):
 
     def create_filelist(self, rootdir):
         u"""Erstellt eine Dateiliste von einem Verzeichnis.
-        @param rootdir: Verzeichnis fuer das eine Liste erstellt werden soll
-        @returns: Dateiliste"""
+        @param rootdir Verzeichnis fuer das eine Liste erstellt werden soll
+        @return Dateiliste"""
         filelist = []
         for tup_dir in os.walk(rootdir):
             for fname in tup_dir[2]:
@@ -269,8 +278,8 @@ class RevPiProgram(tkinter.Frame):
 
         Dabei wird geprueft, ob es sich um einen einzelnen Ordner handelt
         und ob es eine piCtory Konfiguration im rootdir gibt.
-        @param rootdir: Verzeichnis fuer Pruefung
-        @returns: Abgeaendertes rootdir
+        @param rootdir Verzeichnis fuer Pruefung
+        @return Abgeaendertes rootdir
 
         """
         lst_dir = os.listdir(rootdir)
@@ -558,7 +567,8 @@ class RevPiProgram(tkinter.Frame):
                 fh.close()
 
     def plcupload(self):
-        u"""Lädt das angegebene Projekt auf den RevPi."""
+        u"""Lädt das angegebene Projekt auf den RevPi.
+        @return True, bei erfolgreicher Verarbeitung"""
         tup = self.lst_typeup.index(self.var_typeup.get())
         dirselect = ""
         dirtmp = None
@@ -748,3 +758,5 @@ class RevPiProgram(tkinter.Frame):
         # Temp-Dir aufräumen
         if dirtmp is not None:
             rmtree(dirtmp)
+
+        return True

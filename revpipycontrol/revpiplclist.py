@@ -26,7 +26,8 @@ savefile = os.path.join(homedir, ".revpipyplc", "connections.dat")
 
 
 def get_connections():
-    u"""Verbindungen aus Datei laden."""
+    u"""Verbindungen aus Datei laden.
+    @return dict() mit Verbindungen"""
     if os.path.exists(savefile):
         fh = open(savefile, "rb")
         connections = pickle.load(fh)
@@ -39,7 +40,7 @@ class RevPiPlcList(tkinter.Frame):
 
     def __init__(self, master):
         u"""Init RevPiPlcList-class.
-        @param master: tkinter master"""
+        @param master tkinter master"""
         super().__init__(master)
         self.master.bind("<KeyPress-Escape>", self._checkclose)
         self.pack()
@@ -55,7 +56,7 @@ class RevPiPlcList(tkinter.Frame):
 
     def _checkclose(self, event=None):
         u"""Prüft ob Fenster beendet werden soll.
-        @param event: tkinter-Event"""
+        @param event tkinter-Event"""
         ask = True
         if self.changes:
             ask = tkmsg.askyesno(
@@ -134,7 +135,8 @@ class RevPiPlcList(tkinter.Frame):
         self.btn_close.grid(column=4, row=9, sticky="se")
 
     def _saveappdata(self):
-        u"""Speichert Verbindungen im home Dir."""
+        u"""Speichert Verbindungen im home Dir.
+        @return True, bei erfolgreicher Verarbeitung"""
         try:
             makedirs(os.path.dirname(savefile), exist_ok=True)
             fh = open(savefile, "wb")
@@ -151,6 +153,7 @@ class RevPiPlcList(tkinter.Frame):
         self.list_conn.insert("end", *lst_conns)
 
     def evt_btnadd(self):
+        u"""Verbindungseinstellungen übernehmen."""
         # TODO: Daten prüfen
         self._connections[self.var_name.get()] = \
             (self.var_address.get(), self.var_port.get())
@@ -160,6 +163,7 @@ class RevPiPlcList(tkinter.Frame):
         self.changes = True
 
     def evt_btnnew(self):
+        u"""Neue Verbindung erstellen."""
         self.list_conn.select_clear(0, "end")
         self.evt_listconn()
 
@@ -169,6 +173,7 @@ class RevPiPlcList(tkinter.Frame):
         self.var_port.set("55123")
 
     def evt_btnremove(self):
+        u"""Verbindung löschen."""
         item_index = self.list_conn.curselection()
         if len(item_index) == 1:
             item = self.list_conn.get(item_index[0])
@@ -186,6 +191,7 @@ class RevPiPlcList(tkinter.Frame):
                 self.changes = True
 
     def evt_btnsave(self):
+        u"""Alle Verbindungen speichern."""
         if self._saveappdata():
             ask = tkmsg.askyesno(
                 _("Information"),
@@ -202,6 +208,7 @@ class RevPiPlcList(tkinter.Frame):
             )
 
     def evt_listconn(self, evt=None):
+        u"""Übernimmt Einstellungen in Eingabefelder."""
 
         item_index = self.list_conn.curselection()
         if len(item_index) == 1:
@@ -219,6 +226,7 @@ class RevPiPlcList(tkinter.Frame):
             self.btn_remove["state"] = "disabled"
 
     def evt_keypress(self, evt=None):
+        u"""Passt bei Tastendruck den Status der Buttons an."""
         okvalue = "normal" if (
             self.var_address.get() != ""
             and self.var_name.get() != ""

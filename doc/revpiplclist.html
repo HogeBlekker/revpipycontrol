@@ -65,22 +65,22 @@ Methods</h3>
 <td>F&#252;llt Verbindungsliste.</td>
 </tr><tr>
 <td><a style="color:#0000FF" href="#RevPiPlcList.evt_btnadd">evt_btnadd</a></td>
-<td></td>
+<td>Verbindungseinstellungen &#252;bernehmen.</td>
 </tr><tr>
 <td><a style="color:#0000FF" href="#RevPiPlcList.evt_btnnew">evt_btnnew</a></td>
-<td></td>
+<td>Neue Verbindung erstellen.</td>
 </tr><tr>
 <td><a style="color:#0000FF" href="#RevPiPlcList.evt_btnremove">evt_btnremove</a></td>
-<td></td>
+<td>Verbindung l&#246;schen.</td>
 </tr><tr>
 <td><a style="color:#0000FF" href="#RevPiPlcList.evt_btnsave">evt_btnsave</a></td>
-<td></td>
+<td>Alle Verbindungen speichern.</td>
 </tr><tr>
 <td><a style="color:#0000FF" href="#RevPiPlcList.evt_keypress">evt_keypress</a></td>
-<td></td>
+<td>Passt bei Tastendruck den Status der Buttons an.</td>
 </tr><tr>
 <td><a style="color:#0000FF" href="#RevPiPlcList.evt_listconn">evt_listconn</a></td>
-<td></td>
+<td>&#220;bernimmt Einstellungen in Eingabefelder.</td>
 </tr>
 </table>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
@@ -95,7 +95,7 @@ RevPiPlcList (Constructor)</h3>
 <p>
 Init RevPiPlcList-class.
 </p><dl>
-<dt><i>master:</i></dt>
+<dt><i>master</i></dt>
 <dd>
 tkinter master
 </dd>
@@ -106,7 +106,7 @@ RevPiPlcList._checkclose</h3>
 <p>
 Pr&#252;ft ob Fenster beendet werden soll.
 </p><dl>
-<dt><i>event:</i></dt>
+<dt><i>event</i></dt>
 <dd>
 tkinter-Event
 </dd>
@@ -122,7 +122,12 @@ RevPiPlcList._saveappdata</h3>
 <b>_saveappdata</b>(<i></i>)
 <p>
 Speichert Verbindungen im home Dir.
-</p><a NAME="RevPiPlcList.build_listconn" ID="RevPiPlcList.build_listconn"></a>
+</p><dl>
+<dt>Returns:</dt>
+<dd>
+True, bei erfolgreicher Verarbeitung
+</dd>
+</dl><a NAME="RevPiPlcList.build_listconn" ID="RevPiPlcList.build_listconn"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiPlcList.build_listconn</h3>
 <b>build_listconn</b>(<i></i>)
@@ -132,27 +137,39 @@ F&#252;llt Verbindungsliste.
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiPlcList.evt_btnadd</h3>
 <b>evt_btnadd</b>(<i></i>)
-<a NAME="RevPiPlcList.evt_btnnew" ID="RevPiPlcList.evt_btnnew"></a>
+<p>
+Verbindungseinstellungen &#252;bernehmen.
+</p><a NAME="RevPiPlcList.evt_btnnew" ID="RevPiPlcList.evt_btnnew"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiPlcList.evt_btnnew</h3>
 <b>evt_btnnew</b>(<i></i>)
-<a NAME="RevPiPlcList.evt_btnremove" ID="RevPiPlcList.evt_btnremove"></a>
+<p>
+Neue Verbindung erstellen.
+</p><a NAME="RevPiPlcList.evt_btnremove" ID="RevPiPlcList.evt_btnremove"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiPlcList.evt_btnremove</h3>
 <b>evt_btnremove</b>(<i></i>)
-<a NAME="RevPiPlcList.evt_btnsave" ID="RevPiPlcList.evt_btnsave"></a>
+<p>
+Verbindung l&#246;schen.
+</p><a NAME="RevPiPlcList.evt_btnsave" ID="RevPiPlcList.evt_btnsave"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiPlcList.evt_btnsave</h3>
 <b>evt_btnsave</b>(<i></i>)
-<a NAME="RevPiPlcList.evt_keypress" ID="RevPiPlcList.evt_keypress"></a>
+<p>
+Alle Verbindungen speichern.
+</p><a NAME="RevPiPlcList.evt_keypress" ID="RevPiPlcList.evt_keypress"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiPlcList.evt_keypress</h3>
 <b>evt_keypress</b>(<i>evt=None</i>)
-<a NAME="RevPiPlcList.evt_listconn" ID="RevPiPlcList.evt_listconn"></a>
+<p>
+Passt bei Tastendruck den Status der Buttons an.
+</p><a NAME="RevPiPlcList.evt_listconn" ID="RevPiPlcList.evt_listconn"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiPlcList.evt_listconn</h3>
 <b>evt_listconn</b>(<i>evt=None</i>)
-
+<p>
+&#220;bernimmt Einstellungen in Eingabefelder.
+</p>
 <div align="right"><a style="color:#0000FF" href="#top">Up</a></div>
 <hr /><hr />
 <a NAME="get_connections" ID="get_connections"></a>
@@ -160,7 +177,12 @@ RevPiPlcList.evt_listconn</h3>
 <b>get_connections</b>(<i></i>)
 <p>
 Verbindungen aus Datei laden.
-</p>
+</p><dl>
+<dt>Returns:</dt>
+<dd>
+dict() mit Verbindungen
+</dd>
+</dl>
 <div align="right"><a style="color:#0000FF" href="#top">Up</a></div>
 <hr />
 </body></html>

@@ -50,19 +50,19 @@ Methods</h3>
 <td>Init RevPiProgram-Class.</td>
 </tr><tr>
 <td><a style="color:#0000FF" href="#RevPiProgram._checkclose">_checkclose</a></td>
-<td></td>
+<td>Pr&#252;ft ob Fenster beendet werden soll.</td>
 </tr><tr>
 <td><a style="color:#0000FF" href="#RevPiProgram._createwidgets">_createwidgets</a></td>
-<td></td>
+<td>Erstellt alle Widgets.</td>
 </tr><tr>
 <td><a style="color:#0000FF" href="#RevPiProgram._evt_optdown">_evt_optdown</a></td>
-<td></td>
+<td>Passt je nach gew&#228;hlter Option den Status der Widgets an.</td>
 </tr><tr>
 <td><a style="color:#0000FF" href="#RevPiProgram._evt_optup">_evt_optup</a></td>
-<td></td>
+<td>Passt je nach gew&#228;hlter Option den Status der Widgets an.</td>
 </tr><tr>
 <td><a style="color:#0000FF" href="#RevPiProgram._loaddefault">_loaddefault</a></td>
-<td>Uebernimmt fuer den Pi die letzen Pfade.</td>
+<td>&#220;bernimmt f&#252;r den Pi die letzen Pfade.</td>
 </tr><tr>
 <td><a style="color:#0000FF" href="#RevPiProgram._savedefaults">_savedefaults</a></td>
 <td>Schreibt fuer den Pi die letzen Pfade.</td>
@@ -103,35 +103,68 @@ RevPiProgram (Constructor)</h3>
 <b>RevPiProgram</b>(<i>master, xmlcli, xmlmode, revpi</i>)
 <p>
 Init RevPiProgram-Class.
-</p><a NAME="RevPiProgram._checkclose" ID="RevPiProgram._checkclose"></a>
+</p><dl>
+<dt>Returns:</dt>
+<dd>
+None
+</dd>
+</dl><a NAME="RevPiProgram._checkclose" ID="RevPiProgram._checkclose"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiProgram._checkclose</h3>
 <b>_checkclose</b>(<i>event=None</i>)
-<a NAME="RevPiProgram._createwidgets" ID="RevPiProgram._createwidgets"></a>
+<p>
+Pr&#252;ft ob Fenster beendet werden soll.
+</p><dl>
+<dt><i>event</i></dt>
+<dd>
+tkinter-Event
+</dd>
+</dl><a NAME="RevPiProgram._createwidgets" ID="RevPiProgram._createwidgets"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiProgram._createwidgets</h3>
 <b>_createwidgets</b>(<i></i>)
-<a NAME="RevPiProgram._evt_optdown" ID="RevPiProgram._evt_optdown"></a>
+<p>
+Erstellt alle Widgets.
+</p><a NAME="RevPiProgram._evt_optdown" ID="RevPiProgram._evt_optdown"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiProgram._evt_optdown</h3>
 <b>_evt_optdown</b>(<i>text=""</i>)
-<a NAME="RevPiProgram._evt_optup" ID="RevPiProgram._evt_optup"></a>
+<p>
+Passt je nach gew&#228;hlter Option den Status der Widgets an.
+</p><a NAME="RevPiProgram._evt_optup" ID="RevPiProgram._evt_optup"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiProgram._evt_optup</h3>
 <b>_evt_optup</b>(<i>text=""</i>)
-<a NAME="RevPiProgram._loaddefault" ID="RevPiProgram._loaddefault"></a>
+<p>
+Passt je nach gew&#228;hlter Option den Status der Widgets an.
+</p><a NAME="RevPiProgram._loaddefault" ID="RevPiProgram._loaddefault"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiProgram._loaddefault</h3>
 <b>_loaddefault</b>(<i>full=False</i>)
 <p>
-Uebernimmt fuer den Pi die letzen Pfade.
-</p><a NAME="RevPiProgram._savedefaults" ID="RevPiProgram._savedefaults"></a>
+&#220;bernimmt f&#252;r den Pi die letzen Pfade.
+</p><dl>
+<dt><i>full</i></dt>
+<dd>
+Einstellungen f&#252;r alle Verbindungen laden
+</dd>
+</dl><dl>
+<dt>Returns:</dt>
+<dd>
+dict() mit Einstellungen
+</dd>
+</dl><a NAME="RevPiProgram._savedefaults" ID="RevPiProgram._savedefaults"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiProgram._savedefaults</h3>
 <b>_savedefaults</b>(<i></i>)
 <p>
 Schreibt fuer den Pi die letzen Pfade.
-</p><a NAME="RevPiProgram.check_replacedir" ID="RevPiProgram.check_replacedir"></a>
+</p><dl>
+<dt>Returns:</dt>
+<dd>
+True, bei erfolgreicher Verarbeitung
+</dd>
+</dl><a NAME="RevPiProgram.check_replacedir" ID="RevPiProgram.check_replacedir"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiProgram.check_replacedir</h3>
 <b>check_replacedir</b>(<i>rootdir</i>)
@@ -141,7 +174,7 @@ Gibt das rootdir von einem entpackten Verzeichnis zurueck.
         Dabei wird geprueft, ob es sich um einen einzelnen Ordner handelt
         und ob es eine piCtory Konfiguration im rootdir gibt.
 </p><dl>
-<dt><i>rootdir:</i></dt>
+<dt><i>rootdir</i></dt>
 <dd>
 Verzeichnis fuer Pruefung
 </dd>
@@ -157,7 +190,7 @@ RevPiProgram.create_filelist</h3>
 <p>
 Erstellt eine Dateiliste von einem Verzeichnis.
 </p><dl>
-<dt><i>rootdir:</i></dt>
+<dt><i>rootdir</i></dt>
 <dd>
 Verzeichnis fuer das eine Liste erstellt werden soll
 </dd>
@@ -196,7 +229,12 @@ RevPiProgram.plcupload</h3>
 <b>plcupload</b>(<i></i>)
 <p>
 L&#228;dt das angegebene Projekt auf den RevPi.
-</p><a NAME="RevPiProgram.setpictoryrsc" ID="RevPiProgram.setpictoryrsc"></a>
+</p><dl>
+<dt>Returns:</dt>
+<dd>
+True, bei erfolgreicher Verarbeitung
+</dd>
+</dl><a NAME="RevPiProgram.setpictoryrsc" ID="RevPiProgram.setpictoryrsc"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiProgram.setpictoryrsc</h3>
 <b>setpictoryrsc</b>(<i>filename=None</i>)

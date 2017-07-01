@@ -17,7 +17,7 @@ class RevPiOption(tkinter.Frame):
 
     def __init__(self, master, xmlcli, xmlmode):
         u"""Init RevPiOption-Class.
-        @returns: None"""
+        @return None"""
         if xmlmode < 2:
             return None
 
@@ -36,7 +36,7 @@ class RevPiOption(tkinter.Frame):
 
     def _changesdone(self):
         u"""Prüft ob sich die Einstellungen geändert haben.
-        @returns: True, wenn min. eine Einstellung geändert wurde"""
+        @return True, wenn min. eine Einstellung geändert wurde"""
         return (
             self.var_start.get() != self.dc.get("autostart", "1")
             or self.var_reload.get() != self.dc.get("autoreload", "1")
@@ -54,7 +54,7 @@ class RevPiOption(tkinter.Frame):
 
     def _checkclose(self, event=None):
         u"""Prüft ob Fenster beendet werden soll.
-        @param event: tkinter-Event"""
+        @param event tkinter-Event"""
         ask = True
         if self._changesdone():
             ask = tkmsg.askyesno(

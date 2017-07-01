@@ -63,8 +63,8 @@ class RevPiCheckClient(tkinter.Frame):
 
     def __hidewin(self, win, event=None):
         u"""Verbergt übergebenes Fenster.
-        @param win: Fenster zum verbergen
-        @param event: Tkinter Event"""
+        @param win Fenster zum verbergen
+        @param event Tkinter Event"""
         win.withdraw()
 
     def __saveoldvalue(self, event, tkvar):
@@ -78,7 +78,7 @@ class RevPiCheckClient(tkinter.Frame):
 
     def __showwin(self, win):
         u"""Zeigt oder verbergt übergebenes Fenster.
-        @param win: Fenster zum anzeigen/verbergen"""
+        @param win Fenster zum anzeigen/verbergen"""
         if win.winfo_viewable():
             win.withdraw()
         else:
@@ -86,8 +86,8 @@ class RevPiCheckClient(tkinter.Frame):
 
     def __spinboxkey(self, device, io, event=None):
         u"""Prüft die Eingabe auf plausibilität.
-        @param event: tkinter Event
-        @param io: IO Liste mit tkinter Variable"""
+        @param event tkinter Event
+        @param io IO Liste mit tkinter Variable"""
         # io = [name,bytelen,byteaddr,bmk,bitaddress,(tkinter_var)]
         try:
             newvalue = io[5].get()
@@ -112,9 +112,9 @@ class RevPiCheckClient(tkinter.Frame):
     def _createiogroup(self, device, frame, iotype):
         u"""Erstellt IO-Gruppen.
 
-        @param device: Deviceposition
-        @param frame: tkinter Frame
-        @iotype: 'inp' oder 'out' als str()
+        @param device Deviceposition
+        @param frame tkinter Frame
+        @param iotype 'inp' oder 'out' als str()
 
         """
         # IO-Typen festlegen
@@ -265,12 +265,12 @@ class RevPiCheckClient(tkinter.Frame):
 
     def _onfrmconf(self, canvas):
         u"""Erstellt Fenster in einem Canvas.
-        @param canvas: Canvas in dem Objekte erstellt werden sollen"""
+        @param canvas Canvas in dem Objekte erstellt werden sollen"""
         canvas.configure(scrollregion=canvas.bbox("all"))
 
     def _warnwrite(self):
         u"""Warnung für Benutzer über Schreibfunktion einmal fragen.
-        @returns: True, wenn Warnung einmal mit OK bestätigt wurde"""
+        @return True, wenn Warnung einmal mit OK bestätigt wurde"""
         if self.__checkwrite:
             self.__checkwrite = not tkmsg.askokcancel(
                 _("Warning"),
@@ -285,8 +285,8 @@ class RevPiCheckClient(tkinter.Frame):
 
     def _workvalues(self, io_dicts=None, writeout=False):
         u"""Alle Werte der Inputs und Outputs abrufen.
-        @param io_dicts: Arbeit nur für dieses Dict()
-        @param writeout: Änderungen auf RevPi schreiben"""
+        @param io_dicts Arbeit nur für dieses Dict()
+        @param writeout Änderungen auf RevPi schreiben"""
 
         # Abfragelisten vorbereiten
         if io_dicts is None:
@@ -377,7 +377,7 @@ class RevPiCheckClient(tkinter.Frame):
 
     def validatereturn(self, returnlist):
         u"""Überprüft die Rückgaben der setvalue Funktion.
-        @param returnlist: list() der xml Rückgabe"""
+        @param returnlist list() der xml Rückgabe"""
         if type(returnlist[0]) != list:
             returnlist = [returnlist]
 

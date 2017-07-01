@@ -29,7 +29,7 @@ class RevPiInfo(tkinter.Frame):
 
     def _checkclose(self, event=None):
         u"""Prüft ob Fenster beendet werden soll.
-        @param event: tkinter-Event"""
+        @param event tkinter-Event"""
         self.master.destroy()
 
     def _createwidgets(self, extended=False):

@@ -31,7 +31,7 @@ class RevPiPyControl(tkinter.Frame):
 
     def __init__(self, master=None):
         u"""Init RevPiPyControl-Class.
-        @param master: tkinter master"""
+        @param master tkinter master"""
         super().__init__(master)
         self.master.protocol("WM_DELETE_WINDOW", self._closeapp)
         self.pack(fill="both", expand=True)
@@ -84,7 +84,7 @@ class RevPiPyControl(tkinter.Frame):
 
     def _closeapp(self, event=None):
         u"""Räumt auf und beendet Programm.
-        @param event: tkinter Event"""
+        @param event tkinter Event"""
         self._closeall()
         self.master.destroy()
 
@@ -183,6 +183,8 @@ class RevPiPyControl(tkinter.Frame):
         self.mbar.add_cascade(label=_("Connect"), menu=self.mconn)
 
     def _opt_conn(self, text):
+        u"""Stellt eine neue Verbindung zu RevPiPyLoad her.
+        @param text Verbindungsname"""
         socket.setdefaulttimeout(2)
         sp = ServerProxy(
             "http://{}:{}".format(
@@ -261,7 +263,8 @@ class RevPiPyControl(tkinter.Frame):
         self._fillconnbar()
 
     def plclogs(self):
-        u"""Öffnet das Fenster für Logdateien."""
+        u"""Öffnet das Fenster für Logdateien.
+        @return None"""
         if "load_plclog" not in self.xmlfuncs:
             tkmsg.showwarning(
                 _("Warning"),
@@ -345,6 +348,7 @@ class RevPiPyControl(tkinter.Frame):
         )
 
     def tmr_plcrunning(self):
+        u"""Timer der den Status des PLC Programms prüft."""
         self._btnstate()
         if self.cli is None:
             self.txt_status["readonlybackground"] = "lightblue"

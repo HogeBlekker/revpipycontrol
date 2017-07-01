@@ -31,7 +31,7 @@ class RevPiLogfile(tkinter.Frame):
 
     def _checkclose(self, event=None):
         u"""Prüft ob Fenster beendet werden soll.
-        @param event: tkinter-Event"""
+        @param event tkinter-Event"""
         self.master.destroy()
 
     def _createwidgets(self):
@@ -91,7 +91,7 @@ class RevPiLogfile(tkinter.Frame):
 
     def get_applog(self, full=False):
         u"""Ruft App Logbuch ab.
-        @param full: Ganzes Logbuch laden"""
+        @param full Ganzes Logbuch laden"""
 
         # Logs abrufen und letzte Position merken
         self.mrkapp = self._load_log(
@@ -103,7 +103,7 @@ class RevPiLogfile(tkinter.Frame):
 
     def get_plclog(self, full=False):
         u"""Ruft PLC Logbuch ab.
-        @param full: Ganzes Logbuch laden"""
+        @param full Ganzes Logbuch laden"""
 
         # Logs abrufen und letzte Position merken
         self.mrkplc = self._load_log(
@@ -116,11 +116,11 @@ class RevPiLogfile(tkinter.Frame):
     def _load_log(self, textwidget, xmlcall, startposition, full):
         u"""Läd die angegebenen Logfiles herunter.
 
-        @param textwidget: Widget in das Logs eingefügt werden sollen
-        @param xmlcall: xmlrpc Funktion zum Abrufen der Logdaten
-        @param startposition: Startposition ab der Logdaten kommen sollen
-        @param full: Komplettes Logbuch laden
-        @returns: Ende der Datei (neue Startposition)
+        @param textwidget Widget in das Logs eingefügt werden sollen
+        @param xmlcall xmlrpc Funktion zum Abrufen der Logdaten
+        @param startposition Startposition ab der Logdaten kommen sollen
+        @param full Komplettes Logbuch laden
+        @return Ende der Datei (neue Startposition)
 
         """
         roll = textwidget.yview()[1] == 1.0

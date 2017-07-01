@@ -18,8 +18,8 @@ def addroot(filename):
         Je nach Ausführungsart der Anwendung muss das root-dir über
         andere Arten abgerufen werden.
 
-        @param filename: Datei oder Ordnername
-        @returns: root dir
+        @param filename Datei oder Ordnername
+        @return root dir
 
     """
     if getattr(sys, "frozen", False):
