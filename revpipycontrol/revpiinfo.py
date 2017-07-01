@@ -112,23 +112,25 @@ class RevPiInfo(tkinter.Frame):
         # Rechte Seite Mittelframe ---------------
 
         # Funktionen der Gegenstelle
-        frame_func = tkinter.Frame(frame_main)
-        txt_xmlfunc = tkinter.Text(frame_func, width=30, height=15)
-        scr_xmlfunc = tkinter.Scrollbar(frame_func)
-        if extended:
-            txt_xmlfunc.insert(tkinter.END, "\n".join(
-                [] if self.xmlcli is None else self.xmlcli.system.listMethods()
-            ))
-        else:
-            txt_xmlfunc.insert(tkinter.END, "\n".join(
-                [] if self.xmlcli is None else self.xmlcli.get_filelist()
-            ))
-        txt_xmlfunc["yscrollcommand"] = scr_xmlfunc.set
-        txt_xmlfunc["state"] = "disabled"
-        scr_xmlfunc["command"] = txt_xmlfunc.yview
-        txt_xmlfunc.pack(side="left")
-        scr_xmlfunc.pack(fill="y", side="right")
-        frame_func.grid(column=3, row=0, rowspan=int_row + 1, **cpadnw)
+        if self.xmlcli is not None:
+            frame_func = tkinter.Frame(frame_main)
+            txt_xmlfunc = tkinter.Text(frame_func, width=30, height=15)
+            scr_xmlfunc = tkinter.Scrollbar(frame_func)
+            if extended:
+                txt_xmlfunc.insert(tkinter.END, "\n".join(
+                    self.xmlcli.system.listMethods()
+                ))
+            elif "get_filelist" in self.xmlcli.system.listMethods():
+                txt_xmlfunc.insert(tkinter.END, "\n".join(
+                    self.xmlcli.get_filelist()
+                ))
+            txt_xmlfunc["yscrollcommand"] = scr_xmlfunc.set
+            txt_xmlfunc["state"] = "disabled"
+            scr_xmlfunc["command"] = txt_xmlfunc.yview
+            txt_xmlfunc.pack(side="left")
+            scr_xmlfunc.pack(fill="y", side="right")
+            if txt_xmlfunc.get(1.0) != "\n":
+                frame_func.grid(column=3, row=0, rowspan=int_row + 1, **cpadnw)
 
         # Unten Beenden-Button -----------------------------------------------
         self.btnapplog = tkinter.Button(self)

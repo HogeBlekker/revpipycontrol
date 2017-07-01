@@ -15,10 +15,13 @@ _ = gettrans()
 
 class RevPiOption(tkinter.Frame):
 
-    def __init__(self, master, xmlcli, xmlmode):
+    def __init__(self, master, xmlcli):
         u"""Init RevPiOption-Class.
         @return None"""
-        if xmlmode < 2:
+        try:
+            self.dc = xmlcli.get_config()
+        except:
+            self.dc = None
             return None
 
         super().__init__(master)
@@ -27,8 +30,9 @@ class RevPiOption(tkinter.Frame):
         self.pack(expand=True, fill="both")
 
         self.xmlcli = xmlcli
-        self.xmlmode = xmlmode
-        self.xmlstate = "normal" if xmlmode == 3 else "disabled"
+        self.mrk_var_xmlmod2 = False
+        self.mrk_var_xmlmod3 = False
+        self.mrk_xmlmodask = False
 
         # Fenster bauen
         self._createwidgets()
@@ -61,7 +65,7 @@ class RevPiOption(tkinter.Frame):
                 _("Question"),
                 _("Do you really want to quit? \nUnsaved changes will "
                     "be lost"),
-                parent=self.master
+                parent=self.master, default="no"
             )
 
         if ask:
@@ -71,6 +75,8 @@ class RevPiOption(tkinter.Frame):
         u"""Erstellt Widgets."""
         self.master.wm_title(_("RevPi Python PLC Options"))
         self.master.wm_resizable(width=False, height=False)
+
+        xmlstate = "normal" if self.dc["xmlrpc"] >= 3 else "disabled"
 
         cpadw = {"padx": 4, "pady": 2, "sticky": "w"}
         cpadwe = {"padx": 4, "pady": 2, "sticky": "we"}
@@ -87,18 +93,18 @@ class RevPiOption(tkinter.Frame):
 
         ckb_start = tkinter.Checkbutton(stst)
         ckb_start["text"] = _("Start program automatically")
-        ckb_start["state"] = self.xmlstate
+        ckb_start["state"] = xmlstate
         ckb_start["variable"] = self.var_start
         ckb_start.grid(**cpadw)
 
         ckb_reload = tkinter.Checkbutton(stst)
         ckb_reload["text"] = _("Restart program after exit")
-        ckb_reload["state"] = self.xmlstate
+        ckb_reload["state"] = xmlstate
         ckb_reload["variable"] = self.var_reload
         ckb_reload.grid(**cpadw)
 
         ckb_zexit = tkinter.Checkbutton(stst, justify="left")
-        ckb_zexit["state"] = self.xmlstate
+        ckb_zexit["state"] = xmlstate
         ckb_zexit["text"] = _(
             "Set process image to NULL if program\n"
             "terminates successfully")
@@ -106,7 +112,7 @@ class RevPiOption(tkinter.Frame):
         ckb_zexit.grid(**cpadw)
 
         ckb_zerr = tkinter.Checkbutton(stst, justify="left")
-        ckb_zerr["state"] = self.xmlstate
+        ckb_zerr["state"] = xmlstate
         ckb_zerr["text"] = _(
             "Set process image to NULL if program\n"
             "terminates with errors")
@@ -129,14 +135,14 @@ class RevPiOption(tkinter.Frame):
         lbl["text"] = _("Python version")
         lbl.grid(columnspan=2, row=0, **cpadw)
         rbn = tkinter.Radiobutton(prog)
-        rbn["state"] = self.xmlstate
+        rbn["state"] = xmlstate
         rbn["text"] = "Python2"
         rbn["value"] = 2
         rbn["variable"] = self.var_pythonver
         rbn.grid(column=0, row=1, **cpadw)
 
         rbn = tkinter.Radiobutton(prog)
-        rbn["state"] = self.xmlstate
+        rbn["state"] = xmlstate
         rbn["text"] = "Python3"
         rbn["value"] = 3
         rbn["variable"] = self.var_pythonver
@@ -151,7 +157,7 @@ class RevPiOption(tkinter.Frame):
             lst.append("none")
         opt_startpy = tkinter.OptionMenu(
             prog, self.var_startpy, *lst)
-        opt_startpy["state"] = self.xmlstate
+        opt_startpy["state"] = xmlstate
         opt_startpy.grid(columnspan=2, **cpadwe)
 
         lbl = tkinter.Label(prog)
@@ -163,7 +169,7 @@ class RevPiOption(tkinter.Frame):
         txt.grid(columnspan=2, **cpadw)
 
         ckb_slave = tkinter.Checkbutton(prog, justify="left")
-        ckb_slave["state"] = self.xmlstate
+        ckb_slave["state"] = xmlstate
         ckb_slave["text"] = _("Use RevPi as PLC-Slave")
         ckb_slave["state"] = "disabled"
         ckb_slave["variable"] = self.var_slave
@@ -182,21 +188,21 @@ class RevPiOption(tkinter.Frame):
 
         ckb_xmlon = tkinter.Checkbutton(xmlrpc)
         ckb_xmlon["command"] = self.askxmlon
-        ckb_xmlon["state"] = self.xmlstate
+        ckb_xmlon["state"] = xmlstate
         ckb_xmlon["text"] = _("Activate XML-RPC server on RevPi")
         ckb_xmlon["variable"] = self.var_xmlon
         ckb_xmlon.grid(**cpadw)
 
         self.ckb_xmlmod2 = tkinter.Checkbutton(xmlrpc, justify="left")
-        self.ckb_xmlmod2["command"] = self.xmlmods
-        self.ckb_xmlmod2["state"] = self.xmlstate
+        self.ckb_xmlmod2["command"] = self.xmlmod2_tail
+        self.ckb_xmlmod2["state"] = xmlstate
         self.ckb_xmlmod2["text"] = \
             _("Allow download of piCtory configuration and\nPLC programm")
         self.ckb_xmlmod2["variable"] = self.var_xmlmod2
         self.ckb_xmlmod2.grid(**cpadw)
 
         self.ckb_xmlmod3 = tkinter.Checkbutton(xmlrpc, justify="left")
-        self.ckb_xmlmod3["state"] = self.xmlstate
+        self.ckb_xmlmod3["state"] = xmlstate
         self.ckb_xmlmod3["text"] = \
             _("Allow upload of piCtory configuration and\nPLC programm")
         self.ckb_xmlmod3["variable"] = self.var_xmlmod3
@@ -209,14 +215,14 @@ class RevPiOption(tkinter.Frame):
         spb_xmlport = tkinter.Spinbox(xmlrpc)
         spb_xmlport["to"] = 65535
         spb_xmlport["from"] = 1024
-        spb_xmlport["state"] = self.xmlstate
+        spb_xmlport["state"] = xmlstate
         spb_xmlport["textvariable"] = self.var_xmlport
         spb_xmlport.grid(**cpadwe)
 
         # Buttons
         btn_save = tkinter.Button(self)
         btn_save["command"] = self._setappdata
-        btn_save["state"] = self.xmlstate
+        btn_save["state"] = xmlstate
         btn_save["text"] = _("Save")
         btn_save.grid(column=0, row=3)
 
@@ -225,9 +231,11 @@ class RevPiOption(tkinter.Frame):
         btn_close["text"] = _("Close")
         btn_close.grid(column=1, row=3)
 
-    def _loadappdata(self):
-        u"""Läd aktuelle Einstellungen vom RevPi."""
-        self.dc = self.xmlcli.get_config()
+    def _loadappdata(self, refresh=False):
+        u"""Läd aktuelle Einstellungen vom RevPi.
+        @param refresh Wenn True, werden Einstellungen heruntergeladen."""
+        if refresh:
+            self.dc = self.xmlcli.get_config()
 
         self.var_start.set(self.dc.get("autostart", "1"))
         self.var_reload.set(self.dc.get("autoreload", "1"))
@@ -241,33 +249,33 @@ class RevPiOption(tkinter.Frame):
 
         self.var_xmlon.set(self.dc.get("xmlrpc", 0) >= 1)
         self.var_xmlmod2.set(self.dc.get("xmlrpc", 0) >= 2)
+        self.mrk_var_xmlmod2 = self.var_xmlmod2.get()
         self.var_xmlmod3.set(self.dc.get("xmlrpc", 0) >= 3)
+        self.mrk_var_xmlmod3 = self.var_xmlmod3.get()
 
         self.var_xmlport.set(self.dc.get("xmlrpcport", "55123"))
 
     def _setappdata(self):
         u"""Speichert geänderte Einstellungen auf RevPi."""
-        dc = {}
-        dc["autostart"] = int(self.var_start.get())
-        dc["autoreload"] = int(self.var_reload.get())
-        dc["zeroonexit"] = int(self.var_zexit.get())
-        dc["zeroonerror"] = int(self.var_zerr.get())
+        self.dc["autostart"] = int(self.var_start.get())
+        self.dc["autoreload"] = int(self.var_reload.get())
+        self.dc["zeroonexit"] = int(self.var_zexit.get())
+        self.dc["zeroonerror"] = int(self.var_zerr.get())
 
-        dc["plcprogram"] = self.var_startpy.get()
-        dc["plcarguments"] = self.var_startargs.get()
-        dc["pythonversion"] = self.var_pythonver.get()
-        dc["plcslave"] = int(self.var_slave.get())
+        self.dc["plcprogram"] = self.var_startpy.get()
+        self.dc["plcarguments"] = self.var_startargs.get()
+        self.dc["pythonversion"] = self.var_pythonver.get()
+        self.dc["plcslave"] = int(self.var_slave.get())
 
-        dc["xmlrpc"] = 0
+        self.dc["xmlrpc"] = 0
         if self.var_xmlon.get():
-            dc["xmlrpc"] += 1
+            self.dc["xmlrpc"] += 1
             if self.var_xmlmod2.get():
-                dc["xmlrpc"] += 1
+                self.dc["xmlrpc"] += 1
                 if self.var_xmlmod3.get():
-                    dc["xmlrpc"] += 1
+                    self.dc["xmlrpc"] += 1
 
-        dc["xmlrpcport"] = self.var_xmlport.get()
-        self.xmlmode = dc["xmlrpc"]
+        self.dc["xmlrpcport"] = self.var_xmlport.get()
 
         ask = tkmsg.askyesnocancel(
             _("Question"),
@@ -277,12 +285,13 @@ class RevPiOption(tkinter.Frame):
             parent=self.master
         )
         if ask is not None:
-            if self.xmlcli.set_config(dc, ask):
+            if self.xmlcli.set_config(self.dc, ask):
                 tkmsg.showinfo(
                     _("Information"),
                     _("Settings saved"),
                     parent=self.master
                 )
+                self._checkclose()
             else:
                 tkmsg.showerror(
                     _("Error"),
@@ -293,22 +302,36 @@ class RevPiOption(tkinter.Frame):
 
     def askxmlon(self):
         u"""Fragt Nuter, ob wirklicht abgeschaltet werden soll."""
-        if not self.var_xmlon.get():
-            ask = tkmsg.askyesno(
+        if not (self.var_xmlon.get() or self.mrk_xmlmodask):
+            self.mrk_xmlmodask = tkmsg.askyesno(
                 _("Question"),
                 _("Are you sure you want to deactivate the XML-RPC server? "
                     "You will NOT be able to access the Revolution Pi with "
                     "this program."),
                 parent=self.master
             )
-            if not ask:
+            if not self.mrk_xmlmodask:
                 self.var_xmlon.set(True)
 
-        self.xmlmods()
+        self.xmlmod_tail()
 
-    def xmlmods(self):
+    def xmlmod_tail(self):
         u"""Passt XML-Optionszugriff an."""
-        self.ckb_xmlmod2["state"] = \
-            "normal" if self.var_xmlon.get() else "disabled"
-        self.ckb_xmlmod3["state"] = \
-            "normal" if self.var_xmlmod2.get() else "disabled"
+        if self.var_xmlon.get():
+            self.var_xmlmod2.set(self.mrk_var_xmlmod2)
+            self.ckb_xmlmod2["state"] = "normal"
+        else:
+            self.mrk_var_xmlmod2 = self.var_xmlmod2.get()
+            self.var_xmlmod2.set(False)
+            self.ckb_xmlmod2["state"] = "disabled"
+        self.xmlmod2_tail()
+
+    def xmlmod2_tail(self):
+        u"""Passt XML-Optionszugriff an."""
+        if self.var_xmlmod2.get():
+            self.var_xmlmod3.set(self.mrk_var_xmlmod3)
+            self.ckb_xmlmod3["state"] = "normal"
+        else:
+            self.mrk_var_xmlmod3 = self.var_xmlmod3.get()
+            self.var_xmlmod3.set(False)
+            self.ckb_xmlmod3["state"] = "disabled"

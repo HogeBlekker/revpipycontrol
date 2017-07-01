@@ -67,7 +67,10 @@ Methods</h3>
 <td><a style="color:#0000FF" href="#RevPiOption.askxmlon">askxmlon</a></td>
 <td>Fragt Nuter, ob wirklicht abgeschaltet werden soll.</td>
 </tr><tr>
-<td><a style="color:#0000FF" href="#RevPiOption.xmlmods">xmlmods</a></td>
+<td><a style="color:#0000FF" href="#RevPiOption.xmlmod2_tail">xmlmod2_tail</a></td>
+<td>Passt XML-Optionszugriff an.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiOption.xmlmod_tail">xmlmod_tail</a></td>
 <td>Passt XML-Optionszugriff an.</td>
 </tr>
 </table>
@@ -79,7 +82,7 @@ Static Methods</h3>
 <a NAME="RevPiOption.__init__" ID="RevPiOption.__init__"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiOption (Constructor)</h3>
-<b>RevPiOption</b>(<i>master, xmlcli, xmlmode</i>)
+<b>RevPiOption</b>(<i>master, xmlcli</i>)
 <p>
 Init RevPiOption-Class.
 </p><dl>
@@ -118,10 +121,15 @@ Erstellt Widgets.
 </p><a NAME="RevPiOption._loadappdata" ID="RevPiOption._loadappdata"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiOption._loadappdata</h3>
-<b>_loadappdata</b>(<i></i>)
+<b>_loadappdata</b>(<i>refresh=False</i>)
 <p>
 L&#228;d aktuelle Einstellungen vom RevPi.
-</p><a NAME="RevPiOption._setappdata" ID="RevPiOption._setappdata"></a>
+</p><dl>
+<dt><i>refresh</i></dt>
+<dd>
+Wenn True, werden Einstellungen heruntergeladen.
+</dd>
+</dl><a NAME="RevPiOption._setappdata" ID="RevPiOption._setappdata"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiOption._setappdata</h3>
 <b>_setappdata</b>(<i></i>)
@@ -133,10 +141,16 @@ RevPiOption.askxmlon</h3>
 <b>askxmlon</b>(<i></i>)
 <p>
 Fragt Nuter, ob wirklicht abgeschaltet werden soll.
-</p><a NAME="RevPiOption.xmlmods" ID="RevPiOption.xmlmods"></a>
+</p><a NAME="RevPiOption.xmlmod2_tail" ID="RevPiOption.xmlmod2_tail"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
-RevPiOption.xmlmods</h3>
-<b>xmlmods</b>(<i></i>)
+RevPiOption.xmlmod2_tail</h3>
+<b>xmlmod2_tail</b>(<i></i>)
+<p>
+Passt XML-Optionszugriff an.
+</p><a NAME="RevPiOption.xmlmod_tail" ID="RevPiOption.xmlmod_tail"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiOption.xmlmod_tail</h3>
+<b>xmlmod_tail</b>(<i></i>)
 <p>
 Passt XML-Optionszugriff an.
 </p>

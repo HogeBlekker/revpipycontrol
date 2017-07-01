@@ -28,7 +28,9 @@ class RevPiCheckClient(tkinter.Frame):
         self.xmlmode = xmlmode
         self.cli = xmlcli
         self.cli.psstart()
-        self.dict_devices = {v[0]: v[1] for v in self.cli.ps_devices()}
+        self.lst_devices = self.cli.ps_devices()
+        self.dict_devices = {v[0]: v[1] for v in self.lst_devices}
+        self.lst_devices = [d[0] for d in self.lst_devices]
         self.dict_inps = pickle.loads(self.cli.ps_inps().data)
         self.dict_outs = pickle.loads(self.cli.ps_outs().data)
 
@@ -202,7 +204,7 @@ class RevPiCheckClient(tkinter.Frame):
         devgrp["text"] = _("Devices of RevPi")
         devgrp.pack(fill="y", side="left")
 
-        for dev in self.dict_devices:
+        for dev in self.lst_devices:
             win = tkinter.Toplevel(self)
             win.wm_title(self.dict_devices[dev])
             win.protocol(
@@ -245,15 +247,17 @@ class RevPiCheckClient(tkinter.Frame):
         self.btn_read.pack(fill="x")
 
         self.btn_write = tkinter.Button(cntgrp)
+        self.btn_write["state"] = "normal" if self.xmlmode >= 3 \
+            else "disabled"
         self.btn_write["text"] = _("Write Outputs")
         self.btn_write["command"] = self.writevalues
         self.btn_write.pack(fill="x")
 
-        check = tkinter.Checkbutton(cntgrp)
-        check["command"] = self.toggleauto
-        check["text"] = _("Autorefresh values")
-        check["variable"] = self.autorw
-        check.pack(anchor="w")
+        self.chk_auto = tkinter.Checkbutton(cntgrp)
+        self.chk_auto["command"] = self.toggleauto
+        self.chk_auto["text"] = _("Autorefresh values")
+        self.chk_auto["variable"] = self.autorw
+        self.chk_auto.pack(anchor="w")
 
         self.chk_dowrite = tkinter.Checkbutton(cntgrp)
         self.chk_dowrite["command"] = self.togglewrite
@@ -335,9 +339,6 @@ class RevPiCheckClient(tkinter.Frame):
             with self.lk:
                 self.validatereturn(xmlmc())
 
-        if self.autorw.get():
-            self.master.after(200, self._workvalues)
-
     def hideallwindows(self):
         u"""Versteckt alle Fenster."""
         for win in self.dict_wins:
@@ -353,19 +354,35 @@ class RevPiCheckClient(tkinter.Frame):
         if not self.autorw.get():
             self._workvalues()
 
+    def tmr_workvalues(self):
+        u"""Timer für zyklische Abfrage.
+        @return None"""
+        # Verbleibener Timer könnte schon ungültig sein
+        if not self.autorw.get():
+            try:
+                self.chk_auto["state"] = "normal"
+            except:
+                pass
+            return None
+
+        self._workvalues()
+        self.master.after(200, self.tmr_workvalues)
+
     def toggleauto(self):
         u"""Schaltet zwischen Autorefresh um und aktualisiert Widgets."""
         stateval = "disabled" if self.autorw.get() else "normal"
         self.btn_refresh["state"] = stateval
         self.btn_read["state"] = stateval
-        self.btn_write["state"] = stateval
+        self.btn_write["state"] = stateval if self.xmlmode >= 3 \
+            else "disabled"
 
         self.chk_dowrite["state"] = "normal" if self.xmlmode >= 3 \
             and self.autorw.get() else "disabled"
 
         if self.autorw.get():
-            self._workvalues()
+            self.tmr_workvalues()
         else:
+            self.chk_auto["state"] = "disabled"
             self.dowrite.set(False)
 
     def togglewrite(self):

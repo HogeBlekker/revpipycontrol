@@ -78,6 +78,7 @@ class RevPiPyControl(tkinter.Frame):
         if self.tkprogram is not None:
             self.tkprogram.destroy()
         if self.debugframe is not None:
+            self.plcdebug()
             self.debugframe.destroy()
             self.cli.psstop()
             self.debugframe = None
@@ -243,8 +244,9 @@ class RevPiPyControl(tkinter.Frame):
             # Show/Hide wechseln
             if self.debugframe.winfo_viewable():
                 self.debugframe.hideallwindows()
-                self.debugframe.autorw.set(False)
-                self.debugframe.toggleauto()
+                if self.debugframe.autorw.get():
+                    self.debugframe.autorw.set(False)
+                    self.debugframe.toggleauto()
                 self.debugframe.dowrite.set(False)
                 self.debugframe.pack_forget()
             else:
@@ -293,11 +295,12 @@ class RevPiPyControl(tkinter.Frame):
         else:
             win = tkinter.Toplevel(self)
             self.tkoptions = \
-                revpioption.RevPiOption(win, self.cli, self.xmlmode)
+                revpioption.RevPiOption(win, self.cli)
             win.focus_set()
             win.grab_set()
             self.wait_window(win)
-            self.xmlmode = self.tkoptions.xmlmode
+            if self.tkoptions.dc is not None:
+                self.xmlmode = self.tkoptions.dc["xmlrpc"]
 
     def plcprogram(self):
         u"""Startet das Programmfenster."""
@@ -331,12 +334,12 @@ class RevPiPyControl(tkinter.Frame):
 
     def serverdisconnect(self):
         u"""Trennt eine bestehende Verbindung."""
+        self._closeall()
         socket.setdefaulttimeout(2)
         self.cli = None
         self._btnstate()
         self.mbar.entryconfig("PLC", state="disabled")
         self.var_conn.set("")
-        self._closeall()
 
     def servererror(self):
         u"""Setzt alles zurück für neue Verbindungen."""
