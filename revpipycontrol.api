@@ -22,9 +22,6 @@ revpicheckclient.RevPiCheckClient?1(master, xmlcli, xmlmode=0)
 revpicheckclient._?8
 revpiinfo.RevPiInfo._checkclose?5(event=None)
 revpiinfo.RevPiInfo._createwidgets?5(extended=False)
-revpiinfo.RevPiInfo.app?7
-revpiinfo.RevPiInfo.cli?7
-revpiinfo.RevPiInfo.root?7
 revpiinfo.RevPiInfo.visitwebsite?4(event=None)
 revpiinfo.RevPiInfo?1(master, xmlcli, version)
 revpiinfo._?8
@@ -86,7 +83,7 @@ revpipycontrol.RevPiPyControl._closeapp?5(event=None)
 revpipycontrol.RevPiPyControl._createwidgets?5()
 revpipycontrol.RevPiPyControl._fillconnbar?5()
 revpipycontrol.RevPiPyControl._fillmbar?5()
-revpipycontrol.RevPiPyControl._opt_conn?5(text)
+revpipycontrol.RevPiPyControl._opt_conn?5(text, reconnect=False)
 revpipycontrol.RevPiPyControl.infowindow?4()
 revpipycontrol.RevPiPyControl.myapp?7
 revpipycontrol.RevPiPyControl.plcdebug?4()

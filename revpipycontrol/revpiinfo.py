@@ -141,12 +141,3 @@ class RevPiInfo(tkinter.Frame):
     def visitwebsite(self, event=None):
         u"""Öffnet auf dem System einen Webbrowser zur Projektseite."""
         webbrowser.open("https://revpimodio.org")
-
-
-# TODO: Remove testdrive
-if __name__ == "__main__":
-    from xmlrpc.client import ServerProxy
-    cli = ServerProxy("http://192.168.50.35:55123")
-    root = tkinter.Tk()
-    app = RevPiInfo(root, cli, "0.4.0")
-    app.mainloop()

@@ -17,7 +17,6 @@ import socket
 import tkinter
 import tkinter.messagebox as tkmsg
 import webbrowser
-from functools import partial
 from mytools import addroot, gettrans
 from xmlrpc.client import ServerProxy
 
@@ -120,8 +119,8 @@ class RevPiPyControl(tkinter.Frame):
         self.mbar.add_cascade(label=_("Help"), menu=menu1)
 
         self.var_conn = tkinter.StringVar(self)
-        self.txt_connect = tkinter.Entry(
-            self, textvariable=self.var_conn, state="readonly", width=30)
+        self.txt_connect = tkinter.Entry(self, state="readonly", width=40)
+        self.txt_connect["textvariable"] = self.var_conn
         self.txt_connect.pack(fill="x")
 
         self.btn_plcstart = tkinter.Button(self)
@@ -160,7 +159,7 @@ class RevPiPyControl(tkinter.Frame):
         self.mconn.delete(0, "end")
         for con in sorted(self.dict_conn.keys(), key=lambda x: x.lower()):
             self.mconn.add_command(
-                label=con, command=partial(self._opt_conn, con)
+                label=con, command=lambda con=con: self._opt_conn(con)
             )
 
     def _fillmbar(self):
@@ -183,10 +182,15 @@ class RevPiPyControl(tkinter.Frame):
         self.mconn = tkinter.Menu(self.mbar, tearoff=False)
         self.mbar.add_cascade(label=_("Connect"), menu=self.mconn)
 
-    def _opt_conn(self, text):
+    def _opt_conn(self, text, reconnect=False):
         u"""Stellt eine neue Verbindung zu RevPiPyLoad her.
-        @param text Verbindungsname"""
-        socket.setdefaulttimeout(2)
+        @param text Verbindungsname
+        @param reconnect Socket Timeout nicht heruntersetzen"""
+        if reconnect:
+            socket.setdefaulttimeout(15)
+        else:
+            socket.setdefaulttimeout(2)
+
         sp = ServerProxy(
             "http://{}:{}".format(
                 self.dict_conn[text][0], int(self.dict_conn[text][1])
@@ -215,9 +219,9 @@ class RevPiPyControl(tkinter.Frame):
     def infowindow(self):
         u"""Öffnet das Fenster für die Info."""
         win = tkinter.Toplevel(self)
-        revpiinfo.RevPiInfo(win, self.cli, pycontrolversion)
         win.focus_set()
         win.grab_set()
+        revpiinfo.RevPiInfo(win, self.cli, pycontrolversion)
         self.wait_window(win)
         self.dict_conn = revpiplclist.get_connections()
         self._fillconnbar()
@@ -250,16 +254,16 @@ class RevPiPyControl(tkinter.Frame):
                 self.debugframe.dowrite.set(False)
                 self.debugframe.pack_forget()
             else:
-                self.debugframe.pack(fill="y")
+                self.debugframe.pack(fill="x")
 
             self.btn_debug["state"] = "normal"
 
     def plclist(self):
         u"""Öffnet das Fenster für die Verbindungen."""
         win = tkinter.Toplevel(self)
-        revpiplclist.RevPiPlcList(win)
         win.focus_set()
         win.grab_set()
+        revpiplclist.RevPiPlcList(win)
         self.wait_window(win)
         self.dict_conn = revpiplclist.get_connections()
         self._fillconnbar()
@@ -294,13 +298,20 @@ class RevPiPyControl(tkinter.Frame):
             )
         else:
             win = tkinter.Toplevel(self)
-            self.tkoptions = \
-                revpioption.RevPiOption(win, self.cli)
             win.focus_set()
             win.grab_set()
+            self.tkoptions = \
+                revpioption.RevPiOption(win, self.cli)
             self.wait_window(win)
-            if self.tkoptions.dc is not None:
-                self.xmlmode = self.tkoptions.dc["xmlrpc"]
+            if self.tkoptions.dc is not None and self.tkoptions.dorestart:
+
+                # Wenn XML-Modus anders und Dienstneustart
+                if self.xmlmode != self.tkoptions.dc["xmlrpc"]:
+                    self.serverdisconnect()
+                    self._opt_conn(self.revpiname, True)
+
+                if self.debugframe is not None:
+                    self.cli.psstart()
 
     def plcprogram(self):
         u"""Startet das Programmfenster."""
@@ -313,10 +324,10 @@ class RevPiPyControl(tkinter.Frame):
             )
         else:
             win = tkinter.Toplevel(self)
-            self.tkprogram = revpiprogram.RevPiProgram(
-                win, self.cli, self.xmlmode, self.revpiname)
             win.focus_set()
             win.grab_set()
+            self.tkprogram = revpiprogram.RevPiProgram(
+                win, self.cli, self.xmlmode, self.revpiname)
             self.wait_window(win)
 
     def plcstart(self):

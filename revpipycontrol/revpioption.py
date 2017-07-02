@@ -33,6 +33,7 @@ class RevPiOption(tkinter.Frame):
         self.mrk_var_xmlmod2 = False
         self.mrk_var_xmlmod3 = False
         self.mrk_xmlmodask = False
+        self.dorestart = False
 
         # Fenster bauen
         self._createwidgets()
@@ -256,26 +257,16 @@ class RevPiOption(tkinter.Frame):
         self.var_xmlport.set(self.dc.get("xmlrpcport", "55123"))
 
     def _setappdata(self):
-        u"""Speichert geänderte Einstellungen auf RevPi."""
-        self.dc["autostart"] = int(self.var_start.get())
-        self.dc["autoreload"] = int(self.var_reload.get())
-        self.dc["zeroonexit"] = int(self.var_zexit.get())
-        self.dc["zeroonerror"] = int(self.var_zerr.get())
+        u"""Speichert geänderte Einstellungen auf RevPi.
+        @return None"""
 
-        self.dc["plcprogram"] = self.var_startpy.get()
-        self.dc["plcarguments"] = self.var_startargs.get()
-        self.dc["pythonversion"] = self.var_pythonver.get()
-        self.dc["plcslave"] = int(self.var_slave.get())
-
-        self.dc["xmlrpc"] = 0
-        if self.var_xmlon.get():
-            self.dc["xmlrpc"] += 1
-            if self.var_xmlmod2.get():
-                self.dc["xmlrpc"] += 1
-                if self.var_xmlmod3.get():
-                    self.dc["xmlrpc"] += 1
-
-        self.dc["xmlrpcport"] = self.var_xmlport.get()
+        if not self._changesdone():
+            tkmsg.showinfo(
+                _("Information"),
+                _("You have not made any changes to save."),
+            )
+            self._checkclose()
+            return None
 
         ask = tkmsg.askyesnocancel(
             _("Question"),
@@ -285,12 +276,33 @@ class RevPiOption(tkinter.Frame):
             parent=self.master
         )
         if ask is not None:
+            self.dc["autostart"] = int(self.var_start.get())
+            self.dc["autoreload"] = int(self.var_reload.get())
+            self.dc["zeroonexit"] = int(self.var_zexit.get())
+            self.dc["zeroonerror"] = int(self.var_zerr.get())
+
+            self.dc["plcprogram"] = self.var_startpy.get()
+            self.dc["plcarguments"] = self.var_startargs.get()
+            self.dc["pythonversion"] = self.var_pythonver.get()
+            self.dc["plcslave"] = int(self.var_slave.get())
+
+            self.dc["xmlrpc"] = 0
+            if self.var_xmlon.get():
+                self.dc["xmlrpc"] += 1
+                if self.var_xmlmod2.get():
+                    self.dc["xmlrpc"] += 1
+                    if self.var_xmlmod3.get():
+                        self.dc["xmlrpc"] += 1
+
+            self.dc["xmlrpcport"] = self.var_xmlport.get()
+
             if self.xmlcli.set_config(self.dc, ask):
                 tkmsg.showinfo(
                     _("Information"),
                     _("Settings saved"),
                     parent=self.master
                 )
+                self.dorestart = ask
                 self._checkclose()
             else:
                 tkmsg.showerror(

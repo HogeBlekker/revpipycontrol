@@ -23,6 +23,8 @@ class RevPiLogfile(tkinter.Frame):
 
         # Systemvariablen
         self.loadblock = 16384
+        self.errapp = 0
+        self.errplc = 0
         self.mrkapp = 0
         self.mrkplc = 0
 
@@ -94,9 +96,13 @@ class RevPiLogfile(tkinter.Frame):
         @param full Ganzes Logbuch laden"""
 
         # Logs abrufen und letzte Position merken
-        self.mrkapp = self._load_log(
-            self.applog, self.xmlcli.load_applog, self.mrkapp, full
-        )
+        try:
+            self.mrkapp = self._load_log(
+                self.applog, self.xmlcli.load_applog, self.mrkapp, full
+            )
+            self.errapp = 0
+        except:
+            self.errapp += 1
 
         # Timer neu starten
         self.master.after(1000, self.get_applog)
@@ -106,9 +112,13 @@ class RevPiLogfile(tkinter.Frame):
         @param full Ganzes Logbuch laden"""
 
         # Logs abrufen und letzte Position merken
-        self.mrkplc = self._load_log(
-            self.plclog, self.xmlcli.load_plclog, self.mrkplc, full
-        )
+        try:
+            self.mrkplc = self._load_log(
+                self.plclog, self.xmlcli.load_plclog, self.mrkplc, full
+            )
+            self.errplc = 0
+        except:
+            self.errplc += 1
 
         # Timer neu starten
         self.master.after(1000, self.get_plclog)

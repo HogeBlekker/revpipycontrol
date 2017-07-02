@@ -199,10 +199,11 @@ class RevPiCheckClient(tkinter.Frame):
 
     def _createwidgets(self):
         """Erstellt den Fensterinhalt."""
+        cFxPxy53 = {"fill": "x", "padx": 5, "pady": 3}
 
         devgrp = tkinter.LabelFrame(self)
         devgrp["text"] = _("Devices of RevPi")
-        devgrp.pack(fill="y", side="left")
+        devgrp.pack(expand=True, fill="both", side="left")
 
         for dev in self.lst_devices:
             win = tkinter.Toplevel(self)
@@ -229,29 +230,29 @@ class RevPiCheckClient(tkinter.Frame):
             btn = tkinter.Button(devgrp)
             btn["command"] = lambda win=win: self.__showwin(win)
             btn["text"] = self.dict_devices[dev]
-            btn.pack(fill="x", padx=10, pady=5)
+            btn.pack(**cFxPxy53)
 
         # Steuerungsfunktionen
         cntgrp = tkinter.LabelFrame(self)
         cntgrp["text"] = _("Control")
-        cntgrp.pack(fill="y", side="right")
+        cntgrp.pack(expand=True, fill="both", side="right")
 
         self.btn_refresh = tkinter.Button(cntgrp)
         self.btn_refresh["text"] = _("Read all IOs")
         self.btn_refresh["command"] = self.refreshvalues
-        self.btn_refresh.pack(fill="x")
+        self.btn_refresh.pack(**cFxPxy53)
 
         self.btn_read = tkinter.Button(cntgrp)
         self.btn_read["text"] = _("Read just Inputs")
         self.btn_read["command"] = self.readvalues
-        self.btn_read.pack(fill="x")
+        self.btn_read.pack(**cFxPxy53)
 
         self.btn_write = tkinter.Button(cntgrp)
         self.btn_write["state"] = "normal" if self.xmlmode >= 3 \
             else "disabled"
         self.btn_write["text"] = _("Write Outputs")
         self.btn_write["command"] = self.writevalues
-        self.btn_write.pack(fill="x")
+        self.btn_write.pack(**cFxPxy53)
 
         self.chk_auto = tkinter.Checkbutton(cntgrp)
         self.chk_auto["command"] = self.toggleauto
@@ -361,11 +362,11 @@ class RevPiCheckClient(tkinter.Frame):
         if not self.autorw.get():
             try:
                 self.chk_auto["state"] = "normal"
+                self._workvalues()
             except:
                 pass
             return None
 
-        self._workvalues()
         self.master.after(200, self.tmr_workvalues)
 
     def toggleauto(self):

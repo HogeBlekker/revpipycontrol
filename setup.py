@@ -82,7 +82,7 @@ elif platform == "win32":
         options={"build_exe": {
             "include_files": [
                 "revpipycontrol/revpipycontrol.png",
-                # "m4server/locale"
+                "revpipycontrol/locale"
             ]
         }},
         executables=[exe],

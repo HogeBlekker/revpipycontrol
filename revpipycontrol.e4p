@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project revpipycontrol -->
-<!-- Saved: 2017-06-30, 13:49:59 -->
+<!-- Saved: 2017-07-02, 11:35:49 -->
 <!-- Copyright (C) 2017 Sven Sager, akira@narux.de -->
 <Project version="5.1">
   <Language>en_US</Language>
@@ -226,12 +226,6 @@
               <list>
                 <string>setup.py</string>
               </list>
-            </value>
-            <key>
-              <string>noindex</string>
-            </key>
-            <value>
-              <bool>True</bool>
             </value>
             <key>
               <string>outputDirectory</string>
