@@ -33,6 +33,8 @@ class RevPiCheckClient(tkinter.Frame):
         self.lst_devices = [d[0] for d in self.lst_devices]
         self.dict_inps = pickle.loads(self.cli.ps_inps().data)
         self.dict_outs = pickle.loads(self.cli.ps_outs().data)
+        self.err_workvalues = 0
+        self.max_errors = 25
 
         self.lk = Lock()
         self.dict_wins = {}
@@ -94,7 +96,7 @@ class RevPiCheckClient(tkinter.Frame):
         try:
             newvalue = io[5].get()
             # Wertebereich prüfen
-            if newvalue < 0 or newvalue > 255 * io[1]:
+            if newvalue < 0 or newvalue > 256 ** io[1] - 1:
                 raise ValueError("too big")
 
             self.__chval(device, io)
@@ -175,7 +177,7 @@ class RevPiCheckClient(tkinter.Frame):
                 check.grid(column=1, row=rowcount)
             else:
                 var = tkinter.IntVar()
-                txt = tkinter.Spinbox(s_frame, to=255 * io[1])
+                txt = tkinter.Spinbox(s_frame, to=256 ** io[1] - 1)
                 txt.bind(
                     "<Key>",
                     lambda event, tkvar=var: self.__saveoldvalue(event, tkvar)
@@ -188,7 +190,7 @@ class RevPiCheckClient(tkinter.Frame):
                 txt["command"] = \
                     lambda device=device, io=io: self.__chval(device, io)
                 txt["state"] = "disabled" if iotype == "inp" else "normal"
-                txt["width"] = 4
+                txt["width"] = 5
                 txt["textvariable"] = var
                 txt.grid(column=1, row=rowcount)
 
@@ -290,16 +292,32 @@ class RevPiCheckClient(tkinter.Frame):
 
     def _workvalues(self, io_dicts=None, writeout=False):
         u"""Alle Werte der Inputs und Outputs abrufen.
-        @param io_dicts Arbeit nur für dieses Dict()
-        @param writeout Änderungen auf RevPi schreiben"""
 
+        @param io_dicts Arbeit nur für dieses Dict()
+        @param writeout Änderungen auf RevPi schreiben
+        @return None
+
+        """
         # Abfragelisten vorbereiten
         if io_dicts is None:
             io_dicts = [self.dict_inps, self.dict_outs]
 
         # Werte abrufen
         with self.lk:
-            ba_values = bytearray(self.cli.ps_values().data)
+            try:
+                ba_values = bytearray(self.cli.ps_values().data)
+                self.err_workvalues = 0
+            except:
+                if self.autorw.get():
+                    self.err_workvalues += 1
+                else:
+                    self.err_workvalues = self.max_errors
+
+                if self.err_workvalues >= self.max_errors:
+                    self.hideallwindows()
+                    self.pack_forget()
+
+                return None
 
         # Multicall zum Schreiben vorbereiten
         if writeout:
@@ -362,10 +380,11 @@ class RevPiCheckClient(tkinter.Frame):
         if not self.autorw.get():
             try:
                 self.chk_auto["state"] = "normal"
-                self._workvalues()
             except:
                 pass
             return None
+
+        self._workvalues()
 
         self.master.after(200, self.tmr_workvalues)
 

@@ -240,7 +240,9 @@ class RevPiPyControl(tkinter.Frame):
             )
         else:
             # Debugfenster laden
-            if self.debugframe is None:
+            if self.debugframe is None \
+                    or self.debugframe.err_workvalues >= \
+                    self.debugframe.max_errors:
                 self.debugframe = revpicheckclient.RevPiCheckClient(
                     self, self.cli, self.xmlmode
                 )
