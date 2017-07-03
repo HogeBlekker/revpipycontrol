@@ -33,8 +33,9 @@ def gettrans(proglang=None):
     # Sprache auswählen
     if proglang is None:
         # Autodetect Language or switch to static
-        # proglang = "en"
-        proglang = locale.getdefaultlocale()[0].split('_')[0]
+        proglang = locale.getdefaultlocale()[0]
+        if not proglang is None and proglang.find("_") >= 0:
+            proglang = proglang.split('_')[0]
 
     # Übersetzungen laden
     trans = gettext.translation(
