@@ -96,7 +96,7 @@ class RevPiCheckClient(tkinter.Frame):
         try:
             newvalue = io[5].get()
             # Wertebereich prüfen
-            if newvalue < 0 or newvalue > 256 ** io[1] - 1:
+            if newvalue < 0 or newvalue > self.maxint(io[1]):
                 raise ValueError("too big")
 
             self.__chval(device, io)
@@ -177,7 +177,7 @@ class RevPiCheckClient(tkinter.Frame):
                 check.grid(column=1, row=rowcount)
             else:
                 var = tkinter.IntVar()
-                txt = tkinter.Spinbox(s_frame, to=256 ** io[1] - 1)
+                txt = tkinter.Spinbox(s_frame, to=self.maxint(io[1]))
                 txt.bind(
                     "<Key>",
                     lambda event, tkvar=var: self.__saveoldvalue(event, tkvar)
@@ -189,7 +189,8 @@ class RevPiCheckClient(tkinter.Frame):
                 )
                 txt["command"] = \
                     lambda device=device, io=io: self.__chval(device, io)
-                txt["state"] = "disabled" if iotype == "inp" else "normal"
+                txt["state"] = "disabled" if iotype == "inp" or \
+                    self.maxint(io[1]) == 0 else "normal"
                 txt["width"] = 5
                 txt["textvariable"] = var
                 txt.grid(column=1, row=rowcount)
@@ -362,6 +363,12 @@ class RevPiCheckClient(tkinter.Frame):
         u"""Versteckt alle Fenster."""
         for win in self.dict_wins:
             self.dict_wins[win].withdraw()
+
+    def maxint(self, bytelen):
+        u"""Errechnet maximalen int() Wert für Bytes max 22.
+        @param bytelen Anzahl Bytes
+        @return int() max oder 0 bei Überschreitung"""
+        return 0 if bytelen > 22 else 256 ** bytelen - 1
 
     def readvalues(self):
         u"""Ruft nur Input Werte von RevPi ab und aktualisiert Fenster."""

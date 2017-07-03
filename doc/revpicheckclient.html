@@ -82,6 +82,9 @@ Methods</h3>
 <td><a style="color:#0000FF" href="#RevPiCheckClient.hideallwindows">hideallwindows</a></td>
 <td>Versteckt alle Fenster.</td>
 </tr><tr>
+<td><a style="color:#0000FF" href="#RevPiCheckClient.maxint">maxint</a></td>
+<td>Errechnet maximalen int() Wert f&#252;r Bytes max 22.</td>
+</tr><tr>
 <td><a style="color:#0000FF" href="#RevPiCheckClient.readvalues">readvalues</a></td>
 <td>Ruft nur Input Werte von RevPi ab und aktualisiert Fenster.</td>
 </tr><tr>
@@ -236,7 +239,23 @@ RevPiCheckClient.hideallwindows</h3>
 <b>hideallwindows</b>(<i></i>)
 <p>
 Versteckt alle Fenster.
-</p><a NAME="RevPiCheckClient.readvalues" ID="RevPiCheckClient.readvalues"></a>
+</p><a NAME="RevPiCheckClient.maxint" ID="RevPiCheckClient.maxint"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiCheckClient.maxint</h3>
+<b>maxint</b>(<i>bytelen</i>)
+<p>
+Errechnet maximalen int() Wert f&#252;r Bytes max 22.
+</p><dl>
+<dt><i>bytelen</i></dt>
+<dd>
+Anzahl Bytes
+</dd>
+</dl><dl>
+<dt>Returns:</dt>
+<dd>
+int() max oder 0 bei &#220;berschreitung
+</dd>
+</dl><a NAME="RevPiCheckClient.readvalues" ID="RevPiCheckClient.readvalues"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiCheckClient.readvalues</h3>
 <b>readvalues</b>(<i></i>)
