@@ -191,7 +191,7 @@ class RevPiProgram(tkinter.Frame):
         # Gruppe ProcImg
         proc = tkinter.LabelFrame(self)
         proc.columnconfigure(0, weight=1)
-        proc["text"] = _("piControl0 prozess image")
+        proc["text"] = _("piControl0 process image")
         proc.grid(columnspan=2, pady=2, sticky="we")
         lbl = tkinter.Label(proc)
         lbl["text"] = _("Download process image dump")
@@ -383,7 +383,6 @@ class RevPiProgram(tkinter.Frame):
             )
 
             ec = self.xmlcli.set_pictoryrsc(Binary(fh.read()), ask)
-            print(ec)
 
             if ec == 0:
                 if ask:
@@ -461,7 +460,7 @@ class RevPiProgram(tkinter.Frame):
             if ec == 0:
                 tkmsg.showinfo(
                     _("Success"),
-                    _("piControlReset executed successfully"),
+                    _("piControl reset executed successfully"),
                     parent=self.master
                 )
             else:

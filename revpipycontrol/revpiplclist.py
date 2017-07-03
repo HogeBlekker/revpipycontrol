@@ -179,7 +179,7 @@ class RevPiPlcList(tkinter.Frame):
             item = self.list_conn.get(item_index[0])
             ask = tkmsg.askyesno(
                 _("Question"),
-                _("Do you really want to delete the selected connection '{}'"
+                _("Do you really want to delete the selected connection '{}'?"
                     "").format(item),
                 parent=self.master
             )

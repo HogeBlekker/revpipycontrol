@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: RevPiPyControl 0.4.0\n"
-"POT-Creation-Date: 2017-07-02 11:32+0200\n"
-"PO-Revision-Date: 2017-07-02 11:33+0200\n"
+"POT-Creation-Date: 2017-07-03 10:36+0200\n"
+"PO-Revision-Date: 2017-07-03 10:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
@@ -15,58 +15,58 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: revpicheckclient.py:104 revpicheckclient.py:412 revpioption.py:309
+#: revpicheckclient.py:107 revpicheckclient.py:432 revpioption.py:309
 #: revpiplclist.py:205 revpiprogram.py:315 revpiprogram.py:346
 #: revpiprogram.py:410 revpiprogram.py:416 revpiprogram.py:422
 #: revpiprogram.py:430 revpiprogram.py:436 revpiprogram.py:469
 #: revpiprogram.py:553 revpiprogram.py:626 revpiprogram.py:657
 #: revpiprogram.py:670 revpiprogram.py:725 revpiprogram.py:745
-#: revpiprogram.py:753 revpipycontrol.py:359
+#: revpiprogram.py:753 revpipycontrol.py:363
 msgid "Error"
 msgstr "Fehler"
 
-#: revpicheckclient.py:105
+#: revpicheckclient.py:108
 msgid ""
 "Given value for Output '{}' is not valid! \n"
 "Reset to '{}'"
 msgstr ""
-"Angegebener Wert bei Output '{}' ist nicht gültig! \n"
+"Angegebener Wert für Output '{}' ist nicht gültig! \n"
 "Setze auf '{}' zurück"
 
-#: revpicheckclient.py:204
+#: revpicheckclient.py:207
 msgid "Devices of RevPi"
 msgstr "Devices vom RevPi"
 
-#: revpicheckclient.py:236
+#: revpicheckclient.py:239
 msgid "Control"
 msgstr "Kontrolle"
 
-#: revpicheckclient.py:240
+#: revpicheckclient.py:243
 msgid "Read all IOs"
-msgstr "IOs aktualisieren"
+msgstr "Lese alle IOs"
 
-#: revpicheckclient.py:245
+#: revpicheckclient.py:248
 msgid "Read just Inputs"
-msgstr "Inputs lesen"
+msgstr "Nur Inputs lesen"
 
-#: revpicheckclient.py:252
+#: revpicheckclient.py:255
 msgid "Write Outputs"
 msgstr "Outputs schreiben"
 
-#: revpicheckclient.py:258
+#: revpicheckclient.py:261
 msgid "Autorefresh values"
-msgstr "Aktualisiere automatisch"
+msgstr "Aktualisiere Werte automatisch"
 
-#: revpicheckclient.py:266
+#: revpicheckclient.py:269
 msgid "Write values to RevPi"
 msgstr "Schreibe Werte auf RevPi"
 
-#: revpicheckclient.py:280 revpiprogram.py:443 revpipycontrol.py:235
-#: revpipycontrol.py:276 revpipycontrol.py:294 revpipycontrol.py:320
+#: revpicheckclient.py:283 revpiprogram.py:443 revpipycontrol.py:235
+#: revpipycontrol.py:280 revpipycontrol.py:298 revpipycontrol.py:324
 msgid "Warning"
 msgstr "Warnung"
 
-#: revpicheckclient.py:281
+#: revpicheckclient.py:284
 msgid ""
 "You want to set outputs on the RevPi! Note that these are set "
 "IMMEDIATELY!!! \n"
@@ -78,9 +78,9 @@ msgstr ""
 "Wenn auf dem RevPi ein anderes Programm zur Steuerung läuft, könnte dies "
 "gestört werden und die Ausgänge wieder zurücksetzen."
 
-#: revpicheckclient.py:409
+#: revpicheckclient.py:429
 msgid "Error set value of device '{}' Output '{}': {} \n"
-msgstr "Fehler beim Setzen auf Device '{}' bei Output '{}': {}\n"
+msgstr "Fehler beim Setzen der Werte auf Device '{}' bei Output '{}': {}\n"
 
 #: revpiinfo.py:38
 msgid "RevPi Python PLC info"
@@ -96,7 +96,7 @@ msgstr "Version: {}"
 
 #: revpiinfo.py:78
 msgid "RevPiPyLoad version on RevPi:"
-msgstr "RevPiPyLoad Version am RevPi:"
+msgstr "RevPiPyLoad Version auf RevPi:"
 
 #: revpiinfo.py:83
 msgid "not conn."
@@ -147,7 +147,7 @@ msgstr "Python PLC Programm - Logdatei"
 
 #: revpilogfile.py:157
 msgid "Can not access log file on the RevPi"
-msgstr "RevPi kann auf Logdatei nicht zugreifen"
+msgstr "Auf die Logdatei des RevPi kann nicht zugegriffen werden"
 
 #: revpioption.py:66 revpioption.py:272 revpioption.py:319 revpiplclist.py:63
 #: revpiplclist.py:181 revpiprogram.py:379 revpiprogram.py:454
@@ -183,8 +183,8 @@ msgid ""
 "Set process image to NULL if program\n"
 "terminates successfully"
 msgstr ""
-"\"Prozessabbild auf NULL setzen, wenn Programm\n"
-"\"erfolgreich beendet wird\""
+"Prozessabbild auf NULL setzen, wenn Programm\n"
+"erfolgreich beendet wird"
 
 #: revpioption.py:118
 msgid ""
@@ -313,7 +313,7 @@ msgid "Remove"
 msgstr "Entfernen"
 
 #: revpiplclist.py:182
-msgid "Do you really want to delete the selected connection '{}'"
+msgid "Do you really want to delete the selected connection '{}'?"
 msgstr "Wollen Sie die ausgewählte Verbindung '{}' wirklich löschen?"
 
 #: revpiplclist.py:198
@@ -381,7 +381,7 @@ msgstr "PLC Programm hochladen als:"
 
 #: revpiprogram.py:153
 msgid "clean upload folder before upload"
-msgstr "vorher Inhalt im Uploadverzeichnis löschen"
+msgstr "Uploadverzeichnis vor dem Upload leeren"
 
 #: revpiprogram.py:160
 msgid "includes piCtory configuration"
@@ -404,7 +404,7 @@ msgid "Upload piCtory configuration"
 msgstr "piCtory Konfiguration hochladen"
 
 #: revpiprogram.py:194
-msgid "piControl0 prozess image"
+msgid "piControl0 process image"
 msgstr "piControl0 Prozessabbild"
 
 #: revpiprogram.py:197
@@ -462,7 +462,7 @@ msgstr "Image Dateien"
 
 #: revpiprogram.py:367
 msgid "Open piCtory file..."
-msgstr "piCtory Datei öffnen"
+msgstr "piCtory Datei öffnen..."
 
 #: revpiprogram.py:380
 msgid ""
@@ -491,7 +491,7 @@ msgstr "Kann die übertragene Datei nicht verarbeiten."
 
 #: revpiprogram.py:417
 msgid "Can not find main elements in piCtory file."
-msgstr "Kann Hauptelemente in datei nicht finden."
+msgstr "Kann Hauptelemente in piCtory datei nicht finden."
 
 #: revpiprogram.py:423
 msgid ""
@@ -499,11 +499,11 @@ msgid ""
 "be from a newer piCtory version!"
 msgstr ""
 "Enthaltene Geräte konnten auf dem Revolution Pi nicht gefunden werden. "
-"Möglicherweise stammt die Konfiguration von einer neueren piCtory Version."
+"Möglicherweise stammt die Konfiguration von einer neueren piCtory Version!"
 
 #: revpiprogram.py:431
 msgid "Could not load RAP catalog on Revolution Pi."
-msgstr "Konnte Katalog auf nicht laden."
+msgstr "Konnte RAP Katalog auf dem Revolution Pi nicht laden."
 
 #: revpiprogram.py:437
 msgid "The piCtory configuration could not be written on the Revolution Pi."
@@ -525,11 +525,11 @@ msgid ""
 "The process image and the piBridge are interrupted !!!"
 msgstr ""
 "Soll piControlReset wirklich durchgeführt werden? \n"
-"Das Prozessabbild und die Steuerung werden dann unterbrochen!!!"
+"Das Prozessabbild und die piBridge werden dann unterbrochen!!!"
 
 #: revpiprogram.py:464
-msgid "piControlReset executed successfully"
-msgstr "piControl Reset war erfolgreich"
+msgid "piControl reset executed successfully"
+msgstr "piControl reset wurde erfolgreich ausgeführt"
 
 #: revpiprogram.py:470
 msgid "piControl reset could not be executed successfully"
@@ -537,7 +537,7 @@ msgstr "piControl Reset konnte nicht erfolgreich durchgeführt werden"
 
 #: revpiprogram.py:484
 msgid "Directory to save"
-msgstr "Verzeichnis zum Ablegen"
+msgstr "Verzeichnis zum speichern"
 
 #: revpiprogram.py:595
 msgid "Folder to upload"
@@ -549,7 +549,7 @@ msgstr "Zip Archiv hochladen..."
 
 #: revpiprogram.py:627
 msgid "The specified file is not a ZIP archive."
-msgstr "Die angegebene Datei ist kein ZIP Archiv"
+msgstr "Die angegebene Datei ist kein ZIP Archiv."
 
 #: revpiprogram.py:636
 msgid "Upload TarGz archiv..."
@@ -643,12 +643,14 @@ msgstr "Verbinden"
 #: revpipycontrol.py:236
 msgid ""
 "The watch mode ist not supported in version {} of RevPiPyLoad on your RevPi! "
-"You need at least version 0.4.0."
+"You need at least version 0.4.0. Or the python3-revpimodio module is not "
+"installton your RevPi at least version 0.15.0."
 msgstr ""
 "Der Watch-Modus wird von der RevPiPyLoad Version {} auf dem RevPi nicht "
-"unterstützt! Sie benötigen mindestens Version 0.4.0."
+"unterstützt! Sie benötigen mindestens Version 0.4.0. Oder das python3-"
+"revpimodio Modul ist auf dem RevPi nicht in min. Version 0.15.0 installiert."
 
-#: revpipycontrol.py:277
+#: revpipycontrol.py:281
 msgid ""
 "This version of Logviewer ist not supported in version {} of RevPiPyLoad on "
 "your RevPi! You need at least version 0.4.1."
@@ -656,17 +658,47 @@ msgstr ""
 "Diese Version vom Logbetrachter wird in der RevPiPyLoad Version {} auf Ihrem "
 "RevPi nicht unterstützt! Sie benötigen mindestens Version 0.4.1."
 
-#: revpipycontrol.py:295 revpipycontrol.py:321
+#: revpipycontrol.py:299 revpipycontrol.py:325
 msgid ""
-"XML-RPC access mode in the RevPiPyLoad configuration is to small to access "
-"this dialog"
+"XML-RPC access mode in the RevPiPyLoad configuration is too small to access "
+"this dialog!"
 msgstr ""
 "Der XML-RPC Modus ist beim RevPiPyLoad nicht hoch genug eingestellt, um "
 "diesen Dialog zu verwenden!"
 
-#: revpipycontrol.py:360
+#: revpipycontrol.py:364
 msgid "Can not reach server!"
 msgstr "Server ist nicht erreichbar!"
+
+#~ msgid ""
+#~ "The watch mode ist not supported in version {} of RevPiPyLoad on your "
+#~ "RevPi! You need at least version 0.4.0."
+#~ msgstr ""
+#~ "Der Watch-Modus wird von der RevPiPyLoad Version {} auf dem RevPi nicht "
+#~ "unterstützt! Sie benötigen mindestens Version 0.4.0."
+
+#~ msgid ""
+#~ "XML-RPC access mode in the RevPiPyLoad configuration is too small to "
+#~ "access this dialog"
+#~ msgstr ""
+#~ "Der XML-RPC Modus ist beim RevPiPyLoad nicht hoch genug eingestellt, um "
+#~ "diesen Dialog zu verwenden!"
+
+#~ msgid "Do you really want to delete the selected connection '{}'"
+#~ msgstr "Wollen Sie die ausgewählte Verbindung '{}' wirklich löschen?"
+
+#~ msgid "piControl0 prozess image"
+#~ msgstr "piControl0 Prozessabbild"
+
+#~ msgid "piControlReset executed successfully"
+#~ msgstr "piControl Reset war erfolgreich"
+
+#~ msgid ""
+#~ "XML-RPC access mode in the RevPiPyLoad configuration is to small to "
+#~ "access this dialog"
+#~ msgstr ""
+#~ "Der XML-RPC Modus ist beim RevPiPyLoad nicht hoch genug eingestellt, um "
+#~ "diesen Dialog zu verwenden!"
 
 #~ msgid "Quit"
 #~ msgstr "Beenden"

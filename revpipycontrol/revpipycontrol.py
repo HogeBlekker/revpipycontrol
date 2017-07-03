@@ -235,7 +235,9 @@ class RevPiPyControl(tkinter.Frame):
                 _("Warning"),
                 _("The watch mode ist not supported in version {} "
                     "of RevPiPyLoad on your RevPi! You need at least version "
-                    "0.4.0.").format(self.cli.version()),
+                    "0.4.0. Or the python3-revpimodio module is not installt"
+                    "on your RevPi at least version 0.15.0."
+                    "").format(self.cli.version()),
                 parent=self.master
             )
         else:
@@ -295,7 +297,7 @@ class RevPiPyControl(tkinter.Frame):
             tkmsg.showwarning(
                 _("Warning"),
                 _("XML-RPC access mode in the RevPiPyLoad "
-                    "configuration is to small to access this dialog"),
+                    "configuration is too small to access this dialog!"),
                 parent=self.master
             )
         else:
@@ -321,7 +323,7 @@ class RevPiPyControl(tkinter.Frame):
             tkmsg.showwarning(
                 _("Warning"),
                 _("XML-RPC access mode in the RevPiPyLoad "
-                    "configuration is to small to access this dialog"),
+                    "configuration is too small to access this dialog!"),
                 parent=self.master
             )
         else:
