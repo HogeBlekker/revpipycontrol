@@ -23,7 +23,7 @@ globsetup = {
     "author_email": "akira@narux.de",
     "url": "https://revpimodio.org/revpipyplc/",
     "license": "LGPLv3",
-    "version": "0.2.12",
+    "version": "0.4.1",
 
     "name": "revpipycontrol",
 
@@ -82,7 +82,7 @@ elif platform == "win32":
         options={"build_exe": {
             "include_files": [
                 "revpipycontrol/revpipycontrol.png",
-                # "m4server/locale"
+                "revpipycontrol/locale"
             ]
         }},
         executables=[exe],

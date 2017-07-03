@@ -9,216 +9,429 @@
 
 import pickle
 import tkinter
-from argparse import ArgumentParser
-from concurrent.futures import ThreadPoolExecutor
-from time import sleep
-from xmlrpc.client import ServerProxy, Binary, MultiCall
+import tkinter.messagebox as tkmsg
+from mytools import gettrans
+from threading import Lock
+from xmlrpc.client import MultiCall
+
+# Übersetzung laden
+_ = gettrans()
 
 
 class RevPiCheckClient(tkinter.Frame):
 
-    def __init__(self, master, xmlcli):
+    def __init__(self, master, xmlcli, xmlmode=0):
         """Instantiiert MyApp-Klasse."""
         super().__init__(master)
-        self.pack(fill="both", expand=True)
 
+        # XML-Daten abrufen
+        self.xmlmode = xmlmode
         self.cli = xmlcli
+        self.cli.psstart()
+        self.lst_devices = self.cli.ps_devices()
+        self.dict_devices = {v[0]: v[1] for v in self.lst_devices}
+        self.lst_devices = [d[0] for d in self.lst_devices]
+        self.dict_inps = pickle.loads(self.cli.ps_inps().data)
+        self.dict_outs = pickle.loads(self.cli.ps_outs().data)
+        self.err_workvalues = 0
+        self.max_errors = 25
 
-        self.lst_devices = self.cli.get_devicenames()
-        self.lst_group = []
-        self.dict_inpvar = {}
-        self.dict_outvar = {}
+        self.lk = Lock()
+        self.dict_wins = {}
+        self.__checkwrite = True
+        self.__lockedvar = None
+        self.__oldvalue = None
 
         self.autorw = tkinter.BooleanVar()
-        self.fut_autorw = None
+        self.dowrite = tkinter.BooleanVar()
 
         # Fenster aufbauen
         self._createwidgets()
 
         # Aktuelle Werte einlesen
-        self.readvalues()
+        self.refreshvalues()
 
-    def _autorw(self):
-        dict_inp = {}
-        dict_out = {}
+    def __chval(self, device, io, event=None):
+        u"""Schreibt neuen Output Wert auf den RevPi."""
+        if self.dowrite.get() and self._warnwrite():
+            with self.lk:
+                self.validatereturn(
+                    self.cli.ps_setvalue(device, io[0], io[5].get())
+                )
 
-        while self.autorw.get():
-            for dev in self.lst_devices:
-                try:
-                    dict_out[dev] = [
-                        value[8].get() for value in self.dict_outvar[dev]
-                    ]
-                except:
-                    print("lasse {} aus".format(dev))
+            # Alles neu einlesen wenn nicht AutoRW aktiv ist
+            if not self.autorw.get():
+                self.refreshvalues()
 
-            dict_inp = self.cli.refreshvalues(
-                Binary(pickle.dumps(dict_out, 3))
+        self.__lockedvar = None
+
+    def __hidewin(self, win, event=None):
+        u"""Verbergt übergebenes Fenster.
+        @param win Fenster zum verbergen
+        @param event Tkinter Event"""
+        win.withdraw()
+
+    def __saveoldvalue(self, event, tkvar):
+        u"""Speichert bei Keypress aktuellen Wert für wiederherstellung."""
+        if self.__lockedvar is None:
+            self.__lockedvar = tkvar
+            try:
+                self.__oldvalue = tkvar.get()
+            except Exception:
+                pass
+
+    def __showwin(self, win):
+        u"""Zeigt oder verbergt übergebenes Fenster.
+        @param win Fenster zum anzeigen/verbergen"""
+        if win.winfo_viewable():
+            win.withdraw()
+        else:
+            win.deiconify()
+
+    def __spinboxkey(self, device, io, event=None):
+        u"""Prüft die Eingabe auf plausibilität.
+        @param event tkinter Event
+        @param io IO Liste mit tkinter Variable"""
+        # io = [name,bytelen,byteaddr,bmk,bitaddress,(tkinter_var)]
+        try:
+            newvalue = io[5].get()
+            # Wertebereich prüfen
+            if newvalue < 0 or newvalue > 256 ** io[1] - 1:
+                raise ValueError("too big")
+
+            self.__chval(device, io)
+
+        except Exception:
+            io[5].set(self.__oldvalue)
+            tkmsg.showerror(
+                _("Error"),
+                _("Given value for Output '{}' is not valid! \nReset to ""'{}'"
+                    "").format(self.dict_devices[device], self.__oldvalue),
+                parent=self.dict_wins[device]
             )
-            dict_inp = pickle.loads(dict_inp.data)
 
-            for dev in dict_inp:
-                for io in self.dict_inpvar[dev]:
-                    try:
-                        io[8].set(dict_inp[dev].pop(0))
-                    except:
-                        print("lasse {} aus".format(io[0]))
-
-            sleep(0.1)
-
-    def onfrmconf(self, canvas):
-        canvas.configure(scrollregion=canvas.bbox("all"))
+            # Focus zurücksetzen
+            event.widget.focus_set()
 
     def _createiogroup(self, device, frame, iotype):
-        """Erstellt IO-Gruppen."""
-        # IOs generieren
-        canvas = tkinter.Canvas(frame, borderwidth=0, width=180, heigh=800)
+        u"""Erstellt IO-Gruppen.
+
+        @param device Deviceposition
+        @param frame tkinter Frame
+        @param iotype 'inp' oder 'out' als str()
+
+        """
+        # IO-Typen festlegen
+        if iotype == "inp":
+            lst_io = self.dict_inps[device]
+        else:
+            lst_io = self.dict_outs[device]
+
+        # Fensterinhalt aufbauen
+        calc_heigh = len(lst_io) * 21
+        canvas = tkinter.Canvas(
+            frame,
+            borderwidth=0,
+            width=180,
+            heigh=calc_heigh if calc_heigh <= 600 else 600
+        )
         s_frame = tkinter.Frame(canvas)
         vsb = tkinter.Scrollbar(frame, orient="vertical", command=canvas.yview)
         canvas.configure(yscrollcommand=vsb.set)
+
+        # Scrollrad Linux
+        canvas.bind(
+            "<ButtonPress-4>",
+            lambda x: canvas.yview_scroll(-1, "units")
+        )
+        canvas.bind(
+            "<ButtonPress-5>",
+            lambda x: canvas.yview_scroll(1, "units")
+        )
 
         vsb.pack(side="right", fill="y")
         canvas.pack(side="left", fill="both", expand=True)
 
         canvas.create_window((4, 4), window=s_frame, anchor="nw")
         s_frame.bind(
-            "<Configure>", lambda event, canvas=canvas: self.onfrmconf(canvas)
+            "<Configure>", lambda event, canvas=canvas: self._onfrmconf(canvas)
         )
 
+        # IOs generieren
         rowcount = 0
-        for io in self.cli.get_iolist(device, iotype):
-            # io = [name,default,anzbits,adressbyte,export,adressid,bmk,bitaddress,tkinter_var]
+        for io in lst_io:
+            # io = [name,bytelen,byteaddr,bmk,bitaddress,(tkinter_var)]
 
             tkinter.Label(s_frame, text=io[0]).grid(
                 column=0, row=rowcount, sticky="w"
             )
 
-            if io[7] >= 0:
+            if io[4] >= 0:
                 var = tkinter.BooleanVar()
                 check = tkinter.Checkbutton(s_frame)
+                check["command"] = \
+                    lambda device=device, io=io: self.__chval(device, io)
                 check["state"] = "disabled" if iotype == "inp" else "normal"
                 check["text"] = ""
                 check["variable"] = var
                 check.grid(column=1, row=rowcount)
             else:
                 var = tkinter.IntVar()
-                txt = tkinter.Spinbox(s_frame, to=256)
+                txt = tkinter.Spinbox(s_frame, to=256 ** io[1] - 1)
+                txt.bind(
+                    "<Key>",
+                    lambda event, tkvar=var: self.__saveoldvalue(event, tkvar)
+                )
+                txt.bind(
+                    "<FocusOut>",
+                    lambda event, device=device, io=io:
+                    self.__spinboxkey(device, io, event)
+                )
+                txt["command"] = \
+                    lambda device=device, io=io: self.__chval(device, io)
                 txt["state"] = "disabled" if iotype == "inp" else "normal"
-                txt["width"] = 4
+                txt["width"] = 5
                 txt["textvariable"] = var
                 txt.grid(column=1, row=rowcount)
 
-            # Steuerelementvariable in IO übernehmen
+            # Steuerelementvariable in IO übernehmen (mutabel)
             io.append(var)
-            if iotype == "inp":
-                self.dict_inpvar[device].append(io)
-            elif iotype == "out":
-                self.dict_outvar[device].append(io)
 
             rowcount += 1
 
     def _createwidgets(self):
         """Erstellt den Fensterinhalt."""
-        # Hauptfenster
-        self.master.wm_title("RevPi Onlineview")
+        cFxPxy53 = {"fill": "x", "padx": 5, "pady": 3}
+
+        devgrp = tkinter.LabelFrame(self)
+        devgrp["text"] = _("Devices of RevPi")
+        devgrp.pack(expand=True, fill="both", side="left")
 
         for dev in self.lst_devices:
-            # Variablen vorbereiten
-            self.dict_inpvar[dev] = []
-            self.dict_outvar[dev] = []
+            win = tkinter.Toplevel(self)
+            win.wm_title(self.dict_devices[dev])
+            win.protocol(
+                "WM_DELETE_WINDOW",
+                lambda win=win: self.__hidewin(win)
+            )
+            win.resizable(False, True)
+            win.withdraw()
+            self.dict_wins[dev] = win
 
             # Devicegruppe erstellen
-            group = tkinter.LabelFrame(self)
-            group["text"] = dev
+            group = tkinter.LabelFrame(win)
+            group["text"] = self.dict_devices[dev]
             group.pack(side="left", fill="both", expand=True)
-            self.lst_group.append(group)
 
             for iotype in ["inp", "out"]:
                 frame = tkinter.Frame(group)
                 frame.pack(side="left", fill="both", expand=True)
                 self._createiogroup(dev, frame, iotype)
 
-#        self.btn_update = tkinter.Button(self)
-#        self.btn_update["text"] = "UPDATE"
-#        self.btn_update["command"] = self._autorw
-#        self.btn_update.pack(anchor="s", side="bottom", fill="x")
+            # Button erstellen
+            btn = tkinter.Button(devgrp)
+            btn["command"] = lambda win=win: self.__showwin(win)
+            btn["text"] = self.dict_devices[dev]
+            btn.pack(**cFxPxy53)
 
-        self.btn_write = tkinter.Button(self)
-        self.btn_write["text"] = "SCHREIBEN"
-        self.btn_write["command"] = self.writevalues
-        self.btn_write.pack(side="bottom", fill="x")
+        # Steuerungsfunktionen
+        cntgrp = tkinter.LabelFrame(self)
+        cntgrp["text"] = _("Control")
+        cntgrp.pack(expand=True, fill="both", side="right")
 
-        self.btn_read = tkinter.Button(self)
-        self.btn_read["text"] = "LESEN"
+        self.btn_refresh = tkinter.Button(cntgrp)
+        self.btn_refresh["text"] = _("Read all IOs")
+        self.btn_refresh["command"] = self.refreshvalues
+        self.btn_refresh.pack(**cFxPxy53)
+
+        self.btn_read = tkinter.Button(cntgrp)
+        self.btn_read["text"] = _("Read just Inputs")
         self.btn_read["command"] = self.readvalues
-        self.btn_read.pack(side="bottom", fill="x")
+        self.btn_read.pack(**cFxPxy53)
 
-        check = tkinter.Checkbutton(self)
-        check["command"] = self.toggleauto
-        check["text"] = "autoupdate"
-        check["variable"] = self.autorw
-        check.pack(side="bottom")
+        self.btn_write = tkinter.Button(cntgrp)
+        self.btn_write["state"] = "normal" if self.xmlmode >= 3 \
+            else "disabled"
+        self.btn_write["text"] = _("Write Outputs")
+        self.btn_write["command"] = self.writevalues
+        self.btn_write.pack(**cFxPxy53)
 
-    def _readvaluesdev(self, device, iotype):
-        """Ruft alle aktuellen Werte fuer das Device ab."""
-        # Multicall vorbereiten
-        mc_values = MultiCall(self.cli)
+        self.chk_auto = tkinter.Checkbutton(cntgrp)
+        self.chk_auto["command"] = self.toggleauto
+        self.chk_auto["text"] = _("Autorefresh values")
+        self.chk_auto["variable"] = self.autorw
+        self.chk_auto.pack(anchor="w")
 
-        if iotype == "inp":
-            lst_ios = self.dict_inpvar[device]
-        elif iotype == "out":
-            lst_ios = self.dict_outvar[device]
+        self.chk_dowrite = tkinter.Checkbutton(cntgrp)
+        self.chk_dowrite["command"] = self.togglewrite
+        self.chk_dowrite["state"] = "normal" if self.xmlmode >= 3 \
+            and self.autorw.get() else "disabled"
+        self.chk_dowrite["text"] = _("Write values to RevPi")
+        self.chk_dowrite["variable"] = self.dowrite
+        self.chk_dowrite.pack(anchor="w")
 
-        for io in lst_ios:
-            mc_values.get_iovalue(device, io[0])
+    def _onfrmconf(self, canvas):
+        u"""Erstellt Fenster in einem Canvas.
+        @param canvas Canvas in dem Objekte erstellt werden sollen"""
+        canvas.configure(scrollregion=canvas.bbox("all"))
 
-        i = 0
-        for value in mc_values():
-            value = pickle.loads(value.data)
-            if type(value) == bytes:
-                value = int.from_bytes(value, byteorder="little")
+    def _warnwrite(self):
+        u"""Warnung für Benutzer über Schreibfunktion einmal fragen.
+        @return True, wenn Warnung einmal mit OK bestätigt wurde"""
+        if self.__checkwrite:
+            self.__checkwrite = not tkmsg.askokcancel(
+                _("Warning"),
+                _("You want to set outputs on the RevPi! Note that these are "
+                    "set IMMEDIATELY!!! \nIf another control program is "
+                    "running on the RevPi, it could interfere and reset the "
+                    "outputs."),
+                icon=tkmsg.WARNING,
+                parent=self.master
+            )
+        return not self.__checkwrite
 
-            lst_ios[i][8].set(value)
-            i += 1
+    def _workvalues(self, io_dicts=None, writeout=False):
+        u"""Alle Werte der Inputs und Outputs abrufen.
 
-    def _writevaluesdev(self, device):
-        """Sendet Werte der Outputs fuer ein Device."""
-        # Multicall vorbereiten
-        mc_values = MultiCall(self.cli)
-        lst_ios = lst_ios = self.dict_outvar[device]
+        @param io_dicts Arbeit nur für dieses Dict()
+        @param writeout Änderungen auf RevPi schreiben
+        @return None
 
-        for io in lst_ios:
-            mc_values.set_iovalue(device, io[0], pickle.dumps(io[8].get(), 3))
+        """
+        # Abfragelisten vorbereiten
+        if io_dicts is None:
+            io_dicts = [self.dict_inps, self.dict_outs]
 
-        # Multicall ausführen
-        mc_values()
+        # Werte abrufen
+        with self.lk:
+            try:
+                ba_values = bytearray(self.cli.ps_values().data)
+                self.err_workvalues = 0
+            except:
+                if self.autorw.get():
+                    self.err_workvalues += 1
+                else:
+                    self.err_workvalues = self.max_errors
+
+                if self.err_workvalues >= self.max_errors:
+                    self.hideallwindows()
+                    self.pack_forget()
+
+                return None
+
+        # Multicall zum Schreiben vorbereiten
+        if writeout:
+            xmlmc = MultiCall(self.cli)
+
+        for dev in self.dict_devices:
+            # io = [name,bytelen,byteaddr,bmk,bitaddress,(tkinter_var)]
+
+            # IO Typ verarbeiten
+            for iotype in io_dicts:
+                # ios verarbeiten
+                for io in iotype[dev]:
+
+                    # Gesperrte Variable überspringen
+                    if io[5] == self.__lockedvar:
+                        continue
+
+                    # Bytes umwandeln
+                    int_byte = int.from_bytes(
+                        ba_values[io[2]:io[2] + io[1]], byteorder="little"
+                    )
+                    if io[4] >= 0:
+                        # Bit-IO
+                        new_val = bool(int_byte & 1 << io[4])
+                        if writeout and new_val != io[5].get():
+                            xmlmc.ps_setvalue(dev, io[0], io[5].get())
+                        else:
+                            io[5].set(new_val)
+                    else:
+                        # Byte-IO
+                        if writeout and int_byte != io[5].get():
+                            xmlmc.ps_setvalue(dev, io[0], io[5].get())
+                        else:
+                            io[5].set(int_byte)
+
+        # Werte per Multicall schreiben
+        if writeout:
+            with self.lk:
+                self.validatereturn(xmlmc())
+
+    def hideallwindows(self):
+        u"""Versteckt alle Fenster."""
+        for win in self.dict_wins:
+            self.dict_wins[win].withdraw()
 
     def readvalues(self):
-        """Alle Werte der Inputs und Outputs abrufen."""
-        # Werte aus Prozessabbild einlesen
-        self.cli.readprocimg()
+        u"""Ruft nur Input Werte von RevPi ab und aktualisiert Fenster."""
+        if not self.autorw.get():
+            self._workvalues([self.dict_inps])
 
-        for dev in self.lst_devices:
-            self._readvaluesdev(dev, "inp")
-            self._readvaluesdev(dev, "out")
+    def refreshvalues(self):
+        u"""Ruft alle IO Werte von RevPi ab und aktualisiert Fenster."""
+        if not self.autorw.get():
+            self._workvalues()
+
+    def tmr_workvalues(self):
+        u"""Timer für zyklische Abfrage.
+        @return None"""
+        # Verbleibener Timer könnte schon ungültig sein
+        if not self.autorw.get():
+            try:
+                self.chk_auto["state"] = "normal"
+            except:
+                pass
+            return None
+
+        self._workvalues()
+
+        self.master.after(200, self.tmr_workvalues)
 
     def toggleauto(self):
-        self.btn_read["state"] = "disabled" if self.autorw.get() else "normal"
-        self.btn_write["state"] = "disabled" if self.autorw.get() else "normal"
-        if self.autorw.get() \
-                and (self.fut_autorw is None or self.fut_autorw.done()):
-            e = ThreadPoolExecutor(max_workers=1)
-            self.fut_autorw = e.submit(self._autorw)
+        u"""Schaltet zwischen Autorefresh um und aktualisiert Widgets."""
+        stateval = "disabled" if self.autorw.get() else "normal"
+        self.btn_refresh["state"] = stateval
+        self.btn_read["state"] = stateval
+        self.btn_write["state"] = stateval if self.xmlmode >= 3 \
+            else "disabled"
+
+        self.chk_dowrite["state"] = "normal" if self.xmlmode >= 3 \
+            and self.autorw.get() else "disabled"
+
+        if self.autorw.get():
+            self.tmr_workvalues()
+        else:
+            self.chk_auto["state"] = "disabled"
+            self.dowrite.set(False)
+
+    def togglewrite(self):
+        u"""Schaltet zwischen DoWrite um und aktiviert Schreibfunktion."""
+        if self._warnwrite():
+            self.refreshvalues()
+        else:
+            self.dowrite.set(False)
+
+    def validatereturn(self, returnlist):
+        u"""Überprüft die Rückgaben der setvalue Funktion.
+        @param returnlist list() der xml Rückgabe"""
+        if type(returnlist[0]) != list:
+            returnlist = [returnlist]
+
+        str_errmsg = ""
+        for lst_result in returnlist:
+            # [device, io, status, msg]
+
+            if not lst_result[2]:
+                # Fehlermeldungen erstellen
+                devicename = self.dict_devices[lst_result[0]]
+                str_errmsg += _(
+                    "Error set value of device '{}' Output '{}': {} \n"
+                ).format(devicename, lst_result[1], lst_result[3])
+        if str_errmsg != "":
+            tkmsg.showerror(_("Error"), str_errmsg)
 
     def writevalues(self):
-        """Alle Outputs senden."""
-        pass
-        #for dev in self.lst_devices:
-            #self._writevaluesdev(dev)
-
-        # Werte in Prozessabbild schreiben
-        #self.cli.writeprocimg()
-
-if __name__ == "__main__":
-    root = tkinter.Tk()
-    myapp = RevPiCheckClient(root)
-    myapp.mainloop()
+        u"""Schreibt geänderte Outputs auf den RevPi."""
+        if self._warnwrite() and not self.autorw.get():
+            self._workvalues([self.dict_outs], True)

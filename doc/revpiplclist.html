@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html><head>
+<title>revpiplclist</title>
+<meta charset="UTF-8">
+</head>
+<body style="background-color:#FFFFFF;color:#000000"><a NAME="top" ID="top"></a>
+<h1 style="background-color:#FFFFFF;color:#0000FF">
+revpiplclist</h1>
+
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Global Attributes</h3>
+<table>
+<tr><td>_</td></tr><tr><td>savefile</td></tr>
+</table>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Classes</h3>
+<table>
+<tr>
+<td><a style="color:#0000FF" href="#RevPiPlcList">RevPiPlcList</a></td>
+<td></td>
+</tr>
+</table>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Functions</h3>
+<table>
+<tr>
+<td><a style="color:#0000FF" href="#get_connections">get_connections</a></td>
+<td>Verbindungen aus Datei laden.</td>
+</tr>
+</table>
+<hr /><hr />
+<a NAME="RevPiPlcList" ID="RevPiPlcList"></a>
+<h2 style="background-color:#FFFFFF;color:#0000FF">RevPiPlcList</h2>
+
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Derived from</h3>
+tkinter.Frame
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Class Attributes</h3>
+<table>
+<tr><td>myapp</td></tr><tr><td>root</td></tr>
+</table>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Class Methods</h3>
+<table>
+<tr><td>None</td></tr>
+</table>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Methods</h3>
+<table>
+<tr>
+<td><a style="color:#0000FF" href="#RevPiPlcList.__init__">RevPiPlcList</a></td>
+<td>Init RevPiPlcList-class.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiPlcList._checkclose">_checkclose</a></td>
+<td>Pr&#252;ft ob Fenster beendet werden soll.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiPlcList._createwidgets">_createwidgets</a></td>
+<td>Erstellt alle Widgets.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiPlcList._saveappdata">_saveappdata</a></td>
+<td>Speichert Verbindungen im home Dir.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiPlcList.build_listconn">build_listconn</a></td>
+<td>F&#252;llt Verbindungsliste.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiPlcList.evt_btnadd">evt_btnadd</a></td>
+<td>Verbindungseinstellungen &#252;bernehmen.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiPlcList.evt_btnnew">evt_btnnew</a></td>
+<td>Neue Verbindung erstellen.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiPlcList.evt_btnremove">evt_btnremove</a></td>
+<td>Verbindung l&#246;schen.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiPlcList.evt_btnsave">evt_btnsave</a></td>
+<td>Alle Verbindungen speichern.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiPlcList.evt_keypress">evt_keypress</a></td>
+<td>Passt bei Tastendruck den Status der Buttons an.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiPlcList.evt_listconn">evt_listconn</a></td>
+<td>&#220;bernimmt Einstellungen in Eingabefelder.</td>
+</tr>
+</table>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Static Methods</h3>
+<table>
+<tr><td>None</td></tr>
+</table>
+<a NAME="RevPiPlcList.__init__" ID="RevPiPlcList.__init__"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiPlcList (Constructor)</h3>
+<b>RevPiPlcList</b>(<i>master</i>)
+<p>
+Init RevPiPlcList-class.
+</p><dl>
+<dt><i>master</i></dt>
+<dd>
+tkinter master
+</dd>
+</dl><a NAME="RevPiPlcList._checkclose" ID="RevPiPlcList._checkclose"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiPlcList._checkclose</h3>
+<b>_checkclose</b>(<i>event=None</i>)
+<p>
+Pr&#252;ft ob Fenster beendet werden soll.
+</p><dl>
+<dt><i>event</i></dt>
+<dd>
+tkinter-Event
+</dd>
+</dl><a NAME="RevPiPlcList._createwidgets" ID="RevPiPlcList._createwidgets"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiPlcList._createwidgets</h3>
+<b>_createwidgets</b>(<i></i>)
+<p>
+Erstellt alle Widgets.
+</p><a NAME="RevPiPlcList._saveappdata" ID="RevPiPlcList._saveappdata"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiPlcList._saveappdata</h3>
+<b>_saveappdata</b>(<i></i>)
+<p>
+Speichert Verbindungen im home Dir.
+</p><dl>
+<dt>Returns:</dt>
+<dd>
+True, bei erfolgreicher Verarbeitung
+</dd>
+</dl><a NAME="RevPiPlcList.build_listconn" ID="RevPiPlcList.build_listconn"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiPlcList.build_listconn</h3>
+<b>build_listconn</b>(<i></i>)
+<p>
+F&#252;llt Verbindungsliste.
+</p><a NAME="RevPiPlcList.evt_btnadd" ID="RevPiPlcList.evt_btnadd"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiPlcList.evt_btnadd</h3>
+<b>evt_btnadd</b>(<i></i>)
+<p>
+Verbindungseinstellungen &#252;bernehmen.
+</p><a NAME="RevPiPlcList.evt_btnnew" ID="RevPiPlcList.evt_btnnew"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiPlcList.evt_btnnew</h3>
+<b>evt_btnnew</b>(<i></i>)
+<p>
+Neue Verbindung erstellen.
+</p><a NAME="RevPiPlcList.evt_btnremove" ID="RevPiPlcList.evt_btnremove"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiPlcList.evt_btnremove</h3>
+<b>evt_btnremove</b>(<i></i>)
+<p>
+Verbindung l&#246;schen.
+</p><a NAME="RevPiPlcList.evt_btnsave" ID="RevPiPlcList.evt_btnsave"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiPlcList.evt_btnsave</h3>
+<b>evt_btnsave</b>(<i></i>)
+<p>
+Alle Verbindungen speichern.
+</p><a NAME="RevPiPlcList.evt_keypress" ID="RevPiPlcList.evt_keypress"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiPlcList.evt_keypress</h3>
+<b>evt_keypress</b>(<i>evt=None</i>)
+<p>
+Passt bei Tastendruck den Status der Buttons an.
+</p><a NAME="RevPiPlcList.evt_listconn" ID="RevPiPlcList.evt_listconn"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiPlcList.evt_listconn</h3>
+<b>evt_listconn</b>(<i>evt=None</i>)
+<p>
+&#220;bernimmt Einstellungen in Eingabefelder.
+</p>
+<div align="right"><a style="color:#0000FF" href="#top">Up</a></div>
+<hr /><hr />
+<a NAME="get_connections" ID="get_connections"></a>
+<h2 style="background-color:#FFFFFF;color:#0000FF">get_connections</h2>
+<b>get_connections</b>(<i></i>)
+<p>
+Verbindungen aus Datei laden.
+</p><dl>
+<dt>Returns:</dt>
+<dd>
+dict() mit Verbindungen
+</dd>
+</dl>
+<div align="right"><a style="color:#0000FF" href="#top">Up</a></div>
+<hr />
+</body></html>

@@ -13,13 +13,16 @@ import tkinter
 import tkinter.filedialog as tkfd
 import tkinter.messagebox as tkmsg
 import zipfile
+from mytools import gettrans
 from os import environ
 from os import makedirs
 from shutil import rmtree
 from sys import platform
-from tempfile import mktemp, mkdtemp
+from tempfile import mkstemp, mkdtemp
 from xmlrpc.client import Binary
 
+# Übersetzung laden
+_ = gettrans()
 
 # Systemwerte
 if platform == "linux":
@@ -32,11 +35,14 @@ savefile = os.path.join(homedir, ".revpipyplc", "programpath.dat")
 class RevPiProgram(tkinter.Frame):
 
     def __init__(self, master, xmlcli, xmlmode, revpi):
+        u"""Init RevPiProgram-Class.
+        @return None"""
         if xmlmode < 2:
             return None
 
         super().__init__(master)
-#        master.protocol("WM_DELETE_WINDOW", self._checkclose)
+        self.master.protocol("WM_DELETE_WINDOW", self._checkclose)
+        self.master.bind("<KeyPress-Escape>", self._checkclose)
         self.pack(expand=True, fill="both")
 
         self.uploaded = False
@@ -54,15 +60,22 @@ class RevPiProgram(tkinter.Frame):
         self._evt_optdown()
         self._evt_optup()
 
-#    def _checkclose(self):
-#        if self.uploaded:
-#            tkmsg.showinfo("Ein PLC Programm wurde hochgeladen. "
-#            "Bitte die PLC options prüfen ob dort das neue Programm"
-#            "eingestellt werden muss.")
-#        self.master.destroy()
+    def _checkclose(self, event=None):
+        u"""Prüft ob Fenster beendet werden soll.
+        @param event tkinter-Event"""
+        if self.uploaded:
+            tkmsg.showinfo(
+                _("Information"),
+                _("A PLC program has been uploaded. Please check the "
+                    "PLC options to see if the correct program is specified "
+                    "as the start program."),
+                parent=self.master
+            )
+        self.master.destroy()
 
     def _createwidgets(self):
-        self.master.wm_title("RevPi Python PLC Programm")
+        u"""Erstellt alle Widgets."""
+        self.master.wm_title(_("RevPi Python PLC program"))
         self.master.wm_resizable(width=False, height=False)
 
         self.rowconfigure(0, weight=1)
@@ -76,7 +89,7 @@ class RevPiProgram(tkinter.Frame):
         # Gruppe Programm
         prog = tkinter.LabelFrame(self)
         prog.columnconfigure(0, weight=1)
-        prog["text"] = "PLC Python programm"
+        prog["text"] = _("PLC python program")
         prog.grid(columnspan=2, pady=2, sticky="we")
 
         # Variablen vorbereiten
@@ -86,16 +99,26 @@ class RevPiProgram(tkinter.Frame):
         self.var_typedown = tkinter.StringVar(prog)
         self.var_typeup = tkinter.StringVar(prog)
 
-        self.lst_typedown = ["Dateien", "Zip Archiv", "TGZ Archiv"]
-        self.lst_typeup = ["Dateien", "Ordner", "Zip Archiv", "TGZ Archiv"]
+        self.lst_typedown = [_("Files"), _("Zip archive"), _("TGZ archive")]
+        self.lst_typeup = [
+            _("Files"), _("Folder"), _("Zip archive"), _("TGZ archive")
+        ]
         self.var_picdown.set(self.opt.get("picdown", False))
         self.var_picup.set(self.opt.get("picup", False))
-        self.var_typedown.set(self.opt.get("typedown", self.lst_typedown[0]))
-        self.var_typeup.set(self.opt.get("typeup", self.lst_typeup[0]))
+
+        # Gespeicherte Werte übernehmen
+        saved_val = self.opt.get("typedown", self.lst_typedown[0])
+        self.var_typedown.set(
+            saved_val if saved_val in self.lst_typedown else _("Files")
+        )
+        saved_val = self.opt.get("typeup", self.lst_typeup[0])
+        self.var_typeup.set(
+            saved_val if saved_val in self.lst_typeup else _("Files")
+        )
 
         r = 0
         lbl = tkinter.Label(prog)
-        lbl["text"] = "PLC Programm herunterladen als:"
+        lbl["text"] = _("Download PLC program as:")
         lbl.grid(column=0, row=r, **cpadw)
         opt = tkinter.OptionMenu(
             prog, self.var_typedown, *self.lst_typedown,
@@ -105,17 +128,17 @@ class RevPiProgram(tkinter.Frame):
 
         r = 1
         self.ckb_picdown = tkinter.Checkbutton(prog)
-        self.ckb_picdown["text"] = "inkl. piCtory Konfiguration"
+        self.ckb_picdown["text"] = _("include piCtory configuration")
         self.ckb_picdown["variable"] = self.var_picdown
         self.ckb_picdown.grid(column=0, row=r, **cpadw)
         btn = tkinter.Button(prog)
         btn["command"] = self.plcdownload
-        btn["text"] = "Download"
+        btn["text"] = _("Download")
         btn.grid(column=1, row=r, **cpad)
 
         r = 2
         lbl = tkinter.Label(prog)
-        lbl["text"] = "PLC Programm hochladen als:"
+        lbl["text"] = _("Upload PLC program as:")
         lbl.grid(column=0, row=r, **cpadw)
         opt = tkinter.OptionMenu(
             prog, self.var_typeup, *self.lst_typeup,
@@ -127,77 +150,78 @@ class RevPiProgram(tkinter.Frame):
         r = 3
         ckb = tkinter.Checkbutton(prog)
         ckb["state"] = self.xmlstate
-        ckb["text"] = "vorher alles im Uploadverzeichnis löschen"
+        ckb["text"] = _("clean upload folder before upload")
         ckb["variable"] = self.var_cleanup
         ckb.grid(column=0, row=r, columnspan=2, **cpadw)
 
         r = 4
         self.ckb_picup = tkinter.Checkbutton(prog)
         self.ckb_picup["state"] = self.xmlstate
-        self.ckb_picup["text"] = "enthält piCtory Konfiguration"
+        self.ckb_picup["text"] = _("includes piCtory configuration")
         self.ckb_picup["variable"] = self.var_picup
         self.ckb_picup.grid(column=0, row=r, **cpadw)
         btn = tkinter.Button(prog)
         btn["command"] = self.plcupload
         btn["state"] = self.xmlstate
-        btn["text"] = "Upload"
+        btn["text"] = _("Upload")
         btn.grid(column=1, row=r, **cpad)
 
         # Gruppe piCtory
         picto = tkinter.LabelFrame(self)
         picto.columnconfigure(0, weight=1)
-        picto["text"] = "piCtory Konfiguration"
+        picto["text"] = _("piCtory configuration")
         picto.grid(columnspan=2, pady=2, sticky="we")
 
         lbl = tkinter.Label(picto)
-        lbl["text"] = "piCtory Konfiguration herunterladen"
+        lbl["text"] = _("Download piCtory configuration")
         lbl.grid(column=0, row=0, **cpadw)
         btn = tkinter.Button(picto)
         btn["command"] = self.getpictoryrsc
-        btn["text"] = "Download"
+        btn["text"] = _("Download")
         btn.grid(column=1, row=0, **cpad)
         lbl = tkinter.Label(picto)
-        lbl["text"] = "piCtory Konfiguration hochladen"
+        lbl["text"] = _("Upload piCtory configuration")
         lbl.grid(column=0, row=1, **cpadw)
         btn = tkinter.Button(picto)
         btn["command"] = self.setpictoryrsc
         btn["state"] = self.xmlstate
-        btn["text"] = "Upload"
+        btn["text"] = _("Upload")
         btn.grid(column=1, row=1, **cpad)
 
         # Gruppe ProcImg
         proc = tkinter.LabelFrame(self)
         proc.columnconfigure(0, weight=1)
-        proc["text"] = "piControl0 Prozessabbild"
+        proc["text"] = _("piControl0 process image")
         proc.grid(columnspan=2, pady=2, sticky="we")
         lbl = tkinter.Label(proc)
-        lbl["text"] = "Prozessabbild-Dump herunterladen"
+        lbl["text"] = _("Download process image dump")
         lbl.grid(column=0, row=0, **cpadw)
         btn = tkinter.Button(proc)
         btn["command"] = self.getprocimg
-        btn["text"] = "Download"
+        btn["text"] = _("Download")
         btn.grid(column=1, row=0, **cpad)
 
         # Gruppe piControlReset
         picon = tkinter.LabelFrame(self)
         picon.columnconfigure(0, weight=1)
-        picon["text"] = "piControl Reset"
+        picon["text"] = _("Reset piControl")
         picon.grid(columnspan=2, pady=2, sticky="we")
         lbl = tkinter.Label(picon)
-        lbl["text"] = "piControlReset ausführen"
+        lbl["text"] = _("Execute piControlReset")
         lbl.grid(column=0, row=0, **cpadw)
         btn = tkinter.Button(picon)
         btn["command"] = self.picontrolreset
-        btn["text"] = "ausführen"
+        btn["text"] = _("execute")
         btn.grid(column=1, row=0, **cpad)
 
         # Beendenbutton
         btn = tkinter.Button(self)
-        btn["command"] = self.master.destroy
-        btn["text"] = "Beenden"
+        btn["command"] = self._checkclose
+        btn["text"] = _("Exit")
         btn.grid()
 
     def _evt_optdown(self, text=""):
+        u"""Passt je nach gewählter Option den Status der Widgets an."""
         if self.lst_typedown.index(self.var_typedown.get()) == 0:
             self.var_picdown.set(False)
             self.ckb_picdown["state"] = "disable"
@@ -205,6 +229,7 @@ class RevPiProgram(tkinter.Frame):
             self.ckb_picdown["state"] = "normal"
 
     def _evt_optup(self, text=""):
+        u"""Passt je nach gewählter Option den Status der Widgets an."""
         if self.lst_typeup.index(self.var_typeup.get()) <= 1:
             self.var_picup.set(False)
             self.ckb_picup["state"] = "disable"
@@ -212,7 +237,9 @@ class RevPiProgram(tkinter.Frame):
             self.ckb_picup["state"] = "normal"
 
     def _loaddefault(self, full=False):
-        """Uebernimmt fuer den Pi die letzen Pfade."""
+        u"""Übernimmt für den Pi die letzen Pfade.
+        @param full Einstellungen für alle Verbindungen laden
+        @return dict() mit Einstellungen"""
         if os.path.exists(savefile):
             fh = open(savefile, "rb")
             dict_all = pickle.load(fh)
@@ -223,7 +250,8 @@ class RevPiProgram(tkinter.Frame):
         return {}
 
     def _savedefaults(self):
-        """Schreibt fuer den Pi die letzen Pfade."""
+        u"""Schreibt fuer den Pi die letzen Pfade.
+        @return True, bei erfolgreicher Verarbeitung"""
         try:
             makedirs(os.path.dirname(savefile), exist_ok=True)
             dict_all = self._loaddefault(full=True)
@@ -236,9 +264,9 @@ class RevPiProgram(tkinter.Frame):
         return True
 
     def create_filelist(self, rootdir):
-        """Erstellt eine Dateiliste von einem Verzeichnis.
-        @param rootdir: Verzeichnis fuer das eine Liste erstellt werden soll
-        @returns: Dateiliste"""
+        u"""Erstellt eine Dateiliste von einem Verzeichnis.
+        @param rootdir Verzeichnis fuer das eine Liste erstellt werden soll
+        @return Dateiliste"""
         filelist = []
         for tup_dir in os.walk(rootdir):
             for fname in tup_dir[2]:
@@ -249,9 +277,9 @@ class RevPiProgram(tkinter.Frame):
         """Gibt das rootdir von einem entpackten Verzeichnis zurueck.
 
         Dabei wird geprueft, ob es sich um einen einzelnen Ordner handelt
-        und ob es eine piCtory Konfiguraiton im rootdir gibt.
-        @param rootdir: Verzeichnis fuer Pruefung
-        @returns: Abgeaendertes rootdir
+        und ob es eine piCtory Konfiguration im rootdir gibt.
+        @param rootdir Verzeichnis fuer Pruefung
+        @return Abgeaendertes rootdir
 
         """
         lst_dir = os.listdir(rootdir)
@@ -270,28 +298,29 @@ class RevPiProgram(tkinter.Frame):
             return (rootdir, None)
 
     def getpictoryrsc(self):
+        u"""Läd die piCtory Konfiguration herunter."""
         fh = tkfd.asksaveasfile(
             mode="wb", parent=self.master,
             confirmoverwrite=True,
-            title="Speichern als...",
+            title=_("Save as..."),
             initialdir=self.opt.get("getpictoryrsc_dir", ""),
             initialfile=self.revpi + ".rsc",
-            filetypes=(("piCtory Config", "*.rsc"), ("All Files", "*.*"))
+            filetypes=((_("piCtory config"), "*.rsc"), (_("All files"), "*.*"))
         )
         if fh is not None:
             try:
                 fh.write(self.xmlcli.get_pictoryrsc().data)
             except:
                 tkmsg.showerror(
-                    parent=self.master, title="Fehler",
-                    message="Datei konnte nicht geladen und gespeichert "
-                    "werden!"
+                    _("Error"),
+                    _("Could not load and save file!"),
+                    parent=self.master,
                 )
             else:
                 tkmsg.showinfo(
-                    parent=self.master, title="Erfolgreich",
-                    message="Datei erfolgreich vom Revolution Pi geladen "
-                    "und gespeichert.",
+                    _("Success"),
+                    _("File successfully loaded and saved."),
+                    parent=self.master
                 )
                 # Einstellungen speichern
                 self.opt["getpictoryrsc_dir"] = os.path.dirname(fh.name)
@@ -300,28 +329,29 @@ class RevPiProgram(tkinter.Frame):
                 fh.close()
 
     def getprocimg(self):
+        u"""Läd das aktuelle Prozessabbild herunter."""
         fh = tkfd.asksaveasfile(
             mode="wb", parent=self.master,
             confirmoverwrite=True,
-            title="Speichern als...",
+            title=_("Save as..."),
             initialdir=self.opt.get("getprocimg_dir", ""),
             initialfile=self.revpi + ".img",
-            filetypes=(("Imagefiles", "*.img"), ("All Files", "*.*"))
+            filetypes=((_("Imagefiles"), "*.img"), (_("All files"), "*.*"))
         )
         if fh is not None:
             try:
                 fh.write(self.xmlcli.get_procimg().data)
             except:
                 tkmsg.showerror(
-                    parent=self.master, title="Fehler",
-                    message="Datei konnte nicht geladen und gespeichert"
-                    "werden!"
+                    _("Error"),
+                    _("Could not load and save file!"),
+                    parent=self.master
                 )
             else:
                 tkmsg.showinfo(
-                    parent=self.master, title="Erfolgreich",
-                    message="Datei erfolgreich vom Revolution Pi geladen "
-                    "und gespeichert.",
+                    _("Success"),
+                    _("File successfully loaded and saved."),
+                    parent=self.master
                 )
                 # Einstellungen speichern
                 self.opt["getprocimg_dir"] = os.path.dirname(fh.name)
@@ -330,77 +360,118 @@ class RevPiProgram(tkinter.Frame):
                 fh.close()
 
     def setpictoryrsc(self, filename=None):
+        u"""Überträgt die angegebene piCtory-Konfiguration."""
         if filename is None:
             fh = tkfd.askopenfile(
                 mode="rb", parent=self.master,
-                title="piCtory Datei öffnen...",
+                title=_("Open piCtory file..."),
                 initialdir=self.opt.get("setpictoryrsc_dir", ""),
                 initialfile=self.revpi + ".rsc",
-                filetypes=(("piCtory Config", "*.rsc"), ("All Files", "*.*"))
+                filetypes=(
+                    (_("piCtory config"), "*.rsc"), (_("All files"), "*.*")
+                )
             )
         else:
             fh = open(filename, "rb")
 
         if fh is not None:
             ask = tkmsg.askyesno(
-                parent=self.master, title="Frage",
-                message="Soll nach dem Hochladen der piCtory Konfiguration "
-                "ein Reset am piControl Treiber durchgeführt werden?"
+                _("Question"),
+                _("Should the piControl driver be reset after "
+                    "uploading the piCtory configuration?"),
+                parent=self.master
             )
 
             ec = self.xmlcli.set_pictoryrsc(Binary(fh.read()), ask)
-            print(ec)
+
             if ec == 0:
                 if ask:
                     tkmsg.showinfo(
-                        parent=self.master, title="Erfolgreich",
-                        message="Die Übertragung der piCtory Konfiguration "
-                        "und der Reset von piControl wurden erfolgreich "
-                        "ausgeführt")
+                        _("Success"),
+                        _("The transfer of the piCtory configuration "
+                            "and the reset of piControl have been "
+                            "successfully executed."),
+                        parent=self.master
+                    )
                 else:
                     tkmsg.showinfo(
-                        parent=self.master, title="Erfolgreich",
-                        message="Die Übertragung der piCtory Konfiguration "
-                        "wurde erfolgreich ausgeführt")
+                        _("Success"),
+                        _("The piCtory configuration was "
+                            "successfully transferred."),
+                        parent=self.master
+                    )
 
-                #Einstellungen speichern
+                # Einstellungen speichern
                 self.opt["setpictoryrsc_dir"] = os.path.dirname(fh.name)
                 self._savedefaults()
+            elif ec == -1:
+                tkmsg.showerror(
+                    _("Error"),
+                    _("Can not process the transferred file."),
+                    parent=self.master
+                )
+            elif ec == -2:
+                tkmsg.showerror(
+                    _("Error"),
+                    _("Can not find main elements in piCtory file."),
+                    parent=self.master
+                )
+            elif ec == -4:
+                tkmsg.showerror(
+                    _("Error"),
+                    _("Contained devices could not be found on Revolution "
+                        "Pi. The configuration may be from a newer piCtory "
+                        "version!"),
+                    parent=self.master
+                )
+            elif ec == -5:
+                tkmsg.showerror(
+                    _("Error"),
+                    _("Could not load RAP catalog on Revolution Pi."),
+                    parent=self.master
+                )
             elif ec < 0:
                 tkmsg.showerror(
-                    parent=self.master, title="Fehler",
-                    message="Die piCtory Konfiguration konnte auf dem "
-                    "Revolution Pi nicht geschrieben werden.")
+                    _("Error"),
+                    _("The piCtory configuration could not be "
+                        "written on the Revolution Pi."),
+                    parent=self.master
+                )
             elif ec > 0:
                 tkmsg.showwarning(
-                    parent=self.master, title="Warnung",
-                    message="Die piCtroy Konfiguration wurde erfolgreich "
-                    "gespeichert. \nBeim piControl Reset trat allerdings ein "
-                    "Fehler auf!")
+                    _("Warning"),
+                    _("The piCtroy configuration has been saved successfully."
+                        " \nAn error occurred on piControl reset!"),
+                    parent=self.master
+                )
 
             fh.close()
 
     def picontrolreset(self):
+        u"""Fürt ein Reset der piBridge durch."""
         ask = tkmsg.askyesno(
-            parent=self.master, title="Frage...", 
-            message="Soll piControlReset wirklich durchgeführt werden? \n"
-            "Das Prozessabbild und die Steuerung werden dann unterbrochen!!!"
+            _("Question"),
+            _("Are you sure to reset piControl? \nThe process image "
+                "and the piBridge are interrupted !!!"),
+            parent=self.master
         )
         if ask:
             ec = self.xmlcli.resetpicontrol()
             if ec == 0:
                 tkmsg.showinfo(
-                    parent=self.master, title="Erfolgreich",
-                    message="piControlReset erfolgreich durchgeführt"
+                    _("Success"),
+                    _("piControl reset executed successfully"),
+                    parent=self.master
                 )
             else:
                 tkmsg.showerror(
-                    parten=self.master, title="Fehler",
-                    message="piControlReset konnte nicht erfolgreich "
-                    "durchgeführt werden"
+                    _("Error"),
+                    _("piControl reset could not be executed successfully"),
+                    parten=self.master
                 )
 
     def plcdownload(self):
+        u"""Läd das aktuelle Projekt herunter."""
         tdown = self.lst_typedown.index(self.var_typedown.get())
         fh = None
         dirselect = ""
@@ -409,23 +480,25 @@ class RevPiProgram(tkinter.Frame):
             # Ordner
             dirselect = tkfd.askdirectory(
                 parent=self.master,
-                title="Verzeichnis zum Ablegen",
+                title=_("Directory to save"),
                 mustexist=False,
                 initialdir=self.opt.get("plcdownload_dir", self.revpi)
             )
 
             if type(dirselect) == str and dirselect != "":
-                fh = open(mktemp(), "wb")
+                fh = open(mkstemp()[1], "wb")
 
         elif tdown == 1:
             # Zip
             fh = tkfd.asksaveasfile(
                 mode="wb", parent=self.master,
                 confirmoverwrite=True,
-                title="Speichern als...",
+                title=_("Save as..."),
                 initialdir=self.opt.get("plcdownload_file", ""),
                 initialfile=self.revpi + ".zip",
-                filetypes=(("Zip Archiv", "*.zip"), ("All Files", "*.*"))
+                filetypes=(
+                    (_("Zip archive"), "*.zip"), (_("All files"), "*.*")
+                )
             )
 
         elif tdown == 2:
@@ -433,19 +506,23 @@ class RevPiProgram(tkinter.Frame):
             fh = tkfd.asksaveasfile(
                 mode="wb", parent=self.master,
                 confirmoverwrite=True,
-                title="Speichern als...",
+                title=_("Save as..."),
                 initialdir=self.opt.get("plcdownload_file", ""),
                 initialfile=self.revpi + ".tar.gz",
-                filetypes=(("Tar Archiv", "*.tar.gz"), ("All Files", "*.*"))
+                filetypes=(
+                    (_("TGZ archive"), "*.tar.gz"), (_("All files"), "*.*")
+                )
             )
 
         if fh is not None:
             if tdown == 1:
                 plcfile = self.xmlcli.plcdownload(
-                    "zip", self.var_picdown.get())
+                    "zip", self.var_picdown.get()
+                )
             else:
                 plcfile = self.xmlcli.plcdownload(
-                    "tar", self.var_picdown.get())
+                    "tar", self.var_picdown.get()
+                )
 
             try:
                 fh.write(plcfile.data)
@@ -456,9 +533,7 @@ class RevPiProgram(tkinter.Frame):
                     fh_pack = tarfile.open(fh.name)
 
                     # Unterverzeichnis streichen
-                    rootname = ""
                     for taritem in fh_pack.getmembers():
-                        print(rootname)
                         if not taritem.name == "revpipyload":
                             taritem.name = \
                                 taritem.name.replace("revpipyload/", "")
@@ -474,15 +549,15 @@ class RevPiProgram(tkinter.Frame):
             except:
                 raise
                 tkmsg.showerror(
-                    parent=self.master, title="Fehler",
-                    message="Datei konnte nicht geladen und gespeichert "
-                    "werden!"
+                    _("Error"),
+                    _("Could not load and save file!"),
+                    parent=self.master
                 )
             else:
                 tkmsg.showinfo(
-                    parent=self.master, title="Erfolgreich",
-                    message="Datei erfolgreich vom Revolution Pi geladen "
-                    "und gespeichert.",
+                    _("Success"),
+                    _("File successfully loaded and saved."),
+                    parent=self.master
                 )
 
                 # Einstellungen speichern
@@ -491,6 +566,8 @@ class RevPiProgram(tkinter.Frame):
                 fh.close()
 
     def plcupload(self):
+        u"""Lädt das angegebene Projekt auf den RevPi.
+        @return True, bei erfolgreicher Verarbeitung"""
         tup = self.lst_typeup.index(self.var_typeup.get())
         dirselect = ""
         dirtmp = None
@@ -502,9 +579,9 @@ class RevPiProgram(tkinter.Frame):
             # Datei
             fileselect = tkfd.askopenfilenames(
                 parent=self.master,
-                title="Python Programm übertragen...",
+                title="Upload Python program...",
                 initialdir=self.opt.get("plcupload_dir", ""),
-                filetypes=(("Python", "*.py"), ("All Files", "*.*"))
+                filetypes=(("Python", "*.py"), (_("All files"), "*.*"))
             )
             if type(fileselect) == tuple and len(fileselect) > 0:
                 for file in fileselect:
@@ -514,7 +591,7 @@ class RevPiProgram(tkinter.Frame):
             # Ordner
             dirselect = tkfd.askdirectory(
                 parent=self.master,
-                title="Verzeichnis zum Hochladen",
+                title=_("Folder to upload"),
                 mustexist=True,
                 initialdir=self.opt.get("plcupload_dir", self.revpi)
             )
@@ -525,10 +602,12 @@ class RevPiProgram(tkinter.Frame):
             # Zip
             fileselect = tkfd.askopenfilename(
                 parent=self.master,
-                title="Zip-Archive übertragen...",
+                title=_("Upload Zip archive..."),
                 initialdir=self.opt.get("plcupload_file", ""),
                 initialfile=self.revpi + ".zip",
-                filetypes=(("Zip Archiv", "*.zip"), ("All Files", "*.*"))
+                filetypes=(
+                    (_("Zip archive"), "*.zip"), (_("All files"), "*.*")
+                )
             )
             if type(fileselect) == str and fileselect != "":
                 # Zipdatei prüfen
@@ -543,18 +622,22 @@ class RevPiProgram(tkinter.Frame):
 
                 else:
                     tkmsg.showerror(
-                        parent=self.master, title="Fehler",
-                        message="Die angegebene Datei ist kein ZIP-Archiv.")
+                        _("Error"),
+                        _("The specified file is not a ZIP archive."),
+                        parent=self.master
+                    )
                     return False
 
         elif tup == 3:
             # TarGz
             fileselect = tkfd.askopenfilename(
                 parent=self.master,
-                title="TarGz-Archiv übertragen...",
+                title=_("Upload TarGz archiv..."),
                 initialdir=self.opt.get("plcupload_file", ""),
                 initialfile=self.revpi + ".tar.gz",
-                filetypes=(("Tar Archiv", "*.tar.gz"), ("All Files", "*.*"))
+                filetypes=(
+                    (_("TGZ archive"), "*.tar.gz"), (_("All files"), "*.*")
+                )
             )
             if type(fileselect) == str and fileselect != "":
 
@@ -570,8 +653,10 @@ class RevPiProgram(tkinter.Frame):
 
                 else:
                     tkmsg.showerror(
-                        parent=self.master, title="Fehler",
-                        message="Die angegebene Datei ist kein TAR-Archiv.")
+                        _("Error"),
+                        _("The specified file is not a TAR archive."),
+                        parent=self.master
+                    )
                     return False
 
         # Wenn keine Dateien gewählt
@@ -581,12 +666,16 @@ class RevPiProgram(tkinter.Frame):
         # Vor Übertragung aufräumen wenn ausgewählt
         if self.var_cleanup.get() and not self.xmlcli.plcuploadclean():
             tkmsg.showerror(
-                parent=self.masger, title="Fehler",
-                message="Beim Löschen der Dateien auf dem Revolution Pi ist "
-                "ein Fehler aufgetreten.")
+                _("Error"),
+                _("There was an error deleting the files on the "
+                    "Revolution Pi."),
+                parent=self.master
+            )
             return False
 
-        # Flag setzen, weil ab hier Veränderungen existieren
+        # Aktuell konfiguriertes Programm lesen (für uploaded Flag)
+        opt_program = self.xmlcli.get_config()
+        opt_program = opt_program.get("plcprogram", "none.py")
         self.uploaded = True
         ec = 0
 
@@ -595,7 +684,7 @@ class RevPiProgram(tkinter.Frame):
             if fname == rscfile:
                 continue
 
-            # TODO: Fehlerabfang bei Dateilesen
+            # FIXME: Fehlerabfang bei Dateilesen
             with open(fname, "rb") as fh:
 
                 # Dateinamen ermitteln
@@ -603,6 +692,10 @@ class RevPiProgram(tkinter.Frame):
                     sendname = os.path.basename(fname)
                 else:
                     sendname = fname.replace(dirselect, "")[1:]
+
+                # Prüfen ob Dateiname bereits als Startprogramm angegeben ist
+                if sendname == opt_program:
+                    self.uploaded = False
 
                 # Datei übertragen
                 try:
@@ -618,17 +711,21 @@ class RevPiProgram(tkinter.Frame):
 
         if ec == 0:
             tkmsg.showinfo(
-                parent=self.master, title="Erfolgreich",
-                message="Die Übertragung war erfolgreich.")
+                _("Success"),
+                _("The PLC program was transferred successfully."),
+                parent=self.master
+            )
 
             if self.var_picup.get():
                 if rscfile is not None:
                     self.setpictoryrsc(rscfile)
                 else:
                     tkmsg.showerror(
-                        parent=self.master, title="Fehler",
-                        message="Es wurde im Archiv keine piCtory "
-                        "Konfiguration gefunden")
+                        _("Error"),
+                        _("There is no piCtory configuration in this "
+                            "archive."),
+                        parent=self.master
+                    )
 
             # Einstellungen speichern
             if tup == 0:
@@ -644,21 +741,21 @@ class RevPiProgram(tkinter.Frame):
 
         elif ec == -1:
             tkmsg.showerror(
-                parent=self.master, title="Fehler",
-                message="Der Revoluton Pi konnte Teile der Übertragung nicht "
-                "verarbeiten.")
+                _("Error"),
+                _("The Revolution Pi could not process some parts of the "
+                    "transmission."),
+                parent=self.master
+            )
 
         elif ec == -2:
             tkmsg.showerror(
-                parent=self.master, title="Fehler",
-                message="Bei der Übertragung traten Fehler auf")
+                _("Error"),
+                _("Errors occurred during transmission"),
+                parent=self.master
+            )
 
         # Temp-Dir aufräumen
         if dirtmp is not None:
             rmtree(dirtmp)
 
-
-if __name__ == "__main__":
-    root = tkinter.Tk()
-    myapp = RevPiProgram(root, None, "test")
-    root.mainloop()
+        return True

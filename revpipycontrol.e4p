@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project revpipycontrol -->
-<!-- Saved: 2017-04-11, 12:38:06 -->
+<!-- Saved: 2017-07-02, 11:35:49 -->
 <!-- Copyright (C) 2017 Sven Sager, akira@narux.de -->
 <Project version="5.1">
   <Language>en_US</Language>
@@ -9,7 +9,7 @@
   <ProgLanguage mixed="0">Python3</ProgLanguage>
   <ProjectType>Console</ProjectType>
   <Description></Description>
-  <Version>0.2.12</Version>
+  <Version>0.4.1</Version>
   <Author>Sven Sager</Author>
   <Email>akira@narux.de</Email>
   <Eol index="-1"/>
@@ -21,6 +21,8 @@
     <Source>revpipycontrol/revpilogfile.py</Source>
     <Source>revpipycontrol/revpioption.py</Source>
     <Source>revpipycontrol/revpiprogram.py</Source>
+    <Source>revpipycontrol/mytools.py</Source>
+    <Source>revpipycontrol/revpiinfo.py</Source>
   </Sources>
   <Forms/>
   <Translations/>
@@ -30,6 +32,7 @@
     <Other>data</Other>
     <Other>doc</Other>
     <Other>revpipycontrol.api</Other>
+    <Other>stdeb.cfg</Other>
   </Others>
   <MainScript>revpipycontrol/revpipycontrol.py</MainScript>
   <Vcs>
@@ -223,12 +226,6 @@
               <list>
                 <string>setup.py</string>
               </list>
-            </value>
-            <key>
-              <string>noindex</string>
-            </key>
-            <value>
-              <bool>True</bool>
             </value>
             <key>
               <string>outputDirectory</string>

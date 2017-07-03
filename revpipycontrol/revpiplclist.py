@@ -9,9 +9,13 @@ import os.path
 import pickle
 import tkinter
 import tkinter.messagebox as tkmsg
+from mytools import gettrans
 from os import environ
 from os import makedirs
 from sys import platform
+
+# Übersetzungen laden
+_ = gettrans()
 
 # Systemwerte
 if platform == "linux":
@@ -21,8 +25,9 @@ else:
 savefile = os.path.join(homedir, ".revpipyplc", "connections.dat")
 
 
-# Für andere Module zum Laden der Connections
 def get_connections():
+    u"""Verbindungen aus Datei laden.
+    @return dict() mit Verbindungen"""
     if os.path.exists(savefile):
         fh = open(savefile, "rb")
         connections = pickle.load(fh)
@@ -34,21 +39,41 @@ def get_connections():
 class RevPiPlcList(tkinter.Frame):
 
     def __init__(self, master):
+        u"""Init RevPiPlcList-class.
+        @param master tkinter master"""
         super().__init__(master)
+        self.master.bind("<KeyPress-Escape>", self._checkclose)
         self.pack()
 
         self.changes = False
 
         # Daten laden
-        self._connections = {}
+        self._connections = get_connections()
 
         # Fenster bauen
         self._createwidgets()
-        self._loadappdata()
+        self.build_listconn()
+
+    def _checkclose(self, event=None):
+        u"""Prüft ob Fenster beendet werden soll.
+        @param event tkinter-Event"""
+        ask = True
+        if self.changes:
+            ask = tkmsg.askyesno(
+                _("Question"),
+                _("Do you really want to quit? \nUnsaved changes will "
+                    "be lost"),
+                parent=self.master
+            )
+
+        if ask:
+            self.master.destroy()
 
     def _createwidgets(self):
-        self.master.wm_title("RevPi Python PLC Connections")
+        u"""Erstellt alle Widgets."""
+        self.master.wm_title(_("RevPi Python PLC connections"))
         self.master.wm_resizable(width=False, height=False)
+        self.master.protocol("WM_DELETE_WINDOW", self._checkclose)
 
         # Listbox mit vorhandenen Verbindungen
         self.scr_conn = tkinter.Scrollbar(self)
@@ -66,14 +91,14 @@ class RevPiPlcList(tkinter.Frame):
         self.var_port.set("55123")
 
         # Eingabefelder für Adresse und Namen
-        tkinter.Label(self, text="Name").grid(
+        tkinter.Label(self, text=_("Name")).grid(
             column=2, row=0, sticky="wn", padx=5, pady=5)
         self.txt_name = tkinter.Entry(self, textvariable=self.var_name)
         self.txt_name.bind("<KeyRelease>", self.evt_keypress)
         self.txt_name.grid(
             column=3, row=0, columnspan=3, sticky="n", padx=5, pady=5)
 
-        tkinter.Label(self, text="IP-Adresse").grid(
+        tkinter.Label(self, text=_("IP address")).grid(
             column=2, row=1, sticky="wn", padx=5, pady=5
         )
         self.txt_address = tkinter.Entry(self, textvariable=self.var_address)
@@ -81,7 +106,7 @@ class RevPiPlcList(tkinter.Frame):
         self.txt_address.grid(
             column=3,  row=1, columnspan=3, sticky="n", padx=5, pady=5)
 
-        tkinter.Label(self, text="Port").grid(
+        tkinter.Label(self, text=_("Port")).grid(
             column=2, row=2, sticky="wn", padx=5, pady=5)
         self.txt_port = tkinter.Entry(self, textvariable=self.var_port)
         self.txt_port.bind("<KeyRelease>", self.evt_keypress)
@@ -90,32 +115,28 @@ class RevPiPlcList(tkinter.Frame):
 
         # Listenbutton
         self.btn_new = tkinter.Button(
-            self, text="Neu", command=self.evt_btnnew)
+            self, text=_("New"), command=self.evt_btnnew)
         self.btn_new.grid(column=2, row=3, sticky="s")
         self.btn_add = tkinter.Button(
-            self, text="Übernehmen", command=self.evt_btnadd,
+            self, text=_("Apply"), command=self.evt_btnadd,
             state="disabled")
         self.btn_add.grid(column=3, row=3, sticky="s")
         self.btn_remove = tkinter.Button(
-            self, text="Entfernen", command=self.evt_btnremove,
+            self, text=_("Remove"), command=self.evt_btnremove,
             state="disabled")
         self.btn_remove.grid(column=4, row=3, sticky="s")
 
         # Fensterbuttons
         self.btn_save = tkinter.Button(
-            self, text="Speichern", command=self.evt_btnsave)
+            self, text=_("Save"), command=self.evt_btnsave)
         self.btn_save.grid(column=3, row=9, sticky="se")
         self.btn_close = tkinter.Button(
-            self, text="Schließen", command=self.evt_btnclose)
+            self, text=_("Close"), command=self._checkclose)
         self.btn_close.grid(column=4, row=9, sticky="se")
 
-    def _loadappdata(self):
-        if os.path.exists(savefile):
-            fh = open(savefile, "rb")
-            self._connections = pickle.load(fh)
-        self.build_listconn()
-
     def _saveappdata(self):
+        u"""Speichert Verbindungen im home Dir.
+        @return True, bei erfolgreicher Verarbeitung"""
         try:
             makedirs(os.path.dirname(savefile), exist_ok=True)
             fh = open(savefile, "wb")
@@ -126,11 +147,13 @@ class RevPiPlcList(tkinter.Frame):
         return True
 
     def build_listconn(self):
+        u"""Füllt Verbindungsliste."""
         self.list_conn.delete(0, "end")
         lst_conns = sorted(self._connections.keys(), key=lambda x: x.lower())
         self.list_conn.insert("end", *lst_conns)
 
     def evt_btnadd(self):
+        u"""Verbindungseinstellungen übernehmen."""
         # TODO: Daten prüfen
         self._connections[self.var_name.get()] = \
             (self.var_address.get(), self.var_port.get())
@@ -139,20 +162,8 @@ class RevPiPlcList(tkinter.Frame):
         self.evt_btnnew()
         self.changes = True
 
-    def evt_btnclose(self):
-        if self.changes:
-            ask = tkmsg.askyesno(
-                parent=self.master, title="Frage...",
-                message="Wollen Sie wirklich beenden?\n"
-                "Nicht gespeicherte Änderungen gehen verloren",
-            )
-        else:
-            ask = True
-
-        if ask:
-            self.master.destroy()
-
     def evt_btnnew(self):
+        u"""Neue Verbindung erstellen."""
         self.list_conn.select_clear(0, "end")
         self.evt_listconn()
 
@@ -162,13 +173,14 @@ class RevPiPlcList(tkinter.Frame):
         self.var_port.set("55123")
 
     def evt_btnremove(self):
+        u"""Verbindung löschen."""
         item_index = self.list_conn.curselection()
         if len(item_index) == 1:
             item = self.list_conn.get(item_index[0])
             ask = tkmsg.askyesno(
-                "Frage",
-                "Wollen Sie die Ausgewählte Verbindung '{}' wirklich "
-                "löschen?".format(item),
+                _("Question"),
+                _("Do you really want to delete the selected connection '{}'?"
+                    "").format(item),
                 parent=self.master
             )
             if ask:
@@ -179,21 +191,24 @@ class RevPiPlcList(tkinter.Frame):
                 self.changes = True
 
     def evt_btnsave(self):
+        u"""Alle Verbindungen speichern."""
         if self._saveappdata():
             ask = tkmsg.askyesno(
-                "Information", "Verbindungen erfolgreich gespeichert.\n"
-                "Möchten Sie dieses Fenster jetzt schließen?",
+                _("Information"),
+                _("Successfully saved. \nDo you want to close this window?"),
                 parent=self.master
             )
             if ask:
                 self.master.destroy()
         else:
             tkmsg.showerror(
-                "Fehler", "Verbindungen konnten nicht gespeichert werden",
+                _("Error"),
+                _("Failed to save connections"),
                 parent=self.master
             )
 
     def evt_listconn(self, evt=None):
+        u"""Übernimmt Einstellungen in Eingabefelder."""
 
         item_index = self.list_conn.curselection()
         if len(item_index) == 1:
@@ -211,6 +226,7 @@ class RevPiPlcList(tkinter.Frame):
             self.btn_remove["state"] = "disabled"
 
     def evt_keypress(self, evt=None):
+        u"""Passt bei Tastendruck den Status der Buttons an."""
         okvalue = "normal" if (
             self.var_address.get() != ""
             and self.var_name.get() != ""

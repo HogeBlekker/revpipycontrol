@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html><head>
+<title>revpilogfile</title>
+<meta charset="UTF-8">
+</head>
+<body style="background-color:#FFFFFF;color:#000000"><a NAME="top" ID="top"></a>
+<h1 style="background-color:#FFFFFF;color:#0000FF">
+revpilogfile</h1>
+
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Global Attributes</h3>
+<table>
+<tr><td>_</td></tr>
+</table>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Classes</h3>
+<table>
+<tr>
+<td><a style="color:#0000FF" href="#RevPiLogfile">RevPiLogfile</a></td>
+<td></td>
+</tr>
+</table>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Functions</h3>
+<table>
+<tr><td>None</td></tr>
+</table>
+<hr /><hr />
+<a NAME="RevPiLogfile" ID="RevPiLogfile"></a>
+<h2 style="background-color:#FFFFFF;color:#0000FF">RevPiLogfile</h2>
+
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Derived from</h3>
+tkinter.Frame
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Class Attributes</h3>
+<table>
+<tr><td>None</td></tr>
+</table>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Class Methods</h3>
+<table>
+<tr><td>None</td></tr>
+</table>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Methods</h3>
+<table>
+<tr>
+<td><a style="color:#0000FF" href="#RevPiLogfile.__init__">RevPiLogfile</a></td>
+<td>Init RevPiLogfile-Class.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiLogfile._checkclose">_checkclose</a></td>
+<td>Pr&#252;ft ob Fenster beendet werden soll.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiLogfile._createwidgets">_createwidgets</a></td>
+<td>Erstellt alle Widgets.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiLogfile._load_log">_load_log</a></td>
+<td>L&#228;d die angegebenen Logfiles herunter.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiLogfile.btn_clearapp">btn_clearapp</a></td>
+<td>Leert die Logliste der App.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiLogfile.btn_clearplc">btn_clearplc</a></td>
+<td>Leert die Logliste des PLC.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiLogfile.get_applog">get_applog</a></td>
+<td>Ruft App Logbuch ab.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiLogfile.get_plclog">get_plclog</a></td>
+<td>Ruft PLC Logbuch ab.</td>
+</tr>
+</table>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Static Methods</h3>
+<table>
+<tr><td>None</td></tr>
+</table>
+<a NAME="RevPiLogfile.__init__" ID="RevPiLogfile.__init__"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiLogfile (Constructor)</h3>
+<b>RevPiLogfile</b>(<i>master, xmlcli</i>)
+<p>
+Init RevPiLogfile-Class.
+</p><a NAME="RevPiLogfile._checkclose" ID="RevPiLogfile._checkclose"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiLogfile._checkclose</h3>
+<b>_checkclose</b>(<i>event=None</i>)
+<p>
+Pr&#252;ft ob Fenster beendet werden soll.
+</p><dl>
+<dt><i>event</i></dt>
+<dd>
+tkinter-Event
+</dd>
+</dl><a NAME="RevPiLogfile._createwidgets" ID="RevPiLogfile._createwidgets"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiLogfile._createwidgets</h3>
+<b>_createwidgets</b>(<i></i>)
+<p>
+Erstellt alle Widgets.
+</p><a NAME="RevPiLogfile._load_log" ID="RevPiLogfile._load_log"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiLogfile._load_log</h3>
+<b>_load_log</b>(<i>textwidget, xmlcall, startposition, full</i>)
+<p>
+L&#228;d die angegebenen Logfiles herunter.
+</p><dl>
+<dt><i>textwidget</i></dt>
+<dd>
+Widget in das Logs eingef&#252;gt werden sollen
+</dd><dt><i>xmlcall</i></dt>
+<dd>
+xmlrpc Funktion zum Abrufen der Logdaten
+</dd><dt><i>startposition</i></dt>
+<dd>
+Startposition ab der Logdaten kommen sollen
+</dd><dt><i>full</i></dt>
+<dd>
+Komplettes Logbuch laden
+</dd>
+</dl><dl>
+<dt>Returns:</dt>
+<dd>
+Ende der Datei (neue Startposition)
+</dd>
+</dl><a NAME="RevPiLogfile.btn_clearapp" ID="RevPiLogfile.btn_clearapp"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiLogfile.btn_clearapp</h3>
+<b>btn_clearapp</b>(<i></i>)
+<p>
+Leert die Logliste der App.
+</p><a NAME="RevPiLogfile.btn_clearplc" ID="RevPiLogfile.btn_clearplc"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiLogfile.btn_clearplc</h3>
+<b>btn_clearplc</b>(<i></i>)
+<p>
+Leert die Logliste des PLC.
+</p><a NAME="RevPiLogfile.get_applog" ID="RevPiLogfile.get_applog"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiLogfile.get_applog</h3>
+<b>get_applog</b>(<i>full=False</i>)
+<p>
+Ruft App Logbuch ab.
+</p><dl>
+<dt><i>full</i></dt>
+<dd>
+Ganzes Logbuch laden
+</dd>
+</dl><a NAME="RevPiLogfile.get_plclog" ID="RevPiLogfile.get_plclog"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiLogfile.get_plclog</h3>
+<b>get_plclog</b>(<i>full=False</i>)
+<p>
+Ruft PLC Logbuch ab.
+</p><dl>
+<dt><i>full</i></dt>
+<dd>
+Ganzes Logbuch laden
+</dd>
+</dl>
+<div align="right"><a style="color:#0000FF" href="#top">Up</a></div>
+<hr />
+</body></html>
