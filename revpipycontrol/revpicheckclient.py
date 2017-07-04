@@ -210,7 +210,7 @@ class RevPiCheckClient(tkinter.Frame):
 
         for dev in self.lst_devices:
             win = tkinter.Toplevel(self)
-            win.wm_title(self.dict_devices[dev])
+            win.wm_title("{} | {}".format(dev, self.dict_devices[dev]))
             win.protocol(
                 "WM_DELETE_WINDOW",
                 lambda win=win: self.__hidewin(win)
@@ -232,7 +232,7 @@ class RevPiCheckClient(tkinter.Frame):
             # Button erstellen
             btn = tkinter.Button(devgrp)
             btn["command"] = lambda win=win: self.__showwin(win)
-            btn["text"] = self.dict_devices[dev]
+            btn["text"] = "{} | {}".format(dev, self.dict_devices[dev])
             btn.pack(**cFxPxy53)
 
         # Steuerungsfunktionen
