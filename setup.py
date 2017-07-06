@@ -23,7 +23,7 @@ globsetup = {
     "author_email": "akira@narux.de",
     "url": "https://revpimodio.org/revpipyplc/",
     "license": "LGPLv3",
-    "version": "0.4.1",
+    "version": "0.4.2",
 
     "name": "revpipycontrol",
 

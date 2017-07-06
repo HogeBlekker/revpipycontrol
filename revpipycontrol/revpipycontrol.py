@@ -23,7 +23,7 @@ from xmlrpc.client import ServerProxy
 # Übersetzung laden
 _ = gettrans()
 
-pycontrolversion = "0.4.1"
+pycontrolversion = "0.4.2"
 
 
 class RevPiPyControl(tkinter.Frame):
@@ -77,10 +77,12 @@ class RevPiPyControl(tkinter.Frame):
         if self.tkprogram is not None:
             self.tkprogram.destroy()
         if self.debugframe is not None:
-            self.plcdebug()
             self.debugframe.destroy()
-            self.cli.psstop()
             self.debugframe = None
+            try:
+                self.cli.psstop()
+            except:
+                pass
 
     def _closeapp(self, event=None):
         u"""Räumt auf und beendet Programm.
@@ -187,7 +189,7 @@ class RevPiPyControl(tkinter.Frame):
         @param text Verbindungsname
         @param reconnect Socket Timeout nicht heruntersetzen"""
         if reconnect:
-            socket.setdefaulttimeout(15)
+            socket.setdefaulttimeout(10)
         else:
             socket.setdefaulttimeout(2)
 
@@ -204,7 +206,7 @@ class RevPiPyControl(tkinter.Frame):
             self.servererror()
         else:
             self._closeall()
-            socket.setdefaulttimeout(15)
+            socket.setdefaulttimeout(10)
             self.cli = ServerProxy(
                 "http://{}:{}".format(
                     self.dict_conn[text][0], int(self.dict_conn[text][1])
@@ -227,7 +229,8 @@ class RevPiPyControl(tkinter.Frame):
         self._fillconnbar()
 
     def plcdebug(self):
-        u"""Baut den Debugframe und packt ihn."""
+        u"""Baut den Debugframe und packt ihn.
+        @return None"""
         self.btn_debug["state"] = "disabled"
 
         if "psstart" not in self.xmlfuncs:
@@ -245,9 +248,20 @@ class RevPiPyControl(tkinter.Frame):
             if self.debugframe is None \
                     or self.debugframe.err_workvalues >= \
                     self.debugframe.max_errors:
-                self.debugframe = revpicheckclient.RevPiCheckClient(
-                    self, self.cli, self.xmlmode
-                )
+                try:
+                    self.debugframe = revpicheckclient.RevPiCheckClient(
+                        self, self.cli, self.xmlmode
+                    )
+                except:
+                    tkmsg.showwarning(
+                        _("Error"),
+                        _("Can not load piCtory configuration. \n"
+                            "Have you created a hardware configuration? "
+                            "Please check this in piCtory!"),
+                        parent=self.master
+                    )
+                    self.btn_debug["state"] = "normal"
+                    return None
 
             # Show/Hide wechseln
             if self.debugframe.winfo_viewable():
