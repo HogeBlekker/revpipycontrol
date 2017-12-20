@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+# -*- coding: utf-8 -*-
 #
 # RevPiPyControl
 # Version: see global var pycontrolverion
@@ -6,7 +7,6 @@
 # Webpage: https://revpimodio.org/revpipyplc/
 # (c) Sven Sager, License: LGPLv3
 #
-# -*- coding: utf-8 -*-
 import revpicheckclient
 import revpiinfo
 import revpilogfile
@@ -23,7 +23,7 @@ from xmlrpc.client import ServerProxy
 # Übersetzung laden
 _ = gettrans()
 
-pycontrolversion = "0.4.2"
+pycontrolversion = "0.5.0"
 
 
 class RevPiPyControl(tkinter.Frame):

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 # RevPiPyControl
 #
@@ -6,7 +7,6 @@
 #
 # Thranks to: http://stackoverflow.com/questions/3085696/adding-a-
 # scrollbar-to-a-group-of-widgets-in-tkinter
-
 import pickle
 import tkinter
 import tkinter.messagebox as tkmsg

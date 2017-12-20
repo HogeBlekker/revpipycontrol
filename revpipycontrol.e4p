@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project revpipycontrol -->
-<!-- Saved: 2017-07-06, 13:33:38 -->
+<!-- Saved: 2017-12-20, 14:05:18 -->
 <!-- Copyright (C) 2017 Sven Sager, akira@narux.de -->
 <Project version="5.1">
   <Language>en_US</Language>
@@ -9,10 +9,10 @@
   <ProgLanguage mixed="0">Python3</ProgLanguage>
   <ProjectType>Console</ProjectType>
   <Description></Description>
-  <Version>0.4.2</Version>
+  <Version>0.5.0</Version>
   <Author>Sven Sager</Author>
   <Email>akira@narux.de</Email>
-  <Eol index="-1"/>
+  <Eol index="1"/>
   <Sources>
     <Source>revpipycontrol/revpipycontrol.py</Source>
     <Source>revpipycontrol/revpicheckclient.py</Source>

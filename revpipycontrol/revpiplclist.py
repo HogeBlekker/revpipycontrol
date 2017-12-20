@@ -1,17 +1,17 @@
+# -*- coding: utf-8 -*-
 #
 # RevPiPyControl
 #
 # Webpage: https://revpimodio.org/revpipyplc/
 # (c) Sven Sager, License: LGPLv3
 #
-# -*- coding: utf-8 -*-
+u"""Fenster um RevPi-Verbindungen einzurichten."""
 import os.path
 import pickle
 import tkinter
 import tkinter.messagebox as tkmsg
 from mytools import gettrans
-from os import environ
-from os import makedirs
+from os import environ, makedirs
 from sys import platform
 
 # Übersetzungen laden
@@ -37,6 +37,8 @@ def get_connections():
 
 
 class RevPiPlcList(tkinter.Frame):
+
+    u"""TK Fenster."""
 
     def __init__(self, master):
         u"""Init RevPiPlcList-class.
@@ -92,11 +94,13 @@ class RevPiPlcList(tkinter.Frame):
 
         # Eingabefelder für Adresse und Namen
         tkinter.Label(self, text=_("Name")).grid(
-            column=2, row=0, sticky="wn", padx=5, pady=5)
+            column=2, row=0, sticky="wn", padx=5, pady=5
+        )
         self.txt_name = tkinter.Entry(self, textvariable=self.var_name)
         self.txt_name.bind("<KeyRelease>", self.evt_keypress)
         self.txt_name.grid(
-            column=3, row=0, columnspan=3, sticky="n", padx=5, pady=5)
+            column=3, row=0, columnspan=3, sticky="n", padx=5, pady=5
+        )
 
         tkinter.Label(self, text=_("IP address")).grid(
             column=2, row=1, sticky="wn", padx=5, pady=5
@@ -104,34 +108,42 @@ class RevPiPlcList(tkinter.Frame):
         self.txt_address = tkinter.Entry(self, textvariable=self.var_address)
         self.txt_address.bind("<KeyRelease>", self.evt_keypress)
         self.txt_address.grid(
-            column=3,  row=1, columnspan=3, sticky="n", padx=5, pady=5)
+            column=3,  row=1, columnspan=3, sticky="n", padx=5, pady=5
+        )
 
         tkinter.Label(self, text=_("Port")).grid(
-            column=2, row=2, sticky="wn", padx=5, pady=5)
+            column=2, row=2, sticky="wn", padx=5, pady=5
+        )
         self.txt_port = tkinter.Entry(self, textvariable=self.var_port)
         self.txt_port.bind("<KeyRelease>", self.evt_keypress)
         self.txt_port.grid(
-            column=3, row=2, columnspan=3, sticky="n", padx=5, pady=5)
+            column=3, row=2, columnspan=3, sticky="n", padx=5, pady=5
+        )
 
         # Listenbutton
         self.btn_new = tkinter.Button(
-            self, text=_("New"), command=self.evt_btnnew)
+            self, text=_("New"), command=self.evt_btnnew
+        )
         self.btn_new.grid(column=2, row=3, sticky="s")
         self.btn_add = tkinter.Button(
-            self, text=_("Apply"), command=self.evt_btnadd,
-            state="disabled")
+            self, text=_("Apply"),
+            command=self.evt_btnadd, state="disabled"
+        )
         self.btn_add.grid(column=3, row=3, sticky="s")
         self.btn_remove = tkinter.Button(
-            self, text=_("Remove"), command=self.evt_btnremove,
-            state="disabled")
+            self, text=_("Remove"),
+            command=self.evt_btnremove, state="disabled"
+        )
         self.btn_remove.grid(column=4, row=3, sticky="s")
 
         # Fensterbuttons
         self.btn_save = tkinter.Button(
-            self, text=_("Save"), command=self.evt_btnsave)
+            self, text=_("Save"), command=self.evt_btnsave
+        )
         self.btn_save.grid(column=3, row=9, sticky="se")
         self.btn_close = tkinter.Button(
-            self, text=_("Close"), command=self._checkclose)
+            self, text=_("Close"), command=self._checkclose
+        )
         self.btn_close.grid(column=4, row=9, sticky="se")
 
     def _saveappdata(self):
@@ -220,7 +232,6 @@ class RevPiPlcList(tkinter.Frame):
             self.var_port.set(self._connections[item][1])
 
             self.btn_add["state"] == "normal"
-
             self.btn_remove["state"] = "normal"
         else:
             self.btn_remove["state"] = "disabled"

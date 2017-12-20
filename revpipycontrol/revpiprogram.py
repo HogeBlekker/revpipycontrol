@@ -1,10 +1,10 @@
+# -*- coding: utf-8 -*-
 #
 # RevPiPyControl
 #
 # Webpage: https://revpimodio.org/revpipyplc/
 # (c) Sven Sager, License: LGPLv3
 #
-# -*- coding: utf-8 -*-
 import gzip
 import os
 import pickle
@@ -121,8 +121,9 @@ class RevPiProgram(tkinter.Frame):
         lbl["text"] = _("Download PLC program as:")
         lbl.grid(column=0, row=r, **cpadw)
         opt = tkinter.OptionMenu(
-            prog, self.var_typedown, *self.lst_typedown,
-            command=self._evt_optdown)
+            prog, self.var_typedown, command=self._evt_optdown,
+            *self.lst_typedown
+        )
         opt["width"] = 10
         opt.grid(column=1, row=r, **cpad)
 
@@ -131,6 +132,7 @@ class RevPiProgram(tkinter.Frame):
         self.ckb_picdown["text"] = _("include piCtory configuration")
         self.ckb_picdown["variable"] = self.var_picdown
         self.ckb_picdown.grid(column=0, row=r, **cpadw)
+
         btn = tkinter.Button(prog)
         btn["command"] = self.plcdownload
         btn["text"] = _("Download")
@@ -140,9 +142,11 @@ class RevPiProgram(tkinter.Frame):
         lbl = tkinter.Label(prog)
         lbl["text"] = _("Upload PLC program as:")
         lbl.grid(column=0, row=r, **cpadw)
+
         opt = tkinter.OptionMenu(
-            prog, self.var_typeup, *self.lst_typeup,
-            command=self._evt_optup)
+            prog, self.var_typeup, command=self._evt_optup,
+            *self.lst_typeup
+        )
         opt["state"] = self.xmlstate
         opt["width"] = 10
         opt.grid(column=1, row=r, **cpad)
@@ -160,6 +164,7 @@ class RevPiProgram(tkinter.Frame):
         self.ckb_picup["text"] = _("includes piCtory configuration")
         self.ckb_picup["variable"] = self.var_picup
         self.ckb_picup.grid(column=0, row=r, **cpadw)
+
         btn = tkinter.Button(prog)
         btn["command"] = self.plcupload
         btn["state"] = self.xmlstate
@@ -175,13 +180,16 @@ class RevPiProgram(tkinter.Frame):
         lbl = tkinter.Label(picto)
         lbl["text"] = _("Download piCtory configuration")
         lbl.grid(column=0, row=0, **cpadw)
+
         btn = tkinter.Button(picto)
         btn["command"] = self.getpictoryrsc
         btn["text"] = _("Download")
         btn.grid(column=1, row=0, **cpad)
+
         lbl = tkinter.Label(picto)
         lbl["text"] = _("Upload piCtory configuration")
         lbl.grid(column=0, row=1, **cpadw)
+
         btn = tkinter.Button(picto)
         btn["command"] = self.setpictoryrsc
         btn["state"] = self.xmlstate
@@ -193,9 +201,11 @@ class RevPiProgram(tkinter.Frame):
         proc.columnconfigure(0, weight=1)
         proc["text"] = _("piControl0 process image")
         proc.grid(columnspan=2, pady=2, sticky="we")
+
         lbl = tkinter.Label(proc)
         lbl["text"] = _("Download process image dump")
         lbl.grid(column=0, row=0, **cpadw)
+
         btn = tkinter.Button(proc)
         btn["command"] = self.getprocimg
         btn["text"] = _("Download")
@@ -206,9 +216,11 @@ class RevPiProgram(tkinter.Frame):
         picon.columnconfigure(0, weight=1)
         picon["text"] = _("Reset piControl")
         picon.grid(columnspan=2, pady=2, sticky="we")
+
         lbl = tkinter.Label(picon)
         lbl["text"] = _("Execute piControlReset")
         lbl.grid(column=0, row=0, **cpadw)
+
         btn = tkinter.Button(picon)
         btn["command"] = self.picontrolreset
         btn["text"] = _("execute")

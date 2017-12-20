@@ -1,10 +1,10 @@
+# -*- coding: utf-8 -*-
 #
 # RevPiPyControl
 #
 # Webpage: https://revpimodio.org/revpipyplc/
 # (c) Sven Sager, License: LGPLv3
 #
-# -*- coding: utf-8 -*-
 import tkinter
 import tkinter.messagebox as tkmsg
 from mytools import gettrans

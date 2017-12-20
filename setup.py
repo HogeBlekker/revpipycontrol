@@ -1,8 +1,7 @@
-#! /usr/bin/env python3
+# -*- coding: utf-8 -*-
 #
 # (c) Sven Sager, License: LGPLv3
 #
-# -*- coding: utf-8 -*-
 """Setupscript fuer RevPiPyLoad."""
 import distutils.command.install_egg_info
 from sys import platform
@@ -23,7 +22,7 @@ globsetup = {
     "author_email": "akira@narux.de",
     "url": "https://revpimodio.org/revpipyplc/",
     "license": "LGPLv3",
-    "version": "0.4.2",
+    "version": "0.5.0",
 
     "name": "revpipycontrol",
 
