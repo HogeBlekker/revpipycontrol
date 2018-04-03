@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project revpipycontrol -->
-<!-- Saved: 2018-03-12, 15:45:28 -->
+<!-- Saved: 2018-04-03, 12:04:56 -->
 <!-- Copyright (C) 2018 Sven Sager, akira@narux.de -->
 <Project version="5.1">
   <Language>en_US</Language>
@@ -23,8 +23,8 @@
     <Source>revpipycontrol/revpiprogram.py</Source>
     <Source>revpipycontrol/mytools.py</Source>
     <Source>revpipycontrol/revpiinfo.py</Source>
-    <Source>revpipycontrol/revpioptionlegacy.py</Source>
     <Source>revpipycontrol/aclmanager.py</Source>
+    <Source>revpipycontrol/revpilegacy.py</Source>
   </Sources>
   <Forms/>
   <Translations/>

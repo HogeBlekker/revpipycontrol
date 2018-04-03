@@ -5,6 +5,7 @@
 # Webpage: https://revpimodio.org/revpipyplc/
 # (c) Sven Sager, License: LGPLv3
 #
+u"""Programminformationen anzeigen."""
 import tkinter
 import tkinter.font as tkf
 import webbrowser
@@ -15,6 +16,8 @@ _ = gettrans()
 
 
 class RevPiInfo(tkinter.Frame):
+
+    u"""Baut Frame für Programminformationen."""
 
     def __init__(self, master, xmlcli, version):
         u"""Init RevPiLogfile-Class."""

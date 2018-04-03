@@ -5,6 +5,7 @@
 # Webpage: https://revpimodio.org/revpipyplc/
 # (c) Sven Sager, License: LGPLv3
 #
+u"""Alte Klassen laden hier, bevor sie entsorgt werden."""
 import tkinter
 import tkinter.messagebox as tkmsg
 from mytools import gettrans
@@ -14,6 +15,8 @@ _ = gettrans()
 
 
 class RevPiOption(tkinter.Frame):
+
+    u"""Optionen für RevPiPyload vor 0.6.0."""
 
     def __init__(self, master, xmlcli):
         u"""Init RevPiOption-Class.

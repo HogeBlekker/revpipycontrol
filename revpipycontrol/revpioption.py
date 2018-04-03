@@ -5,6 +5,7 @@
 # Webpage: https://revpimodio.org/revpipyplc/
 # (c) Sven Sager, License: LGPLv3
 #
+u"""Optionsfenster."""
 import tkinter
 import tkinter.messagebox as tkmsg
 from aclmanager import AclManager
@@ -15,6 +16,8 @@ _ = gettrans()
 
 
 class RevPiOption(tkinter.Frame):
+
+    u"""Zeigt Optionen von RevPiPyLoad an."""
 
     def __init__(self, master, xmlcli):
         u"""Init RevPiOption-Class.
@@ -76,6 +79,19 @@ class RevPiOption(tkinter.Frame):
         if ask:
             self.master.destroy()
 
+    def _checkvalues(self):
+        u"""Prüft alle Werte auf Gültigkeit.
+        @return True, wenn alle Werte gültig sind"""
+        if not self.var_reload_delay.get().isdigit():
+            tkmsg.showerror(
+                _("Error"),
+                _("The value of 'restart delay' ist not valid."),
+                parent=self.master
+            )
+            return False
+
+        return True
+
     def _createwidgets(self):
         u"""Erstellt Widgets."""
         self.master.wm_title(_("RevPi Python PLC Options"))
@@ -102,17 +118,27 @@ class RevPiOption(tkinter.Frame):
         ckb_start["text"] = _("Start program automatically")
         ckb_start["state"] = xmlstate
         ckb_start["variable"] = self.var_start
-        ckb_start.grid(**cpadw)
+        ckb_start.grid(columnspan=2, **cpadw)
 
         ckb_reload = tkinter.Checkbutton(stst)
         ckb_reload["text"] = _("Restart program after exit")
         ckb_reload["state"] = xmlstate
         ckb_reload["variable"] = self.var_reload
-        ckb_reload.grid(**cpadw)
+        ckb_reload.grid(columnspan=2, **cpadw)
+
+        lbl = tkinter.Label(stst)
+        lbl["text"] = _("Restart after n seconds of delay")
+        lbl.grid(**cpadw)
+        sbx = tkinter.Spinbox(stst)
+        sbx["to"] = 60
+        sbx["from_"] = 5
+        sbx["textvariable"] = self.var_reload_delay
+        sbx["width"] = 4
+        sbx.grid(column=1, row=2, **cpade)
 
         lbl = tkinter.Label(stst)
         lbl["text"] = _("Set process image to NULL if program terminates...")
-        lbl.grid(**cpadw)
+        lbl.grid(columnspan=2, **cpadw)
 
         ckb_zexit = tkinter.Checkbutton(stst, justify="left")
         ckb_zexit["state"] = xmlstate
@@ -261,6 +287,10 @@ class RevPiOption(tkinter.Frame):
                 _("You have not made any changes to save."),
             )
             self._checkclose()
+            return None
+
+        # Gültigkeitsprüfung
+        if not self._checkvalues():
             return None
 
         ask = tkmsg.askyesnocancel(

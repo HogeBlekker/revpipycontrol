@@ -376,6 +376,7 @@ class AclManager(ttk.Frame):
     def _save(self):
         u"""Übernimt die Änderungen."""
         self.__oldacl = self.__acl.acl
+        self._checkclose()
 
     def _savefields(self):
         u"""Übernimmt neuen ACL Eintrag."""

@@ -5,6 +5,7 @@
 # Webpage: https://revpimodio.org/revpipyplc/
 # (c) Sven Sager, License: LGPLv3
 #
+u"""Zeigt die Logfiles an."""
 import tkinter
 from mytools import gettrans
 
@@ -13,6 +14,8 @@ _ = gettrans()
 
 
 class RevPiLogfile(tkinter.Frame):
+
+    u"""Baut Fenster für Logfiles."""
 
     def __init__(self, master, xmlcli):
         u"""Init RevPiLogfile-Class."""

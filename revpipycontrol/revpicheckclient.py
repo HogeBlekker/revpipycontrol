@@ -7,6 +7,7 @@
 #
 # Thranks to: http://stackoverflow.com/questions/3085696/adding-a-
 # scrollbar-to-a-group-of-widgets-in-tkinter
+u"""Fenstererweiterung für den 'watch modus'."""
 import pickle
 import tkinter
 import tkinter.messagebox as tkmsg
@@ -19,6 +20,8 @@ _ = gettrans()
 
 
 class RevPiCheckClient(tkinter.Frame):
+
+    u"""Baut Fenstererweiterung für 'watch modus'."""
 
     def __init__(self, master, xmlcli, xmlmode=0):
         """Instantiiert MyApp-Klasse."""

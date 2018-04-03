@@ -5,6 +5,7 @@
 # Webpage: https://revpimodio.org/revpipyplc/
 # (c) Sven Sager, License: LGPLv3
 #
+u"""PLC Programm und Konfig hoch und runterladen."""
 import gzip
 import os
 import pickle
@@ -33,6 +34,8 @@ savefile = os.path.join(homedir, ".revpipyplc", "programpath.dat")
 
 
 class RevPiProgram(tkinter.Frame):
+
+    u"""Zeigt Programmfenster an."""
 
     def __init__(self, master, xmlcli, xmlmode, revpi):
         u"""Init RevPiProgram-Class.

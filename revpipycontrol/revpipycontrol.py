@@ -12,6 +12,7 @@ import revpicheckclient
 import revpiinfo
 import revpilogfile
 import revpioption
+import revpilegacy
 import revpiplclist
 import revpiprogram
 import socket
@@ -29,6 +30,8 @@ pycontrolversion = "0.6.0"
 
 class RevPiPyControl(tkinter.Frame):
 
+    u"""Baut Hauptprogramm auf."""
+
     def __init__(self, master=None):
         u"""Init RevPiPyControl-Class.
         @param master tkinter master"""
@@ -40,6 +43,7 @@ class RevPiPyControl(tkinter.Frame):
         self.dict_conn = revpiplclist.get_connections()
         self.errcount = 0
         self.revpiname = None
+        self.revpipyversion = [0, 0, 0]
         self.xmlfuncs = []
         self.xmlmode = 0
 
@@ -203,6 +207,7 @@ class RevPiPyControl(tkinter.Frame):
         try:
             self.xmlfuncs = sp.system.listMethods()
             self.xmlmode = sp.xmlmodus()
+            self.revpipyversion = list(map(int, sp.version().split(".")))
         except:
             self.servererror()
         else:
@@ -319,8 +324,16 @@ class RevPiPyControl(tkinter.Frame):
             win = tkinter.Toplevel(self)
             win.focus_set()
             win.grab_set()
-            self.tkoptions = \
-                revpioption.RevPiOption(win, self.cli)
+
+            # Gegenstelle prüfen und passende Optionen laden
+            print(self.revpipyversion)
+            if self.revpipyversion[0] == 0 and self.revpipyversion[1] < 6:
+                self.tkoptions = \
+                    revpilegacy.RevPiOption(win, self.cli)
+            else:
+                self.tkoptions = \
+                    revpioption.RevPiOption(win, self.cli)
+
             self.wait_window(win)
             if self.tkoptions.dc is not None and self.tkoptions.dorestart:
 
