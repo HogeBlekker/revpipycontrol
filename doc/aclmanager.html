@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html><head>
+<title>aclmanager</title>
+<meta charset="UTF-8">
+</head>
+<body style="background-color:#FFFFFF;color:#000000"><a NAME="top" ID="top"></a>
+<h1 style="background-color:#FFFFFF;color:#0000FF">
+aclmanager</h1>
+
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Global Attributes</h3>
+<table>
+<tr><td>_</td></tr>
+</table>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Classes</h3>
+<table>
+<tr>
+<td><a style="color:#0000FF" href="#AclManager">AclManager</a></td>
+<td>Hauptfenster des ACL-Managers.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#IpAclManager">IpAclManager</a></td>
+<td>Verwaltung fuer IP Adressen und deren ACL Level.</td>
+</tr>
+</table>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Functions</h3>
+<table>
+<tr><td>None</td></tr>
+</table>
+<hr /><hr />
+<a NAME="AclManager" ID="AclManager"></a>
+<h2 style="background-color:#FFFFFF;color:#0000FF">AclManager</h2>
+<p>
+Hauptfenster des ACL-Managers.
+</p>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Derived from</h3>
+ttk.Frame
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Class Attributes</h3>
+<table>
+<tr><td>acl</td></tr><tr><td>acltext</td></tr><tr><td>root</td></tr>
+</table>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Class Methods</h3>
+<table>
+<tr><td>None</td></tr>
+</table>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Methods</h3>
+<table>
+<tr>
+<td><a style="color:#0000FF" href="#AclManager.__init__">AclManager</a></td>
+<td>Init RevPiOption-Class.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#AclManager.__get_acltext">__get_acltext</a></td>
+<td>Getter fuer Leveltexte.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#AclManager.__set_acltext">__set_acltext</a></td>
+<td>Setter fuer Leveltexte.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#AclManager._ask_delete">_ask_delete</a></td>
+<td>L&#246;scht ein Eintrag der Liste.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#AclManager._changesdone">_changesdone</a></td>
+<td>Pr&#252;ft ob sich die Einstellungen ge&#228;ndert haben.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#AclManager._checkclose">_checkclose</a></td>
+<td>Pr&#252;ft ob Fenster beendet werden soll.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#AclManager._clearfields">_clearfields</a></td>
+<td>Leert die Eingabefelder.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#AclManager._createwidgets">_createwidgets</a></td>
+<td>Erstellt Widgets.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#AclManager._loadfields">_loadfields</a></td>
+<td>&#220;bernimmt Listeneintrag in Editfelder.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#AclManager._refreshacls">_refreshacls</a></td>
+<td>Leert die ACL Liste und f&#252;llt sie neu.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#AclManager._save">_save</a></td>
+<td>&#220;bernimt die &#196;nderungen.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#AclManager._savefields">_savefields</a></td>
+<td>&#220;bernimmt neuen ACL Eintrag.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#AclManager._status_editremove">_status_editremove</a></td>
+<td>Setzt state der Buttons.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#AclManager.get_acl">get_acl</a></td>
+<td>Gibt die Konfigurierten ACL zur&#252;ck.</td>
+</tr>
+</table>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Static Methods</h3>
+<table>
+<tr><td>None</td></tr>
+</table>
+<a NAME="AclManager.__init__" ID="AclManager.__init__"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+AclManager (Constructor)</h3>
+<b>AclManager</b>(<i>master, minlevel, maxlevel, acl_str="", readonly=False</i>)
+<p>
+Init RevPiOption-Class.
+</p><dl>
+<dt>Returns:</dt>
+<dd>
+None
+</dd>
+</dl><a NAME="AclManager.__get_acltext" ID="AclManager.__get_acltext"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+AclManager.__get_acltext</h3>
+<b>__get_acltext</b>(<i></i>)
+<p>
+Getter fuer Leveltexte.
+</p><dl>
+<dt>Returns:</dt>
+<dd>
+Leveltexte als <class 'dict'>
+</dd>
+</dl><a NAME="AclManager.__set_acltext" ID="AclManager.__set_acltext"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+AclManager.__set_acltext</h3>
+<b>__set_acltext</b>(<i>value</i>)
+<p>
+Setter fuer Leveltexte.
+</p><dl>
+<dt><i>value</i></dt>
+<dd>
+Leveltexte als <class 'dict'>
+</dd>
+</dl><a NAME="AclManager._ask_delete" ID="AclManager._ask_delete"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+AclManager._ask_delete</h3>
+<b>_ask_delete</b>(<i></i>)
+<p>
+L&#246;scht ein Eintrag der Liste.
+</p><a NAME="AclManager._changesdone" ID="AclManager._changesdone"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+AclManager._changesdone</h3>
+<b>_changesdone</b>(<i></i>)
+<p>
+Pr&#252;ft ob sich die Einstellungen ge&#228;ndert haben.
+</p><dl>
+<dt>Returns:</dt>
+<dd>
+True, wenn min. eine Einstellung ge&#228;ndert wurde
+</dd>
+</dl><a NAME="AclManager._checkclose" ID="AclManager._checkclose"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+AclManager._checkclose</h3>
+<b>_checkclose</b>(<i>event=None</i>)
+<p>
+Pr&#252;ft ob Fenster beendet werden soll.
+</p><dl>
+<dt><i>event</i></dt>
+<dd>
+tkinter-Event
+</dd>
+</dl><a NAME="AclManager._clearfields" ID="AclManager._clearfields"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+AclManager._clearfields</h3>
+<b>_clearfields</b>(<i></i>)
+<p>
+Leert die Eingabefelder.
+</p><a NAME="AclManager._createwidgets" ID="AclManager._createwidgets"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+AclManager._createwidgets</h3>
+<b>_createwidgets</b>(<i></i>)
+<p>
+Erstellt Widgets.
+</p><a NAME="AclManager._loadfields" ID="AclManager._loadfields"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+AclManager._loadfields</h3>
+<b>_loadfields</b>(<i></i>)
+<p>
+&#220;bernimmt Listeneintrag in Editfelder.
+</p><a NAME="AclManager._refreshacls" ID="AclManager._refreshacls"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+AclManager._refreshacls</h3>
+<b>_refreshacls</b>(<i></i>)
+<p>
+Leert die ACL Liste und f&#252;llt sie neu.
+</p><a NAME="AclManager._save" ID="AclManager._save"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+AclManager._save</h3>
+<b>_save</b>(<i></i>)
+<p>
+&#220;bernimt die &#196;nderungen.
+</p><a NAME="AclManager._savefields" ID="AclManager._savefields"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+AclManager._savefields</h3>
+<b>_savefields</b>(<i></i>)
+<p>
+&#220;bernimmt neuen ACL Eintrag.
+</p><a NAME="AclManager._status_editremove" ID="AclManager._status_editremove"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+AclManager._status_editremove</h3>
+<b>_status_editremove</b>(<i>tkevt</i>)
+<p>
+Setzt state der Buttons.
+</p><a NAME="AclManager.get_acl" ID="AclManager.get_acl"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+AclManager.get_acl</h3>
+<b>get_acl</b>(<i></i>)
+<p>
+Gibt die Konfigurierten ACL zur&#252;ck.
+</p><dl>
+<dt>Returns:</dt>
+<dd>
+ACL als <class 'str'>
+</dd>
+</dl>
+<div align="right"><a style="color:#0000FF" href="#top">Up</a></div>
+<hr /><hr />
+<a NAME="IpAclManager" ID="IpAclManager"></a>
+<h2 style="background-color:#FFFFFF;color:#0000FF">IpAclManager</h2>
+<p>
+Verwaltung fuer IP Adressen und deren ACL Level.
+</p>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Derived from</h3>
+None
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Class Attributes</h3>
+<table>
+<tr><td>acl</td></tr><tr><td>regex_acl</td></tr>
+</table>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Class Methods</h3>
+<table>
+<tr><td>None</td></tr>
+</table>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Methods</h3>
+<table>
+<tr>
+<td><a style="color:#0000FF" href="#IpAclManager.__init__">IpAclManager</a></td>
+<td>Init IpAclManager class.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#IpAclManager.__get_acl">__get_acl</a></td>
+<td>Getter fuer den rohen ACL-String.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#IpAclManager.__get_regex_acl">__get_regex_acl</a></td>
+<td>Gibt formatierten RegEx-String zurueck.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#IpAclManager.__iter__">__iter__</a></td>
+<td>Gibt einzelne ACLs als <class 'tuple'> aus.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#IpAclManager.__set_acl">__set_acl</a></td>
+<td>Uebernimmt neue ACL-Liste fuer die Ausertung der Level.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#IpAclManager.get_acllevel">get_acllevel</a></td>
+<td>Prueft IP gegen ACL List und gibt ACL-Wert aus.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#IpAclManager.loadacl">loadacl</a></td>
+<td>Laed ACL String und gibt erfolg zurueck.</td>
+</tr>
+</table>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Static Methods</h3>
+<table>
+<tr><td>None</td></tr>
+</table>
+<a NAME="IpAclManager.__init__" ID="IpAclManager.__init__"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+IpAclManager (Constructor)</h3>
+<b>IpAclManager</b>(<i>minlevel, maxlevel, acl=None</i>)
+<p>
+Init IpAclManager class.
+</p><dl>
+<dt><i>minlevel</i></dt>
+<dd>
+Smallest access level (min. 0)
+</dd><dt><i>maxlevel</i></dt>
+<dd>
+Biggest access level (max. 9)
+</dd><dt><i>acl</i></dt>
+<dd>
+ACL Liste fuer Berechtigungen als <class 'str'>
+</dd>
+</dl><a NAME="IpAclManager.__get_acl" ID="IpAclManager.__get_acl"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+IpAclManager.__get_acl</h3>
+<b>__get_acl</b>(<i></i>)
+<p>
+Getter fuer den rohen ACL-String.
+        return ACLs als <class 'str'>
+</p><a NAME="IpAclManager.__get_regex_acl" ID="IpAclManager.__get_regex_acl"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+IpAclManager.__get_regex_acl</h3>
+<b>__get_regex_acl</b>(<i></i>)
+<p>
+Gibt formatierten RegEx-String zurueck.
+        return RegEx Code als <class 'str'>
+</p><a NAME="IpAclManager.__iter__" ID="IpAclManager.__iter__"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+IpAclManager.__iter__</h3>
+<b>__iter__</b>(<i></i>)
+<p>
+Gibt einzelne ACLs als <class 'tuple'> aus.
+</p><a NAME="IpAclManager.__set_acl" ID="IpAclManager.__set_acl"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+IpAclManager.__set_acl</h3>
+<b>__set_acl</b>(<i>value</i>)
+<p>
+Uebernimmt neue ACL-Liste fuer die Ausertung der Level.
+</p><dl>
+<dt><i>value</i></dt>
+<dd>
+Neue ACL-Liste als <class 'str'>
+</dd>
+</dl><a NAME="IpAclManager.get_acllevel" ID="IpAclManager.get_acllevel"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+IpAclManager.get_acllevel</h3>
+<b>get_acllevel</b>(<i>ipaddress</i>)
+<p>
+Prueft IP gegen ACL List und gibt ACL-Wert aus.
+</p><dl>
+<dt><i>ipaddress</i></dt>
+<dd>
+zum pruefen
+</dd>
+</dl><dl>
+<dt>Returns:</dt>
+<dd>
+<class 'int'> ACL Wert oder -1 wenn nicht gefunden
+</dd>
+</dl><a NAME="IpAclManager.loadacl" ID="IpAclManager.loadacl"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+IpAclManager.loadacl</h3>
+<b>loadacl</b>(<i>str_acl</i>)
+<p>
+Laed ACL String und gibt erfolg zurueck.
+</p><dl>
+<dt><i>str_acl</i></dt>
+<dd>
+ACL als <class 'str'>
+</dd>
+</dl><dl>
+<dt>Returns:</dt>
+<dd>
+True, wenn erfolgreich uebernommen
+</dd>
+</dl>
+<div align="right"><a style="color:#0000FF" href="#top">Up</a></div>
+<hr />
+</body></html>

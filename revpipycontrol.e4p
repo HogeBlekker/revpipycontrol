@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project revpipycontrol -->
-<!-- Saved: 2017-12-20, 14:05:18 -->
-<!-- Copyright (C) 2017 Sven Sager, akira@narux.de -->
+<!-- Saved: 2018-03-12, 15:45:28 -->
+<!-- Copyright (C) 2018 Sven Sager, akira@narux.de -->
 <Project version="5.1">
   <Language>en_US</Language>
   <Hash>66103e2eaf8a762f14d1fd51d8b1c9dcaf35a275</Hash>
   <ProgLanguage mixed="0">Python3</ProgLanguage>
   <ProjectType>Console</ProjectType>
   <Description></Description>
-  <Version>0.5.0</Version>
+  <Version>0.6.0</Version>
   <Author>Sven Sager</Author>
   <Email>akira@narux.de</Email>
   <Eol index="1"/>
@@ -23,6 +23,8 @@
     <Source>revpipycontrol/revpiprogram.py</Source>
     <Source>revpipycontrol/mytools.py</Source>
     <Source>revpipycontrol/revpiinfo.py</Source>
+    <Source>revpipycontrol/revpioptionlegacy.py</Source>
+    <Source>revpipycontrol/aclmanager.py</Source>
   </Sources>
   <Forms/>
   <Translations/>

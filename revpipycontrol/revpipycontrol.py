@@ -7,6 +7,7 @@
 # Webpage: https://revpimodio.org/revpipyplc/
 # (c) Sven Sager, License: LGPLv3
 #
+u"""Hauptprogramm."""
 import revpicheckclient
 import revpiinfo
 import revpilogfile
@@ -23,7 +24,7 @@ from xmlrpc.client import ServerProxy
 # Übersetzung laden
 _ = gettrans()
 
-pycontrolversion = "0.5.0"
+pycontrolversion = "0.6.0"
 
 
 class RevPiPyControl(tkinter.Frame):
@@ -238,8 +239,8 @@ class RevPiPyControl(tkinter.Frame):
                 _("Warning"),
                 _("The watch mode ist not supported in version {} "
                     "of RevPiPyLoad on your RevPi! You need at least version "
-                    "0.4.0. Or the python3-revpimodio module is not installt"
-                    "on your RevPi at least version 0.15.0."
+                    "0.5.3! Maybe the python3-revpimodio2 module is not "
+                    "installed on your RevPi at least version 2.0.0."
                     "").format(self.cli.version()),
                 parent=self.master
             )
@@ -256,7 +257,7 @@ class RevPiPyControl(tkinter.Frame):
                     tkmsg.showwarning(
                         _("Error"),
                         _("Can not load piCtory configuration. \n"
-                            "Have you created a hardware configuration? "
+                            "Did you create a hardware configuration? "
                             "Please check this in piCtory!"),
                         parent=self.master
                     )
