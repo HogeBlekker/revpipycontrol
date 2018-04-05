@@ -326,7 +326,6 @@ class RevPiPyControl(tkinter.Frame):
             win.grab_set()
 
             # Gegenstelle prüfen und passende Optionen laden
-            print(self.revpipyversion)
             if self.revpipyversion[0] == 0 and self.revpipyversion[1] < 6:
                 self.tkoptions = \
                     revpilegacy.RevPiOption(win, self.cli)
@@ -338,7 +337,7 @@ class RevPiPyControl(tkinter.Frame):
             if self.tkoptions.dc is not None and self.tkoptions.dorestart:
 
                 # Wenn XML-Modus anders und Dienstneustart
-                if self.xmlmode != self.tkoptions.dc["xmlrpc"]:
+                if self.xmlmode != self.cli.xmlmodus():
                     self.serverdisconnect()
                     self._opt_conn(self.revpiname, True)
 

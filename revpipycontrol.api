@@ -2,7 +2,9 @@ aclmanager.AclManager.__get_acltext?6()
 aclmanager.AclManager.__set_acltext?6(value)
 aclmanager.AclManager._ask_delete?5()
 aclmanager.AclManager._changesdone?5()
+aclmanager.AclManager._checkback?5(event, tkvar, pretxt)
 aclmanager.AclManager._checkclose?5(event=None)
+aclmanager.AclManager._checkdot?5(event, tkvar, nexttxt)
 aclmanager.AclManager._clearfields?5()
 aclmanager.AclManager._createwidgets?5()
 aclmanager.AclManager._loadfields?5()
@@ -15,15 +17,6 @@ aclmanager.AclManager.acltext?7
 aclmanager.AclManager.get_acl?4()
 aclmanager.AclManager.root?7
 aclmanager.AclManager?1(master, minlevel, maxlevel, acl_str="", readonly=False)
-aclmanager.IpAclManager.__get_acl?6()
-aclmanager.IpAclManager.__get_regex_acl?6()
-aclmanager.IpAclManager.__iter__?6()
-aclmanager.IpAclManager.__set_acl?6(value)
-aclmanager.IpAclManager.acl?7
-aclmanager.IpAclManager.get_acllevel?4(ipaddress)
-aclmanager.IpAclManager.loadacl?4(str_acl)
-aclmanager.IpAclManager.regex_acl?7
-aclmanager.IpAclManager?1(minlevel, maxlevel, acl=None)
 aclmanager._?8
 mytools.addroot?4(filename)
 mytools.gettrans?4(proglang=None)
@@ -141,3 +134,17 @@ revpipycontrol.RevPiPyControl.visitwebsite?4()
 revpipycontrol.RevPiPyControl?1(master=None)
 revpipycontrol._?8
 revpipycontrol.pycontrolversion?7
+revpipycontrol.shared.ipaclmanager.IpAclManager.__get_acl?6()
+revpipycontrol.shared.ipaclmanager.IpAclManager.__get_filename?6()
+revpipycontrol.shared.ipaclmanager.IpAclManager.__get_regex_acl?6()
+revpipycontrol.shared.ipaclmanager.IpAclManager.__iter__?6()
+revpipycontrol.shared.ipaclmanager.IpAclManager.__set_acl?6(value)
+revpipycontrol.shared.ipaclmanager.IpAclManager.acl?7
+revpipycontrol.shared.ipaclmanager.IpAclManager.filename?7
+revpipycontrol.shared.ipaclmanager.IpAclManager.get_acllevel?4(ipaddress)
+revpipycontrol.shared.ipaclmanager.IpAclManager.loadacl?4(str_acl)
+revpipycontrol.shared.ipaclmanager.IpAclManager.loadaclfile?4(filename)
+revpipycontrol.shared.ipaclmanager.IpAclManager.regex_acl?7
+revpipycontrol.shared.ipaclmanager.IpAclManager.writeaclfile?4(filename=None, aclname=None)
+revpipycontrol.shared.ipaclmanager.IpAclManager?1(minlevel, maxlevel, acl=None)
+revpipycontrol.shared.ipaclmanager.refullmatch?4(regex, string)

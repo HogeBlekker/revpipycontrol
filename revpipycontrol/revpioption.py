@@ -293,14 +293,22 @@ class RevPiOption(tkinter.Frame):
         if not self._checkvalues():
             return None
 
-        ask = tkmsg.askyesnocancel(
+#        ask = tkmsg.askyesnocancel(
+#            _("Question"),
+#            _("The settings are now saved on the Revolution Pi. \n\n"
+#                "Should the new settings take effect immediately? \nThis "
+#                "means a restart of the service and the PLC program!"),
+#            parent=self.master
+#        )
+        ask = tkmsg.askokcancel(
             _("Question"),
-            _("The settings are now saved on the Revolution Pi. \n\n"
-                "Should the new settings take effect immediately? \nThis "
-                "means a restart of the service and the PLC program!"),
+            _("The settings will be set on the Revolution Pi now. \n\n"
+                "If you made changes on the 'PCL Program' section, your plc "
+                "program will restart! \n"
+                "ACL changes and service settings are applied immediately."),
             parent=self.master
         )
-        if ask is not None:
+        if ask:
             self.dc["autoreload"] = int(self.var_reload.get())
             self.dc["autoreloaddelay"] = int(self.var_reload_delay.get())
             self.dc["autostart"] = int(self.var_start.get())

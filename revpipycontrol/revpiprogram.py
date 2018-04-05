@@ -51,8 +51,7 @@ class RevPiProgram(tkinter.Frame):
         self.uploaded = False
         self.revpi = revpi
         self.xmlcli = xmlcli
-        self.xmlmode = xmlmode
-        self.xmlstate = "normal" if xmlmode == 3 else "disabled"
+        self.xmlstate = "normal" if xmlmode >= 3 else "disabled"
 
         # Letzte Einstellungen übernehmen
         self.opt = self._loaddefault()

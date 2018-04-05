@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project revpipycontrol -->
-<!-- Saved: 2018-04-03, 12:04:56 -->
+<!-- Saved: 2018-04-04, 15:41:50 -->
 <!-- Copyright (C) 2018 Sven Sager, akira@narux.de -->
 <Project version="5.1">
   <Language>en_US</Language>
@@ -25,6 +25,8 @@
     <Source>revpipycontrol/revpiinfo.py</Source>
     <Source>revpipycontrol/aclmanager.py</Source>
     <Source>revpipycontrol/revpilegacy.py</Source>
+    <Source>revpipycontrol/shared/ipaclmanager.py</Source>
+    <Source>revpipycontrol/shared/__init__.py</Source>
   </Sources>
   <Forms/>
   <Translations/>

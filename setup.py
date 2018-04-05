@@ -48,6 +48,7 @@ if platform == "linux":
             ("share/applications", ["data/revpipycontrol.desktop"]),
             ("share/icons/hicolor/32x32/apps", ["data/revpipycontrol.png"]),
             ("share/revpipycontrol", glob("revpipycontrol/*.*")),
+            ("share/revpipycontrol/shared", glob("revpipycontrol/shared/*.*")),
             (
                 "share/revpipycontrol/locale/de/LC_MESSAGES",
                 glob("revpipycontrol/locale/de/LC_MESSAGES/*.mo")

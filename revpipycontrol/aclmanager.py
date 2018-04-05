@@ -9,115 +9,11 @@ u"""Manager für ACL Einträge."""
 import tkinter
 import tkinter.messagebox as tkmsg
 from mytools import gettrans
-from re import fullmatch
+from shared.ipaclmanager import IpAclManager
 from tkinter import ttk
 
 # Übersetzung laden
 _ = gettrans()
-
-
-class IpAclManager():
-
-    """Verwaltung fuer IP Adressen und deren ACL Level."""
-
-    def __init__(self, minlevel, maxlevel, acl=None):
-        """Init IpAclManager class.
-
-        @param minlevel Smallest access level (min. 0)
-        @param maxlevel Biggest access level (max. 9)
-        @param acl ACL Liste fuer Berechtigungen als <class 'str'>
-
-        """
-        if type(minlevel) != int:
-            raise ValueError("parameter minlevel must be <class 'int'>")
-        if type(maxlevel) != int:
-            raise ValueError("parameter maxlevel must be <class 'int'>")
-        if minlevel < 0:
-            raise ValueError("minlevel must be 0 or more")
-        if maxlevel > 9:
-            raise ValueError("maxlevel maximum is 9")
-        if minlevel > maxlevel:
-            raise ValueError("minlevel is smaller than maxlevel")
-
-        self.__dict_acl = {}
-        self.__dict_regex = {}
-        self.__dict_knownips = {}
-        self.__re_ipacl = "(([\\d\\*]{1,3}\\.){3}[\\d\\*]{1,3},[" \
-            + str(minlevel) + "-" + str(maxlevel) + "] ?)*"
-
-        # Liste erstellen, wenn übergeben
-        if acl is not None:
-            self.__set_acl(acl)
-
-    def __iter__(self):
-        """Gibt einzelne ACLs als <class 'tuple'> aus."""
-        for aclip in sorted(self.__dict_acl):
-            yield (aclip, self.__dict_acl[aclip])
-
-    def __get_acl(self):
-        """Getter fuer den rohen ACL-String.
-        return ACLs als <class 'str'>"""
-        str_acl = ""
-        for aclip in sorted(self.__dict_acl):
-            str_acl += "{},{} ".format(aclip, self.__dict_acl[aclip])
-        return str_acl.strip()
-
-    def __get_regex_acl(self):
-        """Gibt formatierten RegEx-String zurueck.
-        return RegEx Code als <class 'str'>"""
-        return self.__re_ipacl
-
-    def __set_acl(self, value):
-        """Uebernimmt neue ACL-Liste fuer die Ausertung der Level.
-        @param value Neue ACL-Liste als <class 'str'>"""
-        if type(value) != str:
-            raise ValueError("parameter acl must be <class 'str'>")
-
-        value = value.strip()
-        if fullmatch(self.__re_ipacl, value) is None:
-            raise ValueError("acl format ist not okay - 1.2.3.4,0 5.6.7.8,1")
-
-        # Klassenwerte übernehmen
-        self.__dict_acl = {}
-        self.__dict_regex = {}
-        self.__dict_knownips = {}
-
-        # Liste neu füllen mit regex Strings
-        for ip_level in value.split():
-            ip, level = ip_level.split(",", 1)
-            self.__dict_acl[ip] = int(level)
-            self.__dict_regex[ip] = \
-                ip.replace(".", "\\.").replace("*", "\\d{1,3}")
-
-    def get_acllevel(self, ipaddress):
-        """Prueft IP gegen ACL List und gibt ACL-Wert aus.
-        @param ipaddress zum pruefen
-        @return <class 'int'> ACL Wert oder -1 wenn nicht gefunden"""
-        # Bei bereits aufgelösten IPs direkt ACL auswerten
-        if ipaddress in self.__dict_knownips:
-            return self.__dict_knownips[ipaddress]
-
-        for aclip in sorted(self.__dict_acl, reverse=True):
-            if fullmatch(self.__dict_regex[aclip], ipaddress) is not None:
-                # IP und Level merken
-                self.__dict_knownips[ipaddress] = self.__dict_acl[aclip]
-
-                # Level zurückgeben
-                return self.__dict_acl[aclip]
-
-        return -1
-
-    def loadacl(self, str_acl):
-        """Laed ACL String und gibt erfolg zurueck.
-        @param str_acl ACL als <class 'str'>
-        @return True, wenn erfolgreich uebernommen"""
-        if fullmatch(self.__re_ipacl, str_acl) is None:
-            return False
-        self.__set_acl(str_acl)
-        return True
-
-    acl = property(__get_acl, __set_acl)
-    regex_acl = property(__get_regex_acl)
 
 
 class AclManager(ttk.Frame):
@@ -258,22 +154,68 @@ class AclManager(ttk.Frame):
         self.var_ip4 = tkinter.StringVar(frame)
         self.var_acl = tkinter.StringVar(frame, self.minlevel)
 
-        ip_block = ttk.Entry(frame, width=4)
-        ip_block["state"] = self.__ro
-        ip_block["textvariable"] = self.var_ip1
-        ip_block.grid(row=row, column=1)
-        ip_block = ttk.Entry(frame, width=4)
-        ip_block["state"] = self.__ro
-        ip_block["textvariable"] = self.var_ip2
-        ip_block.grid(row=row, column=3)
-        ip_block = ttk.Entry(frame, width=4)
-        ip_block["state"] = self.__ro
-        ip_block["textvariable"] = self.var_ip3
-        ip_block.grid(row=row, column=5)
-        ip_block = ttk.Entry(frame, width=4)
-        ip_block["state"] = self.__ro
-        ip_block["textvariable"] = self.var_ip4
-        ip_block.grid(row=row, column=7)
+        ip_block1 = ttk.Entry(frame, width=4)
+        ip_block2 = ttk.Entry(frame, width=4)
+        ip_block3 = ttk.Entry(frame, width=4)
+        ip_block4 = ttk.Entry(frame, width=4)
+
+        ip_block1.bind(
+            "<KeyRelease>",
+            lambda event, tkvar=self.var_ip1: self._checkdot(
+                event, tkvar, ip_block2
+            )
+        )
+        ip_block1["state"] = self.__ro
+        ip_block1["textvariable"] = self.var_ip1
+        ip_block1.grid(row=row, column=1)
+
+        ip_block2.bind(
+            "<KeyRelease>",
+            lambda event, tkvar=self.var_ip2: self._checkdot(
+                event, tkvar, ip_block3
+            )
+        )
+        ip_block2.bind(
+            "<Key>",
+            lambda event, tkvar=self.var_ip2: self._checkback(
+                event, tkvar, ip_block1
+            )
+        )
+        ip_block2["state"] = self.__ro
+        ip_block2["textvariable"] = self.var_ip2
+        ip_block2.grid(row=row, column=3)
+
+        ip_block3.bind(
+            "<KeyRelease>",
+            lambda event, tkvar=self.var_ip3: self._checkdot(
+                event, tkvar, ip_block4
+            )
+        )
+        ip_block3.bind(
+            "<Key>",
+            lambda event, tkvar=self.var_ip3: self._checkback(
+                event, tkvar, ip_block2
+            )
+        )
+        ip_block3["state"] = self.__ro
+        ip_block3["textvariable"] = self.var_ip3
+        ip_block3.grid(row=row, column=5)
+
+        ip_block4.bind(
+            "<KeyRelease>",
+            lambda event, tkvar=self.var_ip4: self._checkdot(
+                event, tkvar, None
+            )
+        )
+        ip_block4.bind(
+            "<Key>",
+            lambda event, tkvar=self.var_ip4: self._checkback(
+                event, tkvar, ip_block3
+            )
+        )
+        ip_block4["state"] = self.__ro
+        ip_block4["textvariable"] = self.var_ip4
+        ip_block4.grid(row=row, column=7)
 
         # Punkte zwischen IP-Feldern
         for i in range(2, 7, 2):
@@ -338,12 +280,44 @@ class AclManager(ttk.Frame):
                 parent=self.master, default="no"
             )
             if ask:
-                self.__acl.loadacl(
-                    self.__acl.acl.replace(
-                        "{},{}".format(*lst_ipacl), ""
-                    ).replace("  ", " ")
-                )
-                self._refreshacls()
+                new_acl = self.__acl.acl.replace(
+                    "{},{}".format(*lst_ipacl), ""
+                ).replace("  ", " ")
+
+                if self.__acl.loadacl(new_acl.strip()):
+                    # Liste neu aufbauen
+                    self._refreshacls()
+                else:
+                    tkmsg.showerror(
+                        _("Error"),
+                        _("Can not delete ACL! Check format."),
+                        parent=self.master
+                    )
+
+    def _checkback(self, event, tkvar, pretxt):
+        u"""Springt bei Backspace in vorheriges Feld.
+
+        @param event TK Event
+        @param tkvar TK Variable zum prüfen
+        @param nexttxt Vorheriges IP Feld für Fokus
+
+        """
+        if pretxt is not None and event.keycode == 22 and tkvar.get() == "":
+            pretxt.focus_set()
+
+    def _checkdot(self, event, tkvar, nexttxt):
+        u"""Prüft auf . und geht weiter.
+
+        @param event TK Event
+        @param tkvar TK Variable zum prüfen
+        @param nexttxt Nächstes IP Feld für Fokus
+
+        """
+        val = tkvar.get()
+        if val.find(".") >= 0:
+            tkvar.set(val[:-1])
+            if nexttxt is not None:
+                nexttxt.focus_set()
 
     def _clearfields(self):
         u"""Leert die Eingabefelder."""
@@ -387,7 +361,7 @@ class AclManager(ttk.Frame):
             self.var_ip4.get(),
             self.var_acl.get()
         )
-        if self.__acl.loadacl(self.__acl.acl + " " + new_acl):
+        if self.__acl.loadacl((self.__acl.acl + " " + new_acl).strip()):
             self._refreshacls()
         else:
             tkmsg.showerror(
