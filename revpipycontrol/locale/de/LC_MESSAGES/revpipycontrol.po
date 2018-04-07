@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: RevPiPyControl 0.4.0\n"
-"POT-Creation-Date: 2018-04-07 13:40+0200\n"
-"PO-Revision-Date: 2018-04-07 13:54+0200\n"
+"POT-Creation-Date: 2018-04-07 14:56+0200\n"
+"PO-Revision-Date: 2018-04-07 14:56+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
@@ -19,8 +19,8 @@ msgstr ""
 msgid "Level"
 msgstr "Level"
 
-#: aclmanager.py:77 aclmanager.py:277 revpilegacy.py:69 revpilegacy.py:281
-#: revpilegacy.py:328 revpioption.py:73 revpioption.py:318 revpioption.py:362
+#: aclmanager.py:77 aclmanager.py:277 revpilegacy.py:69 revpilegacy.py:282
+#: revpilegacy.py:329 revpioption.py:73 revpioption.py:312 revpioption.py:356
 #: revpiplclist.py:61 revpiplclist.py:197 revpiprogram.py:394
 #: revpiprogram.py:468
 msgid "Question"
@@ -90,8 +90,8 @@ msgstr ""
 "IP: {} / Level: {}"
 
 #: aclmanager.py:292 aclmanager.py:368 revpicheckclient.py:110
-#: revpicheckclient.py:442 revpilegacy.py:318 revpioption.py:87
-#: revpioption.py:352 revpiplclist.py:221 revpiprogram.py:330
+#: revpicheckclient.py:442 revpilegacy.py:319 revpioption.py:87
+#: revpioption.py:346 revpiplclist.py:221 revpiprogram.py:330
 #: revpiprogram.py:361 revpiprogram.py:424 revpiprogram.py:430
 #: revpiprogram.py:436 revpiprogram.py:444 revpiprogram.py:450
 #: revpiprogram.py:483 revpiprogram.py:567 revpiprogram.py:640
@@ -285,7 +285,7 @@ msgstr ""
 msgid "XML-RPC server port"
 msgstr "XML-RPC Serverport"
 
-#: revpilegacy.py:274 revpilegacy.py:310 revpioption.py:300 revpioption.py:344
+#: revpilegacy.py:274 revpilegacy.py:311 revpioption.py:300 revpioption.py:338
 #: revpiplclist.py:213 revpiprogram.py:98
 msgid "Information"
 msgstr "Information"
@@ -294,7 +294,7 @@ msgstr "Information"
 msgid "You have not made any changes to save."
 msgstr "Sie haben keine Änderungen zum Speichern vorgenommen."
 
-#: revpilegacy.py:282
+#: revpilegacy.py:283
 msgid ""
 "The settings are now saved on the Revolution Pi. \n"
 "\n"
@@ -306,17 +306,17 @@ msgstr ""
 "Sollen die neuen Einstellungen sofort in Kraft treten? \n"
 "Dies bedeutet einen Neustart des Dienstes und des laufenden PLC-Programms!"
 
-#: revpilegacy.py:311 revpioption.py:345
+#: revpilegacy.py:312 revpioption.py:339
 msgid "Settings saved"
 msgstr "Einstellungen gespeichert"
 
-#: revpilegacy.py:319 revpioption.py:353
+#: revpilegacy.py:320 revpioption.py:347
 msgid "The settings could not be saved. This can happen if values are wrong!"
 msgstr ""
 "Die Einstellungen konnten nicht gesichert werden. Dies kann passieren, wenn "
 "Werte falsch sind!"
 
-#: revpilegacy.py:329 revpioption.py:363
+#: revpilegacy.py:330 revpioption.py:357
 msgid ""
 "Are you sure you want to deactivate the XML-RPC server? You will NOT be able "
 "to access the Revolution Pi with this program."
@@ -372,7 +372,7 @@ msgstr "läuft"
 msgid "stopped"
 msgstr "beendet"
 
-#: revpioption.py:319
+#: revpioption.py:313
 msgid ""
 "The settings will be set on the Revolution Pi now. \n"
 "\n"
@@ -386,31 +386,31 @@ msgstr ""
 "Programm jetzt neu starten!\n"
 "ACL Änderungen und Diensteinstellungen werden sofort angewandt."
 
-#: revpioption.py:382
+#: revpioption.py:376
 msgid "read only"
 msgstr "nur lesen"
 
-#: revpioption.py:383
+#: revpioption.py:377
 msgid "read and write"
 msgstr "lesen und schreiben"
 
-#: revpioption.py:399
+#: revpioption.py:393
 msgid "Start/Stop PLC program and read logs"
 msgstr "PLC Programm starten/stoppen und Logs lesen"
 
-#: revpioption.py:400
+#: revpioption.py:394
 msgid "+ read IOs in watch modus"
 msgstr "+ IOs in 'Watch modus' lesen"
 
-#: revpioption.py:401
+#: revpioption.py:395
 msgid "+ read properties and download PLC program"
 msgstr "+ Einstellungen lesen und PLC Programm herunterladen"
 
-#: revpioption.py:402
+#: revpioption.py:396
 msgid "+ upload PLC program"
 msgstr "+ PLC Programm hochladen"
 
-#: revpioption.py:403
+#: revpioption.py:397
 msgid "+ set properties"
 msgstr "+ Einstellungen ändern"
 
@@ -801,8 +801,20 @@ msgstr ""
 "diesen Dialog zu verwenden!"
 
 #: revpipycontrol.py:391
-msgid "Can not reach server!"
-msgstr "Server ist nicht erreichbar!"
+msgid ""
+"Can not connect to RevPi XML-RPC Service! \n"
+"\n"
+"This could have the following reasons: The RevPi is not online, the XML-RPC "
+"service is not running or the ACL permission is not set for your IP!!!"
+msgstr ""
+"Kann keine Verbindung zum RevPi XML-RPC Dienst herstellen!\n"
+"\n"
+"Das könnte folgende Gründe haben: Der RevPi ist nicht online, der XML-RPC "
+"Dienst läuft nicht oder die ACL Zugriffsberechtigung ist für diese IP nicht "
+"gesetzt!!!"
+
+#~ msgid "Can not reach server!"
+#~ msgstr "Server ist nicht erreichbar!"
 
 #~ msgid ""
 #~ "Set process image to NULL if program\n"

@@ -388,7 +388,10 @@ class RevPiPyControl(tkinter.Frame):
         self.serverdisconnect()
         tkmsg.showerror(
             _("Error"),
-            _("Can not reach server!"),
+            _("Can not connect to RevPi XML-RPC Service! \n\n"
+                "This could have the following reasons: The RevPi is not "
+                "online, the XML-RPC service is not running or the ACL "
+                "permission is not set for your IP!!!"),
             parent=self.master
         )
 

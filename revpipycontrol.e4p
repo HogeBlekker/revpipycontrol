@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project revpipycontrol -->
-<!-- Saved: 2018-04-07, 14:23:09 -->
+<!-- Saved: 2018-04-07, 14:53:30 -->
 <!-- Copyright (C) 2018 Sven Sager, akira@narux.de -->
 <Project version="5.1">
   <Language>en_US</Language>
@@ -35,7 +35,6 @@
   <Others>
     <Other>data</Other>
     <Other>doc</Other>
-    <Other>revpipycontrol.api</Other>
     <Other>stdeb.cfg</Other>
     <Other>eric-revpipycontrol.api</Other>
   </Others>
