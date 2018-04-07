@@ -11,26 +11,22 @@ import pickle
 import tkinter
 import tkinter.messagebox as tkmsg
 from mytools import gettrans
-from os import environ, makedirs
-from sys import platform
+from mytools import savefile_connections as savefile
+from revpiprogram import _loaddefaults as programloaddefaults
+from revpiprogram import _savedefaults as programsavedefaults
+from os import makedirs
+
 
 # Übersetzungen laden
 _ = gettrans()
-
-# Systemwerte
-if platform == "linux":
-    homedir = environ["HOME"]
-else:
-    homedir = environ["APPDATA"]
-savefile = os.path.join(homedir, ".revpipyplc", "connections.dat")
 
 
 def get_connections():
     u"""Verbindungen aus Datei laden.
     @return dict() mit Verbindungen"""
     if os.path.exists(savefile):
-        fh = open(savefile, "rb")
-        connections = pickle.load(fh)
+        with open(savefile, "rb") as fh:
+            connections = pickle.load(fh)
         return connections
     else:
         return {}
@@ -151,11 +147,19 @@ class RevPiPlcList(tkinter.Frame):
         @return True, bei erfolgreicher Verarbeitung"""
         try:
             makedirs(os.path.dirname(savefile), exist_ok=True)
-            fh = open(savefile, "wb")
-            pickle.dump(self._connections, fh)
+            with open(savefile, "wb") as fh:
+                pickle.dump(self._connections, fh)
             self.changes = False
         except:
             return False
+
+        # Andere Einstellungen aufräumen
+        dict = programloaddefaults()
+        for revpi in tuple(dict.keys()):
+            if revpi not in self._connections:
+                del dict[revpi]
+        programsavedefaults(None, dict)
+
         return True
 
     def build_listconn(self):

@@ -162,7 +162,6 @@ class RevPiOption(tkinter.Frame):
         self.var_pythonver = tkinter.IntVar(prog)
         self.var_startpy = tkinter.StringVar(prog)
         self.var_startargs = tkinter.StringVar(prog)
-        self.var_slave = tkinter.BooleanVar(prog)
         self.var_slaveacl = tkinter.StringVar(prog)
 
         self.var_pythonver.set(3)
@@ -210,39 +209,54 @@ class RevPiOption(tkinter.Frame):
         txt["textvariable"] = self.var_startargs
         txt.grid(columnspan=2, **cpadw)
 
-        # Row 6
-        ckb_slave = tkinter.Checkbutton(prog, justify="left")
+        # Gruppe Services
+        services = tkinter.LabelFrame(self)
+        services["text"] = _("RevPiPyLoad server services")
+        services.grid(columnspan=2, pady=2, sticky="we")
+
+        self.var_slave = tkinter.BooleanVar(services)
+        self.var_xmlon = tkinter.BooleanVar(services)
+        self.var_xmlacl = tkinter.StringVar(services)
+
+        # RevPiSlave Service
+        row = 0
+        ckb_slave = tkinter.Checkbutton(services, justify="left")
         ckb_slave["state"] = xmlstate
         ckb_slave["text"] = _("Use RevPi as PLC-Slave")
         ckb_slave["variable"] = self.var_slave
         ckb_slave.grid(column=0, **cpadw)
 
-        btn_slaveacl = tkinter.Button(prog, justify="center")
+        btn_slaveacl = tkinter.Button(services, justify="center")
         btn_slaveacl["command"] = self.btn_slaveacl
         btn_slaveacl["text"] = _("Edit ACL")
-        btn_slaveacl.grid(column=1, row=6, **cpade)
+        btn_slaveacl.grid(column=1, row=row, **cpade)
 
-        # Gruppe XMLRPC
-        xmlrpc = tkinter.LabelFrame(self)
-        xmlrpc["text"] = _("XML-RPC server")
-        xmlrpc.grid(columnspan=2, pady=2, sticky="we")
+        row = 1
+        lbl = tkinter.Label(services)
+        lbl["text"] = _("RevPi-Slave service is:")
+        lbl.grid(column=0, **cpade)
 
-        self.var_xmlon = tkinter.BooleanVar(xmlrpc)
-        self.var_xmlacl = tkinter.StringVar(xmlrpc)
+        status = self.xmlcli.plcslaverunning()
+        lbl = tkinter.Label(services)
+        lbl["fg"] = "green" if status else "red"
+        lbl["text"] = _("running") if status else _("stopped")
+        lbl.grid(column=1, row=row, **cpadwe)
 
-        ckb_xmlon = tkinter.Checkbutton(xmlrpc)
+        # XML-RPC Service
+        row = 2
+        ckb_xmlon = tkinter.Checkbutton(services)
         ckb_xmlon["command"] = self.askxmlon
         ckb_xmlon["state"] = xmlstate
         ckb_xmlon["text"] = _("Activate XML-RPC server on RevPi")
         ckb_xmlon["variable"] = self.var_xmlon
         ckb_xmlon.grid(**cpadw)
 
-        btn_slaveacl = tkinter.Button(xmlrpc, justify="center")
+        btn_slaveacl = tkinter.Button(services, justify="center")
         btn_slaveacl["command"] = self.btn_xmlacl
         btn_slaveacl["text"] = _("Edit ACL")
-        btn_slaveacl.grid(column=1, row=0, **cpade)
+        btn_slaveacl.grid(column=1, row=row, **cpade)
 
-        # Buttons
+        # Buttons am Ende
         btn_save = tkinter.Button(self)
         btn_save["command"] = self._setappdata
         btn_save["state"] = xmlstate

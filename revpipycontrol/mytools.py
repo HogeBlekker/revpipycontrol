@@ -9,8 +9,20 @@
 import gettext
 import locale
 import sys
+from os import environ
 from os.path import dirname
 from os.path import join as pathjoin
+from sys import platform
+
+# Systemwerte und SaveFiles
+if platform == "linux":
+    homedir = environ["HOME"]
+else:
+    homedir = environ["APPDATA"]
+savefile_connections = pathjoin(
+    homedir, ".revpipyplc", "connections.dat")
+savefile_programpath = pathjoin(
+    homedir, ".revpipyplc", "programpath.dat")
 
 
 def addroot(filename):

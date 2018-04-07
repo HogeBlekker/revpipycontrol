@@ -15,22 +15,50 @@ import tkinter.filedialog as tkfd
 import tkinter.messagebox as tkmsg
 import zipfile
 from mytools import gettrans
-from os import environ
+from mytools import savefile_programpath as savefile
 from os import makedirs
 from shutil import rmtree
-from sys import platform
 from tempfile import mkstemp, mkdtemp
 from xmlrpc.client import Binary
 
 # Übersetzung laden
 _ = gettrans()
 
-# Systemwerte
-if platform == "linux":
-    homedir = environ["HOME"]
-else:
-    homedir = environ["APPDATA"]
-savefile = os.path.join(homedir, ".revpipyplc", "programpath.dat")
+
+def _loaddefaults(revpiname=None):
+    u"""Übernimmt für den Pi die letzen Pfade.
+    @param revpiname Einstellungen nur für RevPi laden
+    @return <class 'dict'> mit Einstellungen"""
+    if os.path.exists(savefile):
+        with open(savefile, "rb") as fh:
+            dict_all = pickle.load(fh)
+        if revpiname is None:
+            return dict_all
+        else:
+            return dict_all.get(revpiname, {})
+    return {}
+
+
+def _savedefaults(revpiname, settings):
+    u"""Schreibt fuer den Pi die letzen Pfade.
+
+    @param revpiname Einstellungen sind für diesen RevPi
+    @param settings <class 'dict'> mit Einstellungen
+    @return True, bei erfolgreicher Verarbeitung
+
+    """
+    try:
+        makedirs(os.path.dirname(savefile), exist_ok=True)
+        if revpiname is None:
+            dict_all = settings
+        else:
+            dict_all = _loaddefaults()
+            dict_all[revpiname] = settings
+        with open(savefile, "wb") as fh:
+            pickle.dump(dict_all, fh)
+    except:
+        return False
+    return True
 
 
 class RevPiProgram(tkinter.Frame):
@@ -54,7 +82,7 @@ class RevPiProgram(tkinter.Frame):
         self.xmlstate = "normal" if xmlmode >= 3 else "disabled"
 
         # Letzte Einstellungen übernehmen
-        self.opt = self._loaddefault()
+        self.opt = _loaddefaults()
 
         # Fenster bauen
         self._createwidgets()
@@ -250,33 +278,6 @@ class RevPiProgram(tkinter.Frame):
         else:
             self.ckb_picup["state"] = "normal"
 
-    def _loaddefault(self, full=False):
-        u"""Übernimmt für den Pi die letzen Pfade.
-        @param full Einstellungen für alle Verbindungen laden
-        @return dict() mit Einstellungen"""
-        if os.path.exists(savefile):
-            fh = open(savefile, "rb")
-            dict_all = pickle.load(fh)
-            if full:
-                return dict_all
-            else:
-                return dict_all.get(self.revpi, {})
-        return {}
-
-    def _savedefaults(self):
-        u"""Schreibt fuer den Pi die letzen Pfade.
-        @return True, bei erfolgreicher Verarbeitung"""
-        try:
-            makedirs(os.path.dirname(savefile), exist_ok=True)
-            dict_all = self._loaddefault(full=True)
-            dict_all[self.revpi] = self.opt
-            fh = open(savefile, "wb")
-            pickle.dump(dict_all, fh)
-            self.changes = False
-        except:
-            return False
-        return True
-
     def create_filelist(self, rootdir):
         u"""Erstellt eine Dateiliste von einem Verzeichnis.
         @param rootdir Verzeichnis fuer das eine Liste erstellt werden soll
@@ -338,7 +339,7 @@ class RevPiProgram(tkinter.Frame):
                 )
                 # Einstellungen speichern
                 self.opt["getpictoryrsc_dir"] = os.path.dirname(fh.name)
-                self._savedefaults()
+                self._savedefaults(self.revpi, self.opt)
             finally:
                 fh.close()
 
@@ -369,7 +370,7 @@ class RevPiProgram(tkinter.Frame):
                 )
                 # Einstellungen speichern
                 self.opt["getprocimg_dir"] = os.path.dirname(fh.name)
-                self._savedefaults()
+                self._savedefaults(self.revpi, self.opt)
             finally:
                 fh.close()
 
@@ -417,7 +418,7 @@ class RevPiProgram(tkinter.Frame):
 
                 # Einstellungen speichern
                 self.opt["setpictoryrsc_dir"] = os.path.dirname(fh.name)
-                self._savedefaults()
+                self._savedefaults(self.revpi, self.opt)
             elif ec == -1:
                 tkmsg.showerror(
                     _("Error"),
@@ -575,7 +576,7 @@ class RevPiProgram(tkinter.Frame):
                 )
 
                 # Einstellungen speichern
-                self._savedefaults()
+                self._savedefaults(self.revpi, self.opt)
             finally:
                 fh.close()
 
@@ -751,7 +752,7 @@ class RevPiProgram(tkinter.Frame):
 
             self.opt["typeup"] = self.var_typeup.get()
             self.opt["picup"] = self.var_picup.get()
-            self._savedefaults()
+            self._savedefaults(self.revpi, self.opt)
 
         elif ec == -1:
             tkmsg.showerror(

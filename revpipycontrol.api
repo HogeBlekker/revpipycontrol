@@ -20,6 +20,8 @@ aclmanager.AclManager?1(master, minlevel, maxlevel, acl_str="", readonly=False)
 aclmanager._?8
 mytools.addroot?4(filename)
 mytools.gettrans?4(proglang=None)
+mytools.savefile_connections?7
+mytools.savefile_programpath?7
 revpicheckclient.RevPiCheckClient.__chval?6(device, io, event=None)
 revpicheckclient.RevPiCheckClient.__hidewin?6(win, event=None)
 revpicheckclient.RevPiCheckClient.__saveoldvalue?6(event, tkvar)
@@ -91,13 +93,10 @@ revpiplclist.RevPiPlcList.root?7
 revpiplclist.RevPiPlcList?1(master)
 revpiplclist._?8
 revpiplclist.get_connections?4()
-revpiplclist.savefile?7
 revpiprogram.RevPiProgram._checkclose?5(event=None)
 revpiprogram.RevPiProgram._createwidgets?5()
 revpiprogram.RevPiProgram._evt_optdown?5(text="")
 revpiprogram.RevPiProgram._evt_optup?5(text="")
-revpiprogram.RevPiProgram._loaddefault?5(full=False)
-revpiprogram.RevPiProgram._savedefaults?5()
 revpiprogram.RevPiProgram.check_replacedir?4(rootdir)
 revpiprogram.RevPiProgram.create_filelist?4(rootdir)
 revpiprogram.RevPiProgram.getpictoryrsc?4()
@@ -108,7 +107,8 @@ revpiprogram.RevPiProgram.plcupload?4()
 revpiprogram.RevPiProgram.setpictoryrsc?4(filename=None)
 revpiprogram.RevPiProgram?1(master, xmlcli, xmlmode, revpi)
 revpiprogram._?8
-revpiprogram.savefile?7
+revpiprogram._loaddefaults?5(revpiname=None)
+revpiprogram._savedefaults?5(revpiname, settings)
 revpipycontrol.RevPiPyControl._btnstate?5()
 revpipycontrol.RevPiPyControl._closeall?5()
 revpipycontrol.RevPiPyControl._closeapp?5(event=None)
