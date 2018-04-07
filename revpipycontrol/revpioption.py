@@ -299,6 +299,7 @@ class RevPiOption(tkinter.Frame):
             tkmsg.showinfo(
                 _("Information"),
                 _("You have not made any changes to save."),
+                parent=self.master
             )
             self._checkclose()
             return None
@@ -307,13 +308,6 @@ class RevPiOption(tkinter.Frame):
         if not self._checkvalues():
             return None
 
-#        ask = tkmsg.askyesnocancel(
-#            _("Question"),
-#            _("The settings are now saved on the Revolution Pi. \n\n"
-#                "Should the new settings take effect immediately? \nThis "
-#                "means a restart of the service and the PLC program!"),
-#            parent=self.master
-#        )
         ask = tkmsg.askokcancel(
             _("Question"),
             _("The settings will be set on the Revolution Pi now. \n\n"

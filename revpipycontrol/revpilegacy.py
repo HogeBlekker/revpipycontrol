@@ -273,6 +273,7 @@ class RevPiOption(tkinter.Frame):
             tkmsg.showinfo(
                 _("Information"),
                 _("You have not made any changes to save."),
+                parent=self.master
             )
             self._checkclose()
             return None
