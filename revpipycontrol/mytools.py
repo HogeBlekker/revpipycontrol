@@ -1,15 +1,28 @@
+# -*- coding: utf-8 -*-
 #
 # RevPiPyControl
 #
 # Webpage: https://revpimodio.org/revpipyplc/
 # (c) Sven Sager, License: LGPLv3
 #
-# -*- coding: utf-8 -*-
+"""Tools-Sammlung."""
 import gettext
 import locale
 import sys
+from os import environ
 from os.path import dirname
 from os.path import join as pathjoin
+from sys import platform
+
+# Systemwerte und SaveFiles
+if platform == "linux":
+    homedir = environ["HOME"]
+else:
+    homedir = environ["APPDATA"]
+savefile_connections = pathjoin(
+    homedir, ".revpipyplc", "connections.dat")
+savefile_programpath = pathjoin(
+    homedir, ".revpipyplc", "programpath.dat")
 
 
 def addroot(filename):
@@ -29,7 +42,12 @@ def addroot(filename):
 
 
 def gettrans(proglang=None):
+    u"""Wertet die Sprache des OS aus und gibt Übersetzung zurück.
 
+    @param proglang Bestimmte Sprache laden
+    @return gettext Übersetzung für Zuweisung an '_'
+
+    """
     # Sprache auswählen
     if proglang is None:
         # Autodetect Language or switch to static

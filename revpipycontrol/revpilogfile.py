@@ -1,10 +1,11 @@
+# -*- coding: utf-8 -*-
 #
 # RevPiPyControl
 #
 # Webpage: https://revpimodio.org/revpipyplc/
 # (c) Sven Sager, License: LGPLv3
 #
-# -*- coding: utf-8 -*-
+u"""Zeigt die Logfiles an."""
 import tkinter
 from mytools import gettrans
 
@@ -13,6 +14,8 @@ _ = gettrans()
 
 
 class RevPiLogfile(tkinter.Frame):
+
+    u"""Baut Fenster für Logfiles."""
 
     def __init__(self, master, xmlcli):
         u"""Init RevPiLogfile-Class."""
@@ -57,6 +60,7 @@ class RevPiLogfile(tkinter.Frame):
         self.btnapplog["command"] = self.btn_clearplc
         self.btnapplog["text"] = _("Clear screen")
         self.btnapplog.grid(column=1, row=0, sticky="e")
+
         self.plclog = tkinter.Text(self)
         self.plcscr = tkinter.Scrollbar(self)
         self.plclog.grid(sticky="wnse", columnspan=2, column=0, row=1)
@@ -72,6 +76,7 @@ class RevPiLogfile(tkinter.Frame):
         self.btnapplog["command"] = self.btn_clearapp
         self.btnapplog["text"] = _("Clear screen")
         self.btnapplog.grid(column=4, row=0, sticky="e")
+
         self.applog = tkinter.Text(self)
         self.appscr = tkinter.Scrollbar(self)
         self.applog.grid(sticky="nesw", columnspan=2, column=3, row=1)
@@ -150,13 +155,13 @@ class RevPiLogfile(tkinter.Frame):
         if full:
             textwidget.delete(1.0, tkinter.END)
 
-        if bytebuff == b'\x16':  # 
+        if bytebuff == b'\x16':  # 'ESC'
             # Kein Zugriff auf Logdatei
             textwidget.delete(1.0, tkinter.END)
             textwidget.insert(
                 tkinter.END, _("Can not access log file on the RevPi")
             )
-        elif bytebuff == b'\x19':  # 
+        elif bytebuff == b'\x19':  # 'EndOfMedia'
             # Logdatei neu begonnen
             startposition = 0
         else:

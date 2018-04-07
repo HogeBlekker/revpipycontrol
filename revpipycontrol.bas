@@ -1,3 +1,4 @@
+AclManager ttk.Frame
 RevPiCheckClient tkinter.Frame
 RevPiInfo tkinter.Frame
 RevPiLogfile tkinter.Frame

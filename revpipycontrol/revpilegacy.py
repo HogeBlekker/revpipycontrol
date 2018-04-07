@@ -5,10 +5,9 @@
 # Webpage: https://revpimodio.org/revpipyplc/
 # (c) Sven Sager, License: LGPLv3
 #
-u"""Optionsfenster."""
+u"""Alte Klassen laden hier, bevor sie entsorgt werden."""
 import tkinter
 import tkinter.messagebox as tkmsg
-from aclmanager import AclManager
 from mytools import gettrans
 
 # Übersetzung laden
@@ -17,7 +16,7 @@ _ = gettrans()
 
 class RevPiOption(tkinter.Frame):
 
-    u"""Zeigt Optionen von RevPiPyLoad an."""
+    u"""Optionen für RevPiPyload vor 0.6.0."""
 
     def __init__(self, master, xmlcli):
         u"""Init RevPiOption-Class.
@@ -33,10 +32,9 @@ class RevPiOption(tkinter.Frame):
         self.master.protocol("WM_DELETE_WINDOW", self._checkclose)
         self.pack(expand=True, fill="both")
 
-        # XML-RPC Server konfigurieren
         self.xmlcli = xmlcli
-        self.xmlmodus = self.xmlcli.xmlmodus()
-
+        self.mrk_var_xmlmod2 = False
+        self.mrk_var_xmlmod3 = False
         self.mrk_xmlmodask = False
         self.dorestart = False
 
@@ -48,20 +46,18 @@ class RevPiOption(tkinter.Frame):
         u"""Prüft ob sich die Einstellungen geändert haben.
         @return True, wenn min. eine Einstellung geändert wurde"""
         return (
-            self.var_start.get() != self.dc.get("autostart", 1)
-            or self.var_reload.get() != self.dc.get("autoreload", 1)
-            or self.var_reload_delay.get() !=
-            str(self.dc.get("autoreloaddelay", 5))
-            or self.var_zexit.get() != self.dc.get("zeroonexit", 0)
-            or self.var_zerr.get() != self.dc.get("zeroonerror", 0)
-            # TODO: rtlevel (0)
+            self.var_start.get() != self.dc.get("autostart", "1")
+            or self.var_reload.get() != self.dc.get("autoreload", "1")
+            or self.var_zexit.get() != self.dc.get("zeroonexit", "0")
+            or self.var_zerr.get() != self.dc.get("zeroonerror", "0")
             or self.var_startpy.get() != self.dc.get("plcprogram", "none.py")
             or self.var_startargs.get() != self.dc.get("plcarguments", "")
-            or self.var_pythonver.get() != self.dc.get("pythonversion", 3)
-            or self.var_slave.get() != self.dc.get("plcslave", 0)
-            or self.var_slaveacl.get() != self.dc.get("plcslaveacl", "")
-            or self.var_xmlon.get() != self.dc.get("xmlrpc", 0)
-            or self.var_xmlacl.get() != self.dc.get("xmlrpcacl", "")
+            or self.var_pythonver.get() != self.dc.get("pythonversion", "3")
+            or self.var_slave.get() != self.dc.get("plcslave", "0")
+            or self.var_xmlon.get() != (self.dc.get("xmlrpc", 0) >= 1)
+            or self.var_xmlmod2.get() != (self.dc.get("xmlrpc", 0) >= 2)
+            or self.var_xmlmod3.get() != (self.dc.get("xmlrpc", 0) >= 3)
+            # or self.var_xmlport.get() != self.dc.get("xmlrpcport", "55123")
         )
 
     def _checkclose(self, event=None):
@@ -79,27 +75,13 @@ class RevPiOption(tkinter.Frame):
         if ask:
             self.master.destroy()
 
-    def _checkvalues(self):
-        u"""Prüft alle Werte auf Gültigkeit.
-        @return True, wenn alle Werte gültig sind"""
-        if not self.var_reload_delay.get().isdigit():
-            tkmsg.showerror(
-                _("Error"),
-                _("The value of 'restart delay' ist not valid."),
-                parent=self.master
-            )
-            return False
-
-        return True
-
     def _createwidgets(self):
         u"""Erstellt Widgets."""
         self.master.wm_title(_("RevPi Python PLC Options"))
         self.master.wm_resizable(width=False, height=False)
 
-        xmlstate = "normal" if self.xmlmodus >= 4 else "disabled"
+        xmlstate = "normal" if self.dc["xmlrpc"] >= 3 else "disabled"
 
-        cpade = {"padx": 4, "pady": 2, "sticky": "e"}
         cpadw = {"padx": 4, "pady": 2, "sticky": "w"}
         cpadwe = {"padx": 4, "pady": 2, "sticky": "we"}
 
@@ -110,7 +92,6 @@ class RevPiOption(tkinter.Frame):
 
         self.var_start = tkinter.BooleanVar(stst)
         self.var_reload = tkinter.BooleanVar(stst)
-        self.var_reload_delay = tkinter.StringVar(stst)
         self.var_zexit = tkinter.BooleanVar(stst)
         self.var_zerr = tkinter.BooleanVar(stst)
 
@@ -118,27 +99,17 @@ class RevPiOption(tkinter.Frame):
         ckb_start["text"] = _("Start program automatically")
         ckb_start["state"] = xmlstate
         ckb_start["variable"] = self.var_start
-        ckb_start.grid(columnspan=2, **cpadw)
+        ckb_start.grid(**cpadw)
 
         ckb_reload = tkinter.Checkbutton(stst)
         ckb_reload["text"] = _("Restart program after exit")
         ckb_reload["state"] = xmlstate
         ckb_reload["variable"] = self.var_reload
-        ckb_reload.grid(columnspan=2, **cpadw)
-
-        lbl = tkinter.Label(stst)
-        lbl["text"] = _("Restart after n seconds of delay")
-        lbl.grid(**cpadw)
-        sbx = tkinter.Spinbox(stst)
-        sbx["to"] = 60
-        sbx["from_"] = 5
-        sbx["textvariable"] = self.var_reload_delay
-        sbx["width"] = 4
-        sbx.grid(column=1, row=2, **cpade)
+        ckb_reload.grid(**cpadw)
 
         lbl = tkinter.Label(stst)
         lbl["text"] = _("Set process image to NULL if program terminates...")
-        lbl.grid(columnspan=2, **cpadw)
+        lbl.grid(**cpadw)
 
         ckb_zexit = tkinter.Checkbutton(stst, justify="left")
         ckb_zexit["state"] = xmlstate
@@ -154,20 +125,18 @@ class RevPiOption(tkinter.Frame):
 
         # Gruppe Programm
         prog = tkinter.LabelFrame(self)
-        prog.columnconfigure(0, weight=1)
-        prog.columnconfigure(1, weight=1)
         prog["text"] = _("PLC program")
         prog.grid(columnspan=2, pady=2, sticky="we")
 
         self.var_pythonver = tkinter.IntVar(prog)
         self.var_startpy = tkinter.StringVar(prog)
         self.var_startargs = tkinter.StringVar(prog)
-        self.var_slaveacl = tkinter.StringVar(prog)
+        self.var_slave = tkinter.BooleanVar(prog)
 
         self.var_pythonver.set(3)
 
         lbl = tkinter.Label(prog)
-        lbl["text"] = _("Python version") + ":"
+        lbl["text"] = _("Python version")
         lbl.grid(columnspan=2, row=0, **cpadw)
 
         rbn = tkinter.Radiobutton(prog)
@@ -175,7 +144,7 @@ class RevPiOption(tkinter.Frame):
         rbn["text"] = "Python2"
         rbn["value"] = 2
         rbn["variable"] = self.var_pythonver
-        rbn.grid(column=0, row=1, **cpade)
+        rbn.grid(column=0, row=1, **cpadw)
 
         rbn = tkinter.Radiobutton(prog)
         rbn["state"] = xmlstate
@@ -209,54 +178,58 @@ class RevPiOption(tkinter.Frame):
         txt["textvariable"] = self.var_startargs
         txt.grid(columnspan=2, **cpadw)
 
-        # Gruppe Services
-        services = tkinter.LabelFrame(self)
-        services["text"] = _("RevPiPyLoad server services")
-        services.grid(columnspan=2, pady=2, sticky="we")
-
-        self.var_slave = tkinter.BooleanVar(services)
-        self.var_xmlon = tkinter.BooleanVar(services)
-        self.var_xmlacl = tkinter.StringVar(services)
-
-        # RevPiSlave Service
-        row = 0
-        ckb_slave = tkinter.Checkbutton(services, justify="left")
+        # Row 6
+        ckb_slave = tkinter.Checkbutton(prog, justify="left")
         ckb_slave["state"] = xmlstate
         ckb_slave["text"] = _("Use RevPi as PLC-Slave")
         ckb_slave["variable"] = self.var_slave
         ckb_slave.grid(column=0, **cpadw)
 
-        btn_slaveacl = tkinter.Button(services, justify="center")
-        btn_slaveacl["command"] = self.btn_slaveacl
-        btn_slaveacl["text"] = _("Edit ACL")
-        btn_slaveacl.grid(column=1, row=row, **cpade)
+        # Gruppe XMLRPC
+        xmlrpc = tkinter.LabelFrame(self)
+        xmlrpc["text"] = _("XML-RPC server")
+        xmlrpc.grid(columnspan=2, pady=2, sticky="we")
 
-        row = 1
-        lbl = tkinter.Label(services)
-        lbl["text"] = _("RevPi-Slave service is:")
-        lbl.grid(column=0, **cpade)
+        self.var_xmlon = tkinter.BooleanVar(xmlrpc)
+        self.var_xmlmod2 = tkinter.BooleanVar(xmlrpc)
+        self.var_xmlmod3 = tkinter.BooleanVar(xmlrpc)
+#        self.var_xmlport = tkinter.StringVar(xmlrpc)
+#        self.var_xmlport.set("55123")
 
-        status = self.xmlcli.plcslaverunning()
-        lbl = tkinter.Label(services)
-        lbl["fg"] = "green" if status else "red"
-        lbl["text"] = _("running") if status else _("stopped")
-        lbl.grid(column=1, row=row, **cpadwe)
-
-        # XML-RPC Service
-        row = 2
-        ckb_xmlon = tkinter.Checkbutton(services)
+        ckb_xmlon = tkinter.Checkbutton(xmlrpc)
         ckb_xmlon["command"] = self.askxmlon
         ckb_xmlon["state"] = xmlstate
         ckb_xmlon["text"] = _("Activate XML-RPC server on RevPi")
         ckb_xmlon["variable"] = self.var_xmlon
         ckb_xmlon.grid(**cpadw)
 
-        btn_slaveacl = tkinter.Button(services, justify="center")
-        btn_slaveacl["command"] = self.btn_xmlacl
-        btn_slaveacl["text"] = _("Edit ACL")
-        btn_slaveacl.grid(column=1, row=row, **cpade)
+        self.ckb_xmlmod2 = tkinter.Checkbutton(xmlrpc, justify="left")
+        self.ckb_xmlmod2["command"] = self.xmlmod2_tail
+        self.ckb_xmlmod2["state"] = xmlstate
+        self.ckb_xmlmod2["text"] = \
+            _("Allow download of piCtory configuration and\nPLC programm")
+        self.ckb_xmlmod2["variable"] = self.var_xmlmod2
+        self.ckb_xmlmod2.grid(**cpadw)
 
-        # Buttons am Ende
+        self.ckb_xmlmod3 = tkinter.Checkbutton(xmlrpc, justify="left")
+        self.ckb_xmlmod3["state"] = xmlstate
+        self.ckb_xmlmod3["text"] = \
+            _("Allow upload of piCtory configuration and\nPLC programm")
+        self.ckb_xmlmod3["variable"] = self.var_xmlmod3
+        self.ckb_xmlmod3.grid(**cpadw)
+
+        lbl = tkinter.Label(xmlrpc)
+        lbl["text"] = _("XML-RPC server port")
+        lbl.grid(**cpadw)
+
+#        spb_xmlport = tkinter.Spinbox(xmlrpc)
+#        spb_xmlport["to"] = 65535
+#        spb_xmlport["from"] = 1024
+#        spb_xmlport["state"] = xmlstate
+#        spb_xmlport["textvariable"] = self.var_xmlport
+#        spb_xmlport.grid(**cpadwe)
+
+        # Buttons
         btn_save = tkinter.Button(self)
         btn_save["command"] = self._setappdata
         btn_save["state"] = xmlstate
@@ -274,22 +247,23 @@ class RevPiOption(tkinter.Frame):
         if refresh:
             self.dc = self.xmlcli.get_config()
 
-        self.var_start.set(self.dc.get("autostart", 1))
-        self.var_reload.set(self.dc.get("autoreload", 1))
-        self.var_reload_delay.set(self.dc.get("autoreloaddelay", 5))
-        self.var_zexit.set(self.dc.get("zeroonexit", 0))
-        self.var_zerr.set(self.dc.get("zeroonerror", 0))
-        # TODO: rtlevel (0)
+        self.var_start.set(self.dc.get("autostart", "1"))
+        self.var_reload.set(self.dc.get("autoreload", "1"))
+        self.var_zexit.set(self.dc.get("zeroonexit", "0"))
+        self.var_zerr.set(self.dc.get("zeroonerror", "0"))
 
         self.var_startpy.set(self.dc.get("plcprogram", "none.py"))
         self.var_startargs.set(self.dc.get("plcarguments", ""))
-        self.var_pythonver.set(self.dc.get("pythonversion", 3))
+        self.var_pythonver.set(self.dc.get("pythonversion", "3"))
+        self.var_slave.set(self.dc.get("plcslave", "0"))
 
-        self.var_slave.set(self.dc.get("plcslave", 0))
-        self.var_slaveacl.set(self.dc.get("plcslaveacl", ""))
+        self.var_xmlon.set(self.dc.get("xmlrpc", 0) >= 1)
+        self.var_xmlmod2.set(self.dc.get("xmlrpc", 0) >= 2)
+        self.mrk_var_xmlmod2 = self.var_xmlmod2.get()
+        self.var_xmlmod3.set(self.dc.get("xmlrpc", 0) >= 3)
+        self.mrk_var_xmlmod3 = self.var_xmlmod3.get()
 
-        self.var_xmlon.set(self.dc.get("xmlrpc", 0))
-        self.var_xmlacl.set(self.dc.get("xmlrpcacl", ""))
+#        self.var_xmlport.set(self.dc.get("xmlrpcport", "55123"))
 
     def _setappdata(self):
         u"""Speichert geänderte Einstellungen auf RevPi.
@@ -303,41 +277,33 @@ class RevPiOption(tkinter.Frame):
             self._checkclose()
             return None
 
-        # Gültigkeitsprüfung
-        if not self._checkvalues():
-            return None
-
-#        ask = tkmsg.askyesnocancel(
-#            _("Question"),
-#            _("The settings are now saved on the Revolution Pi. \n\n"
-#                "Should the new settings take effect immediately? \nThis "
-#                "means a restart of the service and the PLC program!"),
-#            parent=self.master
-#        )
-        ask = tkmsg.askokcancel(
+        ask = tkmsg.askyesnocancel(
             _("Question"),
-            _("The settings will be set on the Revolution Pi now. \n\n"
-                "If you made changes on the 'PCL Program' section, your plc "
-                "program will restart! \n"
-                "ACL changes and service settings are applied immediately."),
+            _("The settings are now saved on the Revolution Pi. \n\n"
+                "Should the new settings take effect immediately? \nThis "
+                "means a restart of the service and the PLC program!"),
             parent=self.master
         )
-        if ask:
-            self.dc["autoreload"] = int(self.var_reload.get())
-            self.dc["autoreloaddelay"] = int(self.var_reload_delay.get())
+        if ask is not None:
             self.dc["autostart"] = int(self.var_start.get())
+            self.dc["autoreload"] = int(self.var_reload.get())
+            self.dc["zeroonexit"] = int(self.var_zexit.get())
+            self.dc["zeroonerror"] = int(self.var_zerr.get())
+
             self.dc["plcprogram"] = self.var_startpy.get()
             self.dc["plcarguments"] = self.var_startargs.get()
             self.dc["pythonversion"] = self.var_pythonver.get()
-            # TODO: rtlevel (0)
-            self.dc["zeroonerror"] = int(self.var_zerr.get())
-            self.dc["zeroonexit"] = int(self.var_zexit.get())
-
             self.dc["plcslave"] = int(self.var_slave.get())
-            self.dc["plcslaveacl"] = self.var_slaveacl.get()
 
-            self.dc["xmlrpc"] = int(self.var_xmlon.get())
-            self.dc["xmlrpcacl"] = self.var_xmlacl.get()
+            self.dc["xmlrpc"] = 0
+            if self.var_xmlon.get():
+                self.dc["xmlrpc"] += 1
+                if self.var_xmlmod2.get():
+                    self.dc["xmlrpc"] += 1
+                    if self.var_xmlmod3.get():
+                        self.dc["xmlrpc"] += 1
+
+#            self.dc["xmlrpcport"] = self.var_xmlport.get()
 
             if self.xmlcli.set_config(self.dc, ask):
                 tkmsg.showinfo(
@@ -368,39 +334,25 @@ class RevPiOption(tkinter.Frame):
             if not self.mrk_xmlmodask:
                 self.var_xmlon.set(True)
 
-    def btn_slaveacl(self):
-        u"""Öffnet Fenster für ACL-Verwaltung."""
-        win = tkinter.Toplevel(self)
-        win.focus_set()
-        win.grab_set()
-        slaveacl = AclManager(
-            win, 0, 1,
-            self.var_slaveacl.get(),
-            readonly=self.xmlmodus < 4
-        )
-        slaveacl.acltext = {
-            0: _("read only"),
-            1: _("read and write")
-        }
-        self.wait_window(win)
-        self.var_slaveacl.set(slaveacl.acl)
+        self.xmlmod_tail()
 
-    def btn_xmlacl(self):
-        u"""Öffnet Fenster für ACL-Verwaltung."""
-        win = tkinter.Toplevel(self)
-        win.focus_set()
-        win.grab_set()
-        slaveacl = AclManager(
-            win, 0, 4,
-            self.var_xmlacl.get(),
-            readonly=self.xmlmodus < 4
-        )
-        slaveacl.acltext = {
-            0: _("Start/Stop PLC program and read logs"),
-            1: _("+ read IOs in watch modus"),
-            2: _("+ read properties and download PLC program"),
-            3: _("+ upload PLC program"),
-            4: _("+ set properties")
-        }
-        self.wait_window(win)
-        self.var_xmlacl.set(slaveacl.acl)
+    def xmlmod_tail(self):
+        u"""Passt XML-Optionszugriff an."""
+        if self.var_xmlon.get():
+            self.var_xmlmod2.set(self.mrk_var_xmlmod2)
+            self.ckb_xmlmod2["state"] = "normal"
+        else:
+            self.mrk_var_xmlmod2 = self.var_xmlmod2.get()
+            self.var_xmlmod2.set(False)
+            self.ckb_xmlmod2["state"] = "disabled"
+        self.xmlmod2_tail()
+
+    def xmlmod2_tail(self):
+        u"""Passt XML-Optionszugriff an."""
+        if self.var_xmlmod2.get():
+            self.var_xmlmod3.set(self.mrk_var_xmlmod3)
+            self.ckb_xmlmod3["state"] = "normal"
+        else:
+            self.mrk_var_xmlmod3 = self.var_xmlmod3.get()
+            self.var_xmlmod3.set(False)
+            self.ckb_xmlmod3["state"] = "disabled"

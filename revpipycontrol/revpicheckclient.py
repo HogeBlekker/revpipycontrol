@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 # RevPiPyControl
 #
@@ -6,7 +7,7 @@
 #
 # Thranks to: http://stackoverflow.com/questions/3085696/adding-a-
 # scrollbar-to-a-group-of-widgets-in-tkinter
-
+u"""Fenstererweiterung für den 'watch modus'."""
 import pickle
 import tkinter
 import tkinter.messagebox as tkmsg
@@ -19,6 +20,8 @@ _ = gettrans()
 
 
 class RevPiCheckClient(tkinter.Frame):
+
+    u"""Baut Fenstererweiterung für 'watch modus'."""
 
     def __init__(self, master, xmlcli, xmlmode=0):
         """Instantiiert MyApp-Klasse."""
@@ -202,7 +205,7 @@ class RevPiCheckClient(tkinter.Frame):
 
     def _createwidgets(self):
         """Erstellt den Fensterinhalt."""
-        cFxPxy53 = {"fill": "x", "padx": 5, "pady": 3}
+        cfxpxy53 = {"fill": "x", "padx": 5, "pady": 3}
 
         devgrp = tkinter.LabelFrame(self)
         devgrp["text"] = _("Devices of RevPi")
@@ -233,7 +236,7 @@ class RevPiCheckClient(tkinter.Frame):
             btn = tkinter.Button(devgrp)
             btn["command"] = lambda win=win: self.__showwin(win)
             btn["text"] = "{} | {}".format(dev, self.dict_devices[dev])
-            btn.pack(**cFxPxy53)
+            btn.pack(**cfxpxy53)
 
         # Steuerungsfunktionen
         cntgrp = tkinter.LabelFrame(self)
@@ -243,19 +246,19 @@ class RevPiCheckClient(tkinter.Frame):
         self.btn_refresh = tkinter.Button(cntgrp)
         self.btn_refresh["text"] = _("Read all IOs")
         self.btn_refresh["command"] = self.refreshvalues
-        self.btn_refresh.pack(**cFxPxy53)
+        self.btn_refresh.pack(**cfxpxy53)
 
         self.btn_read = tkinter.Button(cntgrp)
         self.btn_read["text"] = _("Read just Inputs")
         self.btn_read["command"] = self.readvalues
-        self.btn_read.pack(**cFxPxy53)
+        self.btn_read.pack(**cfxpxy53)
 
         self.btn_write = tkinter.Button(cntgrp)
         self.btn_write["state"] = "normal" if self.xmlmode >= 3 \
             else "disabled"
         self.btn_write["text"] = _("Write Outputs")
         self.btn_write["command"] = self.writevalues
-        self.btn_write.pack(**cFxPxy53)
+        self.btn_write.pack(**cfxpxy53)
 
         self.chk_auto = tkinter.Checkbutton(cntgrp)
         self.chk_auto["command"] = self.toggleauto
