@@ -25,7 +25,7 @@ from xmlrpc.client import ServerProxy
 # Übersetzung laden
 _ = gettrans()
 
-pycontrolversion = "0.6.1"
+pycontrolversion = "0.7.0"
 
 
 class RevPiPyControl(tkinter.Frame):

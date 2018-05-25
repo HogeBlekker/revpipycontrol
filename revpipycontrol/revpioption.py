@@ -60,6 +60,7 @@ class RevPiOption(tkinter.Frame):
             or self.var_pythonver.get() != self.dc.get("pythonversion", 3)
             or self.var_slave.get() != self.dc.get("plcslave", 0)
             or self.var_slaveacl.get() != self.dc.get("plcslaveacl", "")
+            or self.var_mqtton.get() != self.dc.get("mqtt", 0)
             or self.var_xmlon.get() != self.dc.get("xmlrpc", 0)
             or self.var_xmlacl.get() != self.dc.get("xmlrpcacl", "")
         )
@@ -162,7 +163,6 @@ class RevPiOption(tkinter.Frame):
         self.var_pythonver = tkinter.IntVar(prog)
         self.var_startpy = tkinter.StringVar(prog)
         self.var_startargs = tkinter.StringVar(prog)
-        self.var_slaveacl = tkinter.StringVar(prog)
 
         self.var_pythonver.set(3)
 
@@ -214,11 +214,9 @@ class RevPiOption(tkinter.Frame):
         services["text"] = _("RevPiPyLoad server services")
         services.grid(columnspan=2, pady=2, sticky="we")
 
-        self.var_slave = tkinter.BooleanVar(services)
-        self.var_xmlon = tkinter.BooleanVar(services)
-        self.var_xmlacl = tkinter.StringVar(services)
-
         # RevPiSlave Service
+        self.var_slave = tkinter.BooleanVar(services)
+        self.var_slaveacl = tkinter.StringVar(services)
         row = 0
         ckb_slave = tkinter.Checkbutton(services, justify="left")
         ckb_slave["state"] = xmlstate
@@ -229,7 +227,7 @@ class RevPiOption(tkinter.Frame):
         btn_slaveacl = tkinter.Button(services, justify="center")
         btn_slaveacl["command"] = self.btn_slaveacl
         btn_slaveacl["text"] = _("Edit ACL")
-        btn_slaveacl.grid(column=1, row=row, **cpade)
+        btn_slaveacl.grid(column=1, row=row, **cpadwe)
 
         row = 1
         lbl = tkinter.Label(services)
@@ -242,8 +240,40 @@ class RevPiOption(tkinter.Frame):
         lbl["text"] = _("running") if status else _("stopped")
         lbl.grid(column=1, row=row, **cpadwe)
 
+        # MQTT Service
+        self.var_mqtton = tkinter.BooleanVar(services)
+        try:
+            status = self.xmlcli.mqttrunning()
+        except:
+            pass
+        else:
+            row = 2
+            ckb_slave = tkinter.Checkbutton(services, justify="left")
+            ckb_slave["state"] = xmlstate
+            ckb_slave["text"] = _("MQTT process image publisher")
+            ckb_slave["variable"] = self.var_mqtton
+            ckb_slave.grid(column=0, **cpadw)
+
+            btn_slaveacl = tkinter.Button(services, justify="center")
+            # TODO: btn_slaveacl["command"] = self.btn_mqttsettings
+            btn_slaveacl["text"] = _("Settings")
+            btn_slaveacl.grid(column=1, row=row, **cpadwe)
+
+            row = 3
+            lbl = tkinter.Label(services)
+            lbl["text"] = _("MQTT publish service is:")
+            lbl.grid(column=0, **cpade)
+
+            status = self.xmlcli.mqttrunning()
+            lbl = tkinter.Label(services)
+            lbl["fg"] = "green" if status else "red"
+            lbl["text"] = _("running") if status else _("stopped")
+            lbl.grid(column=1, row=row, **cpadwe)
+
         # XML-RPC Service
-        row = 2
+        self.var_xmlon = tkinter.BooleanVar(services)
+        self.var_xmlacl = tkinter.StringVar(services)
+        row = 4
         ckb_xmlon = tkinter.Checkbutton(services)
         ckb_xmlon["command"] = self.askxmlon
         ckb_xmlon["state"] = xmlstate
@@ -254,7 +284,7 @@ class RevPiOption(tkinter.Frame):
         btn_slaveacl = tkinter.Button(services, justify="center")
         btn_slaveacl["command"] = self.btn_xmlacl
         btn_slaveacl["text"] = _("Edit ACL")
-        btn_slaveacl.grid(column=1, row=row, **cpade)
+        btn_slaveacl.grid(column=1, row=row, **cpadwe)
 
         # Buttons am Ende
         btn_save = tkinter.Button(self)
@@ -284,6 +314,8 @@ class RevPiOption(tkinter.Frame):
         self.var_startpy.set(self.dc.get("plcprogram", "none.py"))
         self.var_startargs.set(self.dc.get("plcarguments", ""))
         self.var_pythonver.set(self.dc.get("pythonversion", 3))
+
+        self.var_mqtton.set(self.dc.get("mqtt", 0))
 
         self.var_slave.set(self.dc.get("plcslave", 0))
         self.var_slaveacl.set(self.dc.get("plcslaveacl", ""))
@@ -326,6 +358,8 @@ class RevPiOption(tkinter.Frame):
             # TODO: rtlevel (0)
             self.dc["zeroonerror"] = int(self.var_zerr.get())
             self.dc["zeroonexit"] = int(self.var_zexit.get())
+
+            self.dc["mqtt"] = int(self.var_mqtton.get())
 
             self.dc["plcslave"] = int(self.var_slave.get())
             self.dc["plcslaveacl"] = self.var_slaveacl.get()
