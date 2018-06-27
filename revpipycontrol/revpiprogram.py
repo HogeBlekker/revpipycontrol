@@ -82,7 +82,7 @@ class RevPiProgram(tkinter.Frame):
         self.xmlstate = "normal" if xmlmode >= 3 else "disabled"
 
         # Letzte Einstellungen übernehmen
-        self.opt = _loaddefaults()
+        self.opt = _loaddefaults(revpi)
 
         # Fenster bauen
         self._createwidgets()
@@ -339,7 +339,7 @@ class RevPiProgram(tkinter.Frame):
                 )
                 # Einstellungen speichern
                 self.opt["getpictoryrsc_dir"] = os.path.dirname(fh.name)
-                self._savedefaults(self.revpi, self.opt)
+                _savedefaults(self.revpi, self.opt)
             finally:
                 fh.close()
 
@@ -370,7 +370,7 @@ class RevPiProgram(tkinter.Frame):
                 )
                 # Einstellungen speichern
                 self.opt["getprocimg_dir"] = os.path.dirname(fh.name)
-                self._savedefaults(self.revpi, self.opt)
+                _savedefaults(self.revpi, self.opt)
             finally:
                 fh.close()
 
@@ -418,7 +418,7 @@ class RevPiProgram(tkinter.Frame):
 
                 # Einstellungen speichern
                 self.opt["setpictoryrsc_dir"] = os.path.dirname(fh.name)
-                self._savedefaults(self.revpi, self.opt)
+                _savedefaults(self.revpi, self.opt)
             elif ec == -1:
                 tkmsg.showerror(
                     _("Error"),
@@ -576,7 +576,7 @@ class RevPiProgram(tkinter.Frame):
                 )
 
                 # Einstellungen speichern
-                self._savedefaults(self.revpi, self.opt)
+                _savedefaults(self.revpi, self.opt)
             finally:
                 fh.close()
 
@@ -752,7 +752,7 @@ class RevPiProgram(tkinter.Frame):
 
             self.opt["typeup"] = self.var_typeup.get()
             self.opt["picup"] = self.var_picup.get()
-            self._savedefaults(self.revpi, self.opt)
+            _savedefaults(self.revpi, self.opt)
 
         elif ec == -1:
             tkmsg.showerror(
