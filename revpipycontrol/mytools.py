@@ -19,8 +19,11 @@ if platform == "linux":
     homedir = environ["HOME"]
 else:
     homedir = environ["APPDATA"]
+
 savefile_connections = pathjoin(
     homedir, ".revpipyplc", "connections.dat")
+savefile_developer = pathjoin(
+    homedir, ".revpipyplc", "developer.dat")
 savefile_programpath = pathjoin(
     homedir, ".revpipyplc", "programpath.dat")
 

@@ -12,6 +12,8 @@ import tkinter
 import tkinter.messagebox as tkmsg
 from mytools import gettrans
 from mytools import savefile_connections as savefile
+from revpidevelop import _loaddefaults as developloaddefaults
+from revpidevelop import _savedefaults as developsavedefaults
 from revpiprogram import _loaddefaults as programloaddefaults
 from revpiprogram import _savedefaults as programsavedefaults
 from os import makedirs
@@ -154,6 +156,11 @@ class RevPiPlcList(tkinter.Frame):
             return False
 
         # Andere Einstellungen aufräumen
+        dict = developloaddefaults()
+        for revpi in tuple(dict.keys()):
+            if revpi not in self._connections:
+                del dict[revpi]
+        developsavedefaults(None, dict)
         dict = programloaddefaults()
         for revpi in tuple(dict.keys()):
             if revpi not in self._connections:

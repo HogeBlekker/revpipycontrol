@@ -15,8 +15,8 @@ import tkinter.filedialog as tkfd
 import tkinter.messagebox as tkmsg
 import zipfile
 from mytools import gettrans
+from mytools import homedir
 from mytools import savefile_programpath as savefile
-from os import makedirs
 from shutil import rmtree
 from tempfile import mkstemp, mkdtemp
 from xmlrpc.client import Binary
@@ -48,7 +48,7 @@ def _savedefaults(revpiname, settings):
 
     """
     try:
-        makedirs(os.path.dirname(savefile), exist_ok=True)
+        os.makedirs(os.path.dirname(savefile), exist_ok=True)
         if revpiname is None:
             dict_all = settings
         else:
@@ -588,6 +588,7 @@ class RevPiProgram(tkinter.Frame):
         dirtmp = None
         filelist = []
         fileselect = None
+        foldername = ""
         rscfile = None
 
         if tup == 0:
@@ -595,7 +596,7 @@ class RevPiProgram(tkinter.Frame):
             fileselect = tkfd.askopenfilenames(
                 parent=self.master,
                 title="Upload Python program...",
-                initialdir=self.opt.get("plcupload_dir", ""),
+                initialdir=self.opt.get("plcupload_dir", homedir),
                 filetypes=(("Python", "*.py"), (_("All files"), "*.*"))
             )
             if type(fileselect) == tuple and len(fileselect) > 0:
@@ -608,8 +609,12 @@ class RevPiProgram(tkinter.Frame):
                 parent=self.master,
                 title=_("Folder to upload"),
                 mustexist=True,
-                initialdir=self.opt.get("plcupload_dir", self.revpi)
+                initialdir=self.opt.get("plcupload_dir", homedir)
             )
+
+            # Ordnernamen merken um diesen auf RevPi anzulegen
+            foldername = os.path.basename(dirselect)
+
             if type(dirselect) == str and dirselect != "":
                 filelist = self.create_filelist(dirselect)
 
@@ -706,7 +711,11 @@ class RevPiProgram(tkinter.Frame):
                 if dirselect == "":
                     sendname = os.path.basename(fname)
                 else:
-                    sendname = fname.replace(dirselect, "")[1:]
+                    # Ordnernamen in Dateipfad für RevPi übernehmen
+                    sendname = os.path.join(
+                        foldername,
+                        fname.replace(dirselect, "")[1:]
+                    )
 
                 # Prüfen ob Dateiname bereits als Startprogramm angegeben ist
                 if sendname == opt_program:

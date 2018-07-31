@@ -21,6 +21,7 @@ aclmanager._?8
 mytools.addroot?4(filename)
 mytools.gettrans?4(proglang=None)
 mytools.savefile_connections?7
+mytools.savefile_developer?7
 mytools.savefile_programpath?7
 revpicheckclient.RevPiCheckClient.__chval?6(device, io, event=None)
 revpicheckclient.RevPiCheckClient.__hidewin?6(win, event=None)
@@ -43,6 +44,20 @@ revpicheckclient.RevPiCheckClient.validatereturn?4(returnlist)
 revpicheckclient.RevPiCheckClient.writevalues?4()
 revpicheckclient.RevPiCheckClient?1(master, xmlcli, xmlmode=0)
 revpicheckclient._?8
+revpidevelop.RevPiDevelop._checkclose?5(event=None)
+revpidevelop.RevPiDevelop._createwidgets?5()
+revpidevelop.RevPiDevelop.app?7
+revpidevelop.RevPiDevelop.btn_domyjob?4()
+revpidevelop.RevPiDevelop.btn_selectpath?4()
+revpidevelop.RevPiDevelop.cli?7
+revpidevelop.RevPiDevelop.load_pathfiles?4(silent=False)
+revpidevelop.RevPiDevelop.refresh_stats?4()
+revpidevelop.RevPiDevelop.root?7
+revpidevelop.RevPiDevelop.select_pathfiles?4(tkevt)
+revpidevelop.RevPiDevelop?1(master, xmlcli, xmlmode, revpi)
+revpidevelop._?8
+revpidevelop._loaddefaults?5(revpiname=None)
+revpidevelop._savedefaults?5(revpiname, settings)
 revpiinfo.RevPiInfo._checkclose?5(event=None)
 revpiinfo.RevPiInfo._createwidgets?5(extended=False)
 revpiinfo.RevPiInfo.visitwebsite?4(event=None)
@@ -119,6 +134,7 @@ revpipycontrol.RevPiPyControl._opt_conn?5(text, reconnect=False)
 revpipycontrol.RevPiPyControl.infowindow?4()
 revpipycontrol.RevPiPyControl.myapp?7
 revpipycontrol.RevPiPyControl.plcdebug?4()
+revpipycontrol.RevPiPyControl.plcdevelop?4()
 revpipycontrol.RevPiPyControl.plclist?4()
 revpipycontrol.RevPiPyControl.plclogs?4()
 revpipycontrol.RevPiPyControl.plcoptions?4()

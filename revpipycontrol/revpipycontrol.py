@@ -9,6 +9,7 @@
 #
 u"""Hauptprogramm."""
 import revpicheckclient
+import revpidevelop
 import revpiinfo
 import revpilogfile
 import revpioption
@@ -25,7 +26,7 @@ from xmlrpc.client import ServerProxy
 # Übersetzung laden
 _ = gettrans()
 
-pycontrolversion = "0.6.2"
+pycontrolversion = "0.7.0"
 
 
 class RevPiPyControl(tkinter.Frame):
@@ -52,6 +53,7 @@ class RevPiPyControl(tkinter.Frame):
 
         # Globale Fenster
         self.tkcheckclient = None
+        self.tkdevelop = None
         self.tklogs = None
         self.tkoptions = None
         self.tkprogram = None
@@ -75,6 +77,8 @@ class RevPiPyControl(tkinter.Frame):
         u"""Schließt alle Fenster."""
         if self.tkcheckclient is not None:
             self.tkcheckclient.destroy()
+        if self.tkdevelop is not None:
+            self.tkdevelop.destroy()
         if self.tklogs is not None:
             self.tklogs.master.destroy()
         if self.tkoptions is not None:
@@ -179,6 +183,8 @@ class RevPiPyControl(tkinter.Frame):
             label=_("PLC options..."), command=self.plcoptions)
         self.mplc.add_command(
             label=_("PLC program..."), command=self.plcprogram)
+        self.mplc.add_command(
+            label=_("PLC developer..."), command=self.plcdevelop)
         self.mplc.add_separator()
 
         self.mplc.add_command(
@@ -281,6 +287,27 @@ class RevPiPyControl(tkinter.Frame):
                 self.debugframe.pack(fill="x")
 
             self.btn_debug["state"] = "normal"
+
+    def plcdevelop(self):
+        u"""Startet das Developfenster."""
+        if self.xmlmode < 3:
+            tkmsg.showwarning(
+                _("Warning"),
+                _("XML-RPC access mode in the RevPiPyLoad "
+                    "configuration is too small to access this dialog!"),
+                parent=self.master
+            )
+        else:
+            # Logfenster schließen
+            if self.tklogs is not None:
+                self.tklogs.master.destroy()
+
+            win = tkinter.Toplevel(self)
+            win.focus_set()
+            win.grab_set()
+            self.tkdevelop = revpidevelop.RevPiDevelop(
+                win, self.cli, self.xmlmode, self.revpiname)
+            self.wait_window(win)
 
     def plclist(self):
         u"""Öffnet das Fenster für die Verbindungen."""
