@@ -15,7 +15,6 @@ import tkinter.messagebox as tkmsg
 from mytools import homedir
 from mytools import gettrans
 from mytools import savefile_developer as savefile
-from revpilogfile import RevPiLogfile
 from tkinter import ttk
 from xmlrpc.client import Binary
 
@@ -70,8 +69,6 @@ class RevPiDevelop(ttk.Frame):
             return None
 
         super().__init__(master)
-        self.master.protocol("WM_DELETE_WINDOW", self._checkclose)
-        self.master.bind("<KeyPress-Escape>", self._checkclose)
         self.pack(expand=True, fill="both")
 
         self.revpi = revpi
@@ -94,9 +91,6 @@ class RevPiDevelop(ttk.Frame):
 
         self.refresh_stats()
 
-        # Logfenster öffnen
-        self.tklog = RevPiLogfile(master, self.xmlcli)
-
     def _checkclose(self, event=None):
         u"""Prüft ob Fenster beendet werden soll.
         @param event tkinter-Event"""
@@ -107,18 +101,12 @@ class RevPiDevelop(ttk.Frame):
         self.opt["watchfiles"] = self.watchfiles
         _savedefaults(self.revpi, self.opt)
 
-        # Logfile und eigenes fenster schließen
-        self.tklog.destroy()
-        self.master.destroy()
-
     def _createwidgets(self):
         u"""Erstellt alle Widgets."""
-        self.master.wm_title(_("RevPi Python PLC program"))
-
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)
 
-        cpad = {"padx": 4, "pady": 2}
+        # cpad = {"padx": 4, "pady": 2}
         # cpade = {"padx": 4, "pady": 2, "sticky": "e"}
         cpadw = {"padx": 4, "pady": 2, "sticky": "w"}
         cpadwe = {"padx": 4, "pady": 2, "sticky": "we"}
@@ -134,15 +122,15 @@ class RevPiDevelop(ttk.Frame):
         lbl["text"] = _("Path to list files:")
         lbl.grid(row=r, **cpadw)
 
-        r += 1
-        self.lbl_path = ttk.Label(devel)
-        self.lbl_path["text"] = self.watchpath
-        self.lbl_path.grid(row=r, column=0, columnspan=2, **cpadw)
-
         btn = ttk.Button(devel)
         btn["command"] = self.btn_selectpath
         btn["text"] = _("Select path")
         btn.grid(row=r, column=1, **cpadw)
+
+        r += 1
+        self.lbl_path = ttk.Label(devel)
+        self.lbl_path["width"] = 50
+        self.lbl_path.grid(row=r, column=0, columnspan=2, **cpadw)
 
         # Listbox
         r += 1
@@ -164,26 +152,10 @@ class RevPiDevelop(ttk.Frame):
         btnlist.columnconfigure(1, weight=1)
         btnlist.grid(row=r, columnspan=2, sticky="we")
 
-        btn = ttk.Button(btnlist)
-        btn["command"] = lambda: self.xmlcli.plcstop()
-        btn["text"] = _("Just stop PLC")
-        btn.grid(row=0, column=0, **cpadwe)
-
         self.btn_jobs = ttk.Button(btnlist)
         self.btn_jobs["command"] = self.btn_domyjob
         self.btn_jobs["text"] = _("Stop / Upload / Start")
         self.btn_jobs.grid(row=0, column=1, **cpadwe)
-
-        btn = ttk.Button(btnlist)
-        btn["command"] = lambda: self.xmlcli.plcstart()
-        btn["text"] = _("Just start PLC")
-        btn.grid(row=0, column=2, **cpadwe)
-
-        # Beendenbutton
-        btn = ttk.Button(self)
-        btn["command"] = self._checkclose
-        btn["text"] = _("Exit")
-        btn.grid(**cpad)
 
     def btn_domyjob(self):
         u"""Hochladen und neu starten."""

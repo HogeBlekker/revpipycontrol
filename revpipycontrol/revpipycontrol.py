@@ -48,12 +48,12 @@ class RevPiPyControl(tkinter.Frame):
         self.xmlfuncs = []
         self.xmlmode = 0
 
-        # Debugger vorbereiten
+        # Frames vorbereiten
         self.debugframe = None
+        self.developframe = None
 
         # Globale Fenster
         self.tkcheckclient = None
-        self.tkdevelop = None
         self.tklogs = None
         self.tkoptions = None
         self.tkprogram = None
@@ -77,8 +77,10 @@ class RevPiPyControl(tkinter.Frame):
         u"""Schließt alle Fenster."""
         if self.tkcheckclient is not None:
             self.tkcheckclient.destroy()
-        if self.tkdevelop is not None:
-            self.tkdevelop.destroy()
+        if self.developframe is not None:
+            self.developframe._checkclose()
+            self.developframe.destroy()
+            self.developframe = None
         if self.tklogs is not None:
             self.tklogs.master.destroy()
         if self.tkoptions is not None:
@@ -129,38 +131,43 @@ class RevPiPyControl(tkinter.Frame):
         menu1.add_command(label=_("Info..."), command=self.infowindow)
         self.mbar.add_cascade(label=_("Help"), menu=menu1)
 
-        self.var_conn = tkinter.StringVar(self)
-        self.txt_connect = tkinter.Entry(self, state="readonly", width=40)
+        self.main_frame = tkinter.Frame(self)
+        self.main_frame.pack(side="left", fill="y")
+
+        self.var_conn = tkinter.StringVar(self.main_frame)
+        self.txt_connect = tkinter.Entry(
+            self.main_frame, state="readonly", width=40
+        )
         self.txt_connect["textvariable"] = self.var_conn
         self.txt_connect.pack(fill="x")
 
-        self.btn_plcstart = tkinter.Button(self)
+        self.btn_plcstart = tkinter.Button(self.main_frame)
         self.btn_plcstart["text"] = _("PLC start")
         self.btn_plcstart["command"] = self.plcstart
         self.btn_plcstart.pack(fill="x")
 
-        self.btn_plcstop = tkinter.Button(self)
+        self.btn_plcstop = tkinter.Button(self.main_frame)
         self.btn_plcstop["text"] = _("PLC stop")
         self.btn_plcstop["command"] = self.plcstop
         self.btn_plcstop.pack(fill="x")
 
-        self.btn_plcrestart = tkinter.Button(self)
+        self.btn_plcrestart = tkinter.Button(self.main_frame)
         self.btn_plcrestart["text"] = _("PLC restart")
         self.btn_plcrestart["command"] = self.plcrestart
         self.btn_plcrestart.pack(fill="x")
 
-        self.btn_plclogs = tkinter.Button(self)
+        self.btn_plclogs = tkinter.Button(self.main_frame)
         self.btn_plclogs["text"] = _("PLC logs")
         self.btn_plclogs["command"] = self.plclogs
         self.btn_plclogs.pack(fill="x")
 
-        self.var_status = tkinter.StringVar(self)
-        self.txt_status = tkinter.Entry(self)
+        self.var_status = tkinter.StringVar(self.main_frame)
+        self.txt_status = tkinter.Entry(self.main_frame)
         self.txt_status["state"] = "readonly"
         self.txt_status["textvariable"] = self.var_status
         self.txt_status.pack(fill="x")
 
-        self.btn_debug = tkinter.Button(self)
+        self.btn_debug = tkinter.Button(self.main_frame)
         self.btn_debug["text"] = _("PLC watch mode")
         self.btn_debug["command"] = self.plcdebug
         self.btn_debug.pack(fill="x")
@@ -200,7 +207,7 @@ class RevPiPyControl(tkinter.Frame):
         @param text Verbindungsname
         @param reconnect Socket Timeout nicht heruntersetzen"""
         if reconnect:
-            socket.setdefaulttimeout(10)
+            socket.setdefaulttimeout(6)
         else:
             socket.setdefaulttimeout(2)
 
@@ -218,7 +225,7 @@ class RevPiPyControl(tkinter.Frame):
             self.servererror()
         else:
             self._closeall()
-            socket.setdefaulttimeout(10)
+            socket.setdefaulttimeout(6)
             self.cli = ServerProxy(
                 "http://{}:{}".format(
                     self.dict_conn[text][0], int(self.dict_conn[text][1])
@@ -255,38 +262,40 @@ class RevPiPyControl(tkinter.Frame):
                     "").format(self.cli.version()),
                 parent=self.master
             )
+            return
+
+        # Debugframe laden
+        # FIXME: Bei neuer piCtory Konfig schneller vernichten
+        if self.debugframe is None \
+                or self.debugframe.err_workvalues >= \
+                self.debugframe.max_errors:
+            try:
+                self.debugframe = revpicheckclient.RevPiCheckClient(
+                    self.main_frame, self.cli, self.xmlmode
+                )
+            except:
+                tkmsg.showwarning(
+                    _("Error"),
+                    _("Can not load piCtory configuration. \n"
+                        "Did you create a hardware configuration? "
+                        "Please check this in piCtory!"),
+                    parent=self.master
+                )
+                self.btn_debug["state"] = "normal"
+                return None
+
+        # Show/Hide wechseln
+        if self.debugframe.winfo_viewable():
+            self.debugframe.hideallwindows()
+            if self.debugframe.autorw.get():
+                self.debugframe.autorw.set(False)
+                self.debugframe.toggleauto()
+            self.debugframe.dowrite.set(False)
+            self.debugframe.pack_forget()
         else:
-            # Debugfenster laden
-            if self.debugframe is None \
-                    or self.debugframe.err_workvalues >= \
-                    self.debugframe.max_errors:
-                try:
-                    self.debugframe = revpicheckclient.RevPiCheckClient(
-                        self, self.cli, self.xmlmode
-                    )
-                except:
-                    tkmsg.showwarning(
-                        _("Error"),
-                        _("Can not load piCtory configuration. \n"
-                            "Did you create a hardware configuration? "
-                            "Please check this in piCtory!"),
-                        parent=self.master
-                    )
-                    self.btn_debug["state"] = "normal"
-                    return None
+            self.debugframe.pack(fill="x")
 
-            # Show/Hide wechseln
-            if self.debugframe.winfo_viewable():
-                self.debugframe.hideallwindows()
-                if self.debugframe.autorw.get():
-                    self.debugframe.autorw.set(False)
-                    self.debugframe.toggleauto()
-                self.debugframe.dowrite.set(False)
-                self.debugframe.pack_forget()
-            else:
-                self.debugframe.pack(fill="x")
-
-            self.btn_debug["state"] = "normal"
+        self.btn_debug["state"] = "normal"
 
     def plcdevelop(self):
         u"""Startet das Developfenster."""
@@ -297,17 +306,19 @@ class RevPiPyControl(tkinter.Frame):
                     "configuration is too small to access this dialog!"),
                 parent=self.master
             )
-        else:
-            # Logfenster schließen
-            if self.tklogs is not None:
-                self.tklogs.master.destroy()
+            return
 
-            win = tkinter.Toplevel(self)
-            win.focus_set()
-            win.grab_set()
-            self.tkdevelop = revpidevelop.RevPiDevelop(
-                win, self.cli, self.xmlmode, self.revpiname)
-            self.wait_window(win)
+        # Developframe laden
+        if self.developframe is None:
+            self.developframe = revpidevelop.RevPiDevelop(
+                self, self.cli, self.xmlmode, self.revpiname
+            )
+
+        if self.developframe.winfo_viewable():
+            self.developframe._checkclose()
+            self.developframe.pack_forget()
+        else:
+            self.developframe.pack(side="right")  # fill="x")
 
     def plclist(self):
         u"""Öffnet das Fenster für die Verbindungen."""
