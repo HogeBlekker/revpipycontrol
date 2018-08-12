@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-#
-# RevPiPyControl
-#
-# Webpage: https://revpimodio.org/revpipyplc/
-# (c) Sven Sager, License: LGPLv3
-#
 u"""Manager für ACL Einträge."""
+
+__author__ = "Sven Sager"
+__copyright__ = "Copyright (C) 2018 Sven Sager"
+__license__ = "GPLv3"
+
 import tkinter
 import tkinter.messagebox as tkmsg
 from mytools import gettrans
@@ -56,8 +55,8 @@ class AclManager(ttk.Frame):
         self.aclinfo = ttk.Frame(self)
         for acltext in self.__dict_acltext:
             lbl = ttk.Label(self.aclinfo)
-            lbl["text"] = _("Level") + " {}: {}".format(
-                acltext, self.__dict_acltext[acltext]
+            lbl["text"] = _("Level") + " {id}: {text}".format(
+                id=acltext, text=self.__dict_acltext[acltext]
             )
             lbl.pack(anchor="w")
 
@@ -276,12 +275,12 @@ class AclManager(ttk.Frame):
             ask = tkmsg.askyesno(
                 _("Question"),
                 _("Do you really want to delete the following item? \n"
-                    "\nIP: {} / Level: {}").format(*lst_ipacl),
+                    "\nIP: {0} / Level: {1}").format(*lst_ipacl),
                 parent=self.master, default="no"
             )
             if ask:
                 new_acl = self.__acl.acl.replace(
-                    "{},{}".format(*lst_ipacl), ""
+                    "{0},{1}".format(*lst_ipacl), ""
                 ).replace("  ", " ")
 
                 if self.__acl.loadacl(new_acl.strip()):
@@ -354,7 +353,7 @@ class AclManager(ttk.Frame):
 
     def _savefields(self):
         u"""Übernimmt neuen ACL Eintrag."""
-        new_acl = "{}.{}.{}.{},{}".format(
+        new_acl = "{0}.{1}.{2}.{3},{4}".format(
             self.var_ip1.get(),
             self.var_ip2.get(),
             self.var_ip3.get(),
@@ -386,8 +385,8 @@ class AclManager(ttk.Frame):
     acltext = property(__get_acltext, __set_acltext)
 
 
+# Debugging
 if __name__ == "__main__":
     root = AclManager(tkinter.Tk(), 0, 9, " 192.168.50.100,2 127.0.0.*,1")
     root.acltext = {0: "Keine Rechte", 1: "Hohe Rechte"}
     root.mainloop()
-    print(root.acl)

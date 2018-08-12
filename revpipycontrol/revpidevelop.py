@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-#
-# RevPiPyControl
-#
-# Webpage: https://revpimodio.org/revpipyplc/
-# (c) Sven Sager, License: LGPLv3
-#
 u"""PLC Programm und Konfig hoch und runterladen."""
+
+__author__ = "Sven Sager"
+__copyright__ = "Copyright (C) 2018 Sven Sager"
+__license__ = "GPLv3"
+
 import gzip
 import os
 import pickle
@@ -53,7 +52,7 @@ def _savedefaults(revpiname, settings):
             dict_all[revpiname] = settings
         with open(savefile, "wb") as fh:
             pickle.dump(dict_all, fh)
-    except:
+    except Exception:
         return False
     return True
 
@@ -186,7 +185,7 @@ class RevPiDevelop(ttk.Frame):
                     ustatus = self.xmlcli.plcupload(
                         Binary(gzip.compress(fh.read())), sendname
                     )
-                except:
+                except Exception:
                     ec = -2
                     break
 
@@ -258,7 +257,7 @@ class RevPiDevelop(ttk.Frame):
         # Dateiliste erstellen
         filecount = 0
         for tup_walk in os.walk(self.watchpath):
-            for filename in tup_walk[2]:
+            for filename in sorted(tup_walk[2]):
                 fullname = os.path.join(tup_walk[0], filename)
                 self.trv_files.insert(
                     "", "end", fullname,
@@ -286,7 +285,7 @@ class RevPiDevelop(ttk.Frame):
         for watchfile in self.watchfiles.copy():
             try:
                 self.trv_files.item(watchfile)
-            except:
+            except Exception:
                 self.watchfiles.remove(watchfile)
         self.trv_files.selection_set(self.watchfiles)
 

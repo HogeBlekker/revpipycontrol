@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-#
-# RevPiPyControl
-#
-# Webpage: https://revpimodio.org/revpipyplc/
-# (c) Sven Sager, License: LGPLv3
-#
 u"""PLC Programm und Konfig hoch und runterladen."""
+
+__author__ = "Sven Sager"
+__copyright__ = "Copyright (C) 2018 Sven Sager"
+__license__ = "GPLv3"
+
 import gzip
 import os
 import pickle
@@ -56,7 +55,7 @@ def _savedefaults(revpiname, settings):
             dict_all[revpiname] = settings
         with open(savefile, "wb") as fh:
             pickle.dump(dict_all, fh)
-    except:
+    except Exception:
         return False
     return True
 
@@ -325,7 +324,7 @@ class RevPiProgram(tkinter.Frame):
         if fh is not None:
             try:
                 fh.write(self.xmlcli.get_pictoryrsc().data)
-            except:
+            except Exception:
                 tkmsg.showerror(
                     _("Error"),
                     _("Could not load and save file!"),
@@ -356,7 +355,7 @@ class RevPiProgram(tkinter.Frame):
         if fh is not None:
             try:
                 fh.write(self.xmlcli.get_procimg().data)
-            except:
+            except Exception:
                 tkmsg.showerror(
                     _("Error"),
                     _("Could not load and save file!"),
@@ -561,7 +560,7 @@ class RevPiProgram(tkinter.Frame):
                 self.opt["typedown"] = self.var_typedown.get()
                 self.opt["picdown"] = self.var_picdown.get()
 
-            except:
+            except Exception:
                 raise
                 tkmsg.showerror(
                     _("Error"),
@@ -725,7 +724,7 @@ class RevPiProgram(tkinter.Frame):
                 try:
                     ustatus = self.xmlcli.plcupload(
                         Binary(gzip.compress(fh.read())), sendname)
-                except:
+                except Exception:
                     ec = -2
                     break
 

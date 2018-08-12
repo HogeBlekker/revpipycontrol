@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-#
-# RevPiPyControl
-#
-# Webpage: https://revpimodio.org/revpipyplc/
-# (c) Sven Sager, License: LGPLv3
-#
 u"""Fenster um RevPi-Verbindungen einzurichten."""
+
+__author__ = "Sven Sager"
+__copyright__ = "Copyright (C) 2018 Sven Sager"
+__license__ = "GPLv3"
+
 import os.path
 import pickle
 import tkinter
@@ -152,20 +151,20 @@ class RevPiPlcList(tkinter.Frame):
             with open(savefile, "wb") as fh:
                 pickle.dump(self._connections, fh)
             self.changes = False
-        except:
+        except Exception:
             return False
 
         # Andere Einstellungen aufräumen
-        dict = developloaddefaults()
-        for revpi in tuple(dict.keys()):
+        dict_o = developloaddefaults()
+        for revpi in tuple(dict_o.keys()):
             if revpi not in self._connections:
-                del dict[revpi]
-        developsavedefaults(None, dict)
-        dict = programloaddefaults()
-        for revpi in tuple(dict.keys()):
+                del dict_o[revpi]
+        developsavedefaults(None, dict_o)
+        dict_o = programloaddefaults()
+        for revpi in tuple(dict_o.keys()):
             if revpi not in self._connections:
-                del dict[revpi]
-        programsavedefaults(None, dict)
+                del dict_o[revpi]
+        programsavedefaults(None, dict_o)
 
         return True
 
@@ -202,7 +201,7 @@ class RevPiPlcList(tkinter.Frame):
             item = self.list_conn.get(item_index[0])
             ask = tkmsg.askyesno(
                 _("Question"),
-                _("Do you really want to delete the selected connection '{}'?"
+                _("Do you really want to delete the selected connection '{0}'?"
                     "").format(item),
                 parent=self.master
             )
@@ -250,9 +249,9 @@ class RevPiPlcList(tkinter.Frame):
     def evt_keypress(self, evt=None):
         u"""Passt bei Tastendruck den Status der Buttons an."""
         okvalue = "normal" if (
-            self.var_address.get() != ""
-            and self.var_name.get() != ""
-            and self.var_port.get() != ""
+            self.var_address.get() != "" and
+            self.var_name.get() != "" and
+            self.var_port.get() != ""
         ) else "disabled"
         self.btn_add["state"] = okvalue
 

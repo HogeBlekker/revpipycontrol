@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
-#
-# RevPiPyControl
-#
-# Webpage: https://revpimodio.org/revpipyplc/
-# (c) Sven Sager, License: LGPLv3
-#
-# Thranks to: http://stackoverflow.com/questions/3085696/adding-a-
-# scrollbar-to-a-group-of-widgets-in-tkinter
-u"""Fenstererweiterung für den 'watch modus'."""
+u"""Fenstererweiterung für den 'watch modus'.
+
+Thranks to: http://stackoverflow.com/questions/3085696/adding-a-
+scrollbar-to-a-group-of-widgets-in-tkinter
+
+"""
+
+__author__ = "Sven Sager"
+__copyright__ = "Copyright (C) 2018 Sven Sager"
+__license__ = "GPLv3"
+
 import pickle
 import tkinter
 import tkinter.messagebox as tkmsg
@@ -108,8 +110,11 @@ class RevPiCheckClient(tkinter.Frame):
             io[5].set(self.__oldvalue)
             tkmsg.showerror(
                 _("Error"),
-                _("Given value for Output '{}' is not valid! \nReset to ""'{}'"
-                    "").format(self.dict_devices[device], self.__oldvalue),
+                _("Given value for Output '{0}' is not valid! \n"
+                    "Reset to '{1}'").format(
+                        self.dict_devices[device],
+                        self.__oldvalue
+                    ),
                 parent=self.dict_wins[device]
             )
 
@@ -213,7 +218,7 @@ class RevPiCheckClient(tkinter.Frame):
 
         for dev in self.lst_devices:
             win = tkinter.Toplevel(self)
-            win.wm_title("{} | {}".format(dev, self.dict_devices[dev]))
+            win.wm_title("{0} | {1}".format(dev, self.dict_devices[dev]))
             win.protocol(
                 "WM_DELETE_WINDOW",
                 lambda win=win: self.__hidewin(win)
@@ -235,7 +240,7 @@ class RevPiCheckClient(tkinter.Frame):
             # Button erstellen
             btn = tkinter.Button(devgrp)
             btn["command"] = lambda win=win: self.__showwin(win)
-            btn["text"] = "{} | {}".format(dev, self.dict_devices[dev])
+            btn["text"] = "{0} | {1}".format(dev, self.dict_devices[dev])
             btn.pack(**cfxpxy53)
 
         # Steuerungsfunktionen
@@ -311,7 +316,7 @@ class RevPiCheckClient(tkinter.Frame):
             try:
                 ba_values = bytearray(self.cli.ps_values().data)
                 self.err_workvalues = 0
-            except:
+            except Exception:
                 if self.autorw.get():
                     self.err_workvalues += 1
                 else:
@@ -390,7 +395,7 @@ class RevPiCheckClient(tkinter.Frame):
         if not self.autorw.get():
             try:
                 self.chk_auto["state"] = "normal"
-            except:
+            except Exception:
                 pass
             return None
 
@@ -436,7 +441,7 @@ class RevPiCheckClient(tkinter.Frame):
                 # Fehlermeldungen erstellen
                 devicename = self.dict_devices[lst_result[0]]
                 str_errmsg += _(
-                    "Error set value of device '{}' Output '{}': {} \n"
+                    "Error set value of device '{0}' Output '{1}': {2} \n"
                 ).format(devicename, lst_result[1], lst_result[3])
         if str_errmsg != "":
             tkmsg.showerror(_("Error"), str_errmsg)

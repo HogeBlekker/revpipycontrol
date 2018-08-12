@@ -1,13 +1,12 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-#
-# RevPiPyControl
-# Version: see global var pycontrolverion
-#
-# Webpage: https://revpimodio.org/revpipyplc/
-# (c) Sven Sager, License: LGPLv3
-#
-u"""Hauptprogramm."""
+u"""RevPiPyControl main program."""
+
+__author__ = "Sven Sager"
+__copyright__ = "Copyright (C) 2018 Sven Sager"
+__license__ = "GPLv3"
+__version__ = "0.7.0"
+
 import revpicheckclient
 import revpidevelop
 import revpiinfo
@@ -25,8 +24,6 @@ from xmlrpc.client import ServerProxy
 
 # Übersetzung laden
 _ = gettrans()
-
-pycontrolversion = "0.7.0"
 
 
 class RevPiPyControl(tkinter.Frame):
@@ -92,7 +89,7 @@ class RevPiPyControl(tkinter.Frame):
             self.debugframe = None
             try:
                 self.cli.psstop()
-            except:
+            except Exception:
                 pass
 
     def _closeapp(self, event=None):
@@ -212,7 +209,7 @@ class RevPiPyControl(tkinter.Frame):
             socket.setdefaulttimeout(2)
 
         sp = ServerProxy(
-            "http://{}:{}".format(
+            "http://{0}:{1}".format(
                 self.dict_conn[text][0], int(self.dict_conn[text][1])
             )
         )
@@ -221,18 +218,18 @@ class RevPiPyControl(tkinter.Frame):
             self.xmlfuncs = sp.system.listMethods()
             self.xmlmode = sp.xmlmodus()
             self.revpipyversion = list(map(int, sp.version().split(".")))
-        except:
+        except Exception:
             self.servererror()
         else:
             self._closeall()
             socket.setdefaulttimeout(6)
             self.cli = ServerProxy(
-                "http://{}:{}".format(
+                "http://{0}:{1}".format(
                     self.dict_conn[text][0], int(self.dict_conn[text][1])
                 )
             )
             self.revpiname = text
-            self.var_conn.set("{} - {}:{}".format(
+            self.var_conn.set("{0} - {1}:{2}".format(
                 text, self.dict_conn[text][0], int(self.dict_conn[text][1])
             ))
             self.mbar.entryconfig("PLC", state="normal")
@@ -242,7 +239,7 @@ class RevPiPyControl(tkinter.Frame):
         win = tkinter.Toplevel(self)
         win.focus_set()
         win.grab_set()
-        revpiinfo.RevPiInfo(win, self.cli, pycontrolversion)
+        revpiinfo.RevPiInfo(win, self.cli, __version__)
         self.wait_window(win)
         self.dict_conn = revpiplclist.get_connections()
         self._fillconnbar()
@@ -255,7 +252,7 @@ class RevPiPyControl(tkinter.Frame):
         if "psstart" not in self.xmlfuncs:
             tkmsg.showwarning(
                 _("Warning"),
-                _("The watch mode ist not supported in version {} "
+                _("The watch mode ist not supported in version {0} "
                     "of RevPiPyLoad on your RevPi! You need at least version "
                     "0.5.3! Maybe the python3-revpimodio2 module is not "
                     "installed on your RevPi at least version 2.0.0."
@@ -273,7 +270,7 @@ class RevPiPyControl(tkinter.Frame):
                 self.debugframe = revpicheckclient.RevPiCheckClient(
                     self.main_frame, self.cli, self.xmlmode
                 )
-            except:
+            except Exception:
                 tkmsg.showwarning(
                     _("Error"),
                     _("Can not load piCtory configuration. \n"
@@ -336,7 +333,7 @@ class RevPiPyControl(tkinter.Frame):
         if "load_plclog" not in self.xmlfuncs:
             tkmsg.showwarning(
                 _("Warning"),
-                _("This version of Logviewer ist not supported in version {} "
+                _("This version of Logviewer ist not supported in version {0} "
                     "of RevPiPyLoad on your RevPi! You need at least version "
                     "0.4.1.").format(self.cli.version()),
                 parent=self.master
@@ -442,7 +439,7 @@ class RevPiPyControl(tkinter.Frame):
         else:
             try:
                 plcec = self.cli.plcexitcode()
-            except:
+            except Exception:
                 self.errcount += 1
                 if self.errcount >= 5:
                     self.var_status.set("SERVER ERROR")
