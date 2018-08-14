@@ -251,9 +251,7 @@ class RevPiPyControl(tkinter.Frame):
             )
         else:
             # Debugfenster laden
-            if self.debugframe is None \
-                    or self.debugframe.err_workvalues >= \
-                    self.debugframe.max_errors:
+            if self.debugframe is None:
                 try:
                     self.debugframe = revpicheckclient.RevPiCheckClient(
                         self, self.cli, self.xmlmode
@@ -268,6 +266,11 @@ class RevPiPyControl(tkinter.Frame):
                     )
                     self.btn_debug["state"] = "normal"
                     return None
+
+            # Fehler prüfen
+            if self.debugframe.err_workvalues >= self.debugframe.max_errors:
+                self.debugframe = None
+                return None
 
             # Show/Hide wechseln
             if self.debugframe.winfo_viewable():

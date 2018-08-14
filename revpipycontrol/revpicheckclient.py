@@ -318,8 +318,20 @@ class RevPiCheckClient(tkinter.Frame):
                     self.err_workvalues = self.max_errors
 
                 if self.err_workvalues >= self.max_errors:
+                    # Fenster zerstören bei zu vielen Fehlern
                     self.hideallwindows()
+                    if self.autorw.get():
+                        self.autorw.set(False)
+                        self.toggleauto()
+                    self.dowrite.set(False)
                     self.pack_forget()
+
+                    tkmsg.showerror(
+                        _("Error"),
+                        _("To many errors while reading IO data. "
+                        "Can not show the Watch-Mode."),
+                        parent=self.master
+                    )
 
                 return None
 
@@ -438,8 +450,9 @@ class RevPiCheckClient(tkinter.Frame):
                 str_errmsg += _(
                     "Error set value of device '{}' Output '{}': {} \n"
                 ).format(devicename, lst_result[1], lst_result[3])
+
         if str_errmsg != "":
-            tkmsg.showerror(_("Error"), str_errmsg)
+            tkmsg.showerror(_("Error"), str_errmsg, parent=self.master)
 
     def writevalues(self):
         u"""Schreibt geänderte Outputs auf den RevPi."""
