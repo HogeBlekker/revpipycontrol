@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-#
-# RevPiPyControl
-#
-# Webpage: https://revpimodio.org/revpipyplc/
-# (c) Sven Sager, License: LGPLv3
-#
 u"""PLC Programm und Konfig hoch und runterladen."""
+
+__author__ = "Sven Sager"
+__copyright__ = "Copyright (C) 2018 Sven Sager"
+__license__ = "GPLv3"
+
 import gzip
 import os
 import pickle
@@ -15,8 +14,8 @@ import tkinter.filedialog as tkfd
 import tkinter.messagebox as tkmsg
 import zipfile
 from mytools import gettrans
+from mytools import homedir
 from mytools import savefile_programpath as savefile
-from os import makedirs
 from shutil import rmtree
 from tempfile import mkstemp, mkdtemp
 from xmlrpc.client import Binary
@@ -48,7 +47,7 @@ def _savedefaults(revpiname, settings):
 
     """
     try:
-        makedirs(os.path.dirname(savefile), exist_ok=True)
+        os.makedirs(os.path.dirname(savefile), exist_ok=True)
         if revpiname is None:
             dict_all = settings
         else:
@@ -56,7 +55,7 @@ def _savedefaults(revpiname, settings):
             dict_all[revpiname] = settings
         with open(savefile, "wb") as fh:
             pickle.dump(dict_all, fh)
-    except:
+    except Exception:
         return False
     return True
 
@@ -325,7 +324,7 @@ class RevPiProgram(tkinter.Frame):
         if fh is not None:
             try:
                 fh.write(self.xmlcli.get_pictoryrsc().data)
-            except:
+            except Exception:
                 tkmsg.showerror(
                     _("Error"),
                     _("Could not load and save file!"),
@@ -356,7 +355,7 @@ class RevPiProgram(tkinter.Frame):
         if fh is not None:
             try:
                 fh.write(self.xmlcli.get_procimg().data)
-            except:
+            except Exception:
                 tkmsg.showerror(
                     _("Error"),
                     _("Could not load and save file!"),
@@ -561,7 +560,7 @@ class RevPiProgram(tkinter.Frame):
                 self.opt["typedown"] = self.var_typedown.get()
                 self.opt["picdown"] = self.var_picdown.get()
 
-            except:
+            except Exception:
                 raise
                 tkmsg.showerror(
                     _("Error"),
@@ -588,6 +587,7 @@ class RevPiProgram(tkinter.Frame):
         dirtmp = None
         filelist = []
         fileselect = None
+        foldername = ""
         rscfile = None
 
         if tup == 0:
@@ -595,7 +595,7 @@ class RevPiProgram(tkinter.Frame):
             fileselect = tkfd.askopenfilenames(
                 parent=self.master,
                 title="Upload Python program...",
-                initialdir=self.opt.get("plcupload_dir", ""),
+                initialdir=self.opt.get("plcupload_dir", homedir),
                 filetypes=(("Python", "*.py"), (_("All files"), "*.*"))
             )
             if type(fileselect) == tuple and len(fileselect) > 0:
@@ -608,8 +608,12 @@ class RevPiProgram(tkinter.Frame):
                 parent=self.master,
                 title=_("Folder to upload"),
                 mustexist=True,
-                initialdir=self.opt.get("plcupload_dir", self.revpi)
+                initialdir=self.opt.get("plcupload_dir", homedir)
             )
+
+            # Ordnernamen merken um diesen auf RevPi anzulegen
+            foldername = os.path.basename(dirselect)
+
             if type(dirselect) == str and dirselect != "":
                 filelist = self.create_filelist(dirselect)
 
@@ -706,7 +710,11 @@ class RevPiProgram(tkinter.Frame):
                 if dirselect == "":
                     sendname = os.path.basename(fname)
                 else:
-                    sendname = fname.replace(dirselect, "")[1:]
+                    # Ordnernamen in Dateipfad für RevPi übernehmen
+                    sendname = os.path.join(
+                        foldername,
+                        fname.replace(dirselect, "")[1:]
+                    )
 
                 # Prüfen ob Dateiname bereits als Startprogramm angegeben ist
                 if sendname == opt_program:
@@ -716,7 +724,7 @@ class RevPiProgram(tkinter.Frame):
                 try:
                     ustatus = self.xmlcli.plcupload(
                         Binary(gzip.compress(fh.read())), sendname)
-                except:
+                except Exception:
                     ec = -2
                     break
 

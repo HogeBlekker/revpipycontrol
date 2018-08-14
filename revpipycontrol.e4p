@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project revpipycontrol -->
-<!-- Saved: 2018-05-25, 08:26:59 -->
+<!-- Saved: 2018-08-12, 16:56:01 -->
 <!-- Copyright (C) 2018 Sven Sager, akira@narux.de -->
 <Project version="5.1">
   <Language>en_US</Language>
   <Hash>66103e2eaf8a762f14d1fd51d8b1c9dcaf35a275</Hash>
   <ProgLanguage mixed="0">Python3</ProgLanguage>
   <ProjectType>Console</ProjectType>
-  <Description></Description>
-  <Version>0.6.2</Version>
+  <Version>0.7.0</Version>
   <Author>Sven Sager</Author>
   <Email>akira@narux.de</Email>
   <Eol index="1"/>
   <Sources>
-    <Source>revpipycontrol/revpipycontrol.py</Source>
+    <Source>revpipycontrol/aclmanager.py</Source>
+    <Source>revpipycontrol/mytools.py</Source>
     <Source>revpipycontrol/revpicheckclient.py</Source>
-    <Source>setup.py</Source>
-    <Source>revpipycontrol/revpiplclist.py</Source>
+    <Source>revpipycontrol/revpidevelop.py</Source>
+    <Source>revpipycontrol/revpiinfo.py</Source>
+    <Source>revpipycontrol/revpilegacy.py</Source>
     <Source>revpipycontrol/revpilogfile.py</Source>
     <Source>revpipycontrol/revpioption.py</Source>
+    <Source>revpipycontrol/revpiplclist.py</Source>
     <Source>revpipycontrol/revpiprogram.py</Source>
-    <Source>revpipycontrol/mytools.py</Source>
-    <Source>revpipycontrol/revpiinfo.py</Source>
-    <Source>revpipycontrol/aclmanager.py</Source>
-    <Source>revpipycontrol/revpilegacy.py</Source>
-    <Source>revpipycontrol/shared/ipaclmanager.py</Source>
+    <Source>revpipycontrol/revpipycontrol.py</Source>
     <Source>revpipycontrol/shared/__init__.py</Source>
+    <Source>revpipycontrol/shared/ipaclmanager.py</Source>
+    <Source>setup.py</Source>
   </Sources>
   <Forms/>
   <Translations/>
@@ -35,8 +35,8 @@
   <Others>
     <Other>data</Other>
     <Other>doc</Other>
-    <Other>stdeb.cfg</Other>
     <Other>eric-revpipycontrol.api</Other>
+    <Other>stdeb.cfg</Other>
   </Others>
   <MainScript>revpipycontrol/revpipycontrol.py</MainScript>
   <Vcs>
@@ -141,9 +141,6 @@
         </value>
       </dict>
     </VcsOptions>
-    <VcsOtherData>
-      <dict/>
-    </VcsOtherData>
   </Vcs>
   <FiletypeAssociations>
     <FiletypeAssociation pattern="*.idl" type="INTERFACES"/>
@@ -244,14 +241,6 @@
               <bool>False</bool>
             </value>
             <key>
-              <string>sourceExtensions</string>
-            </key>
-            <value>
-              <list>
-                <string></string>
-              </list>
-            </value>
-            <key>
               <string>useRecursion</string>
             </key>
             <value>
@@ -265,6 +254,133 @@
   <Checkers>
     <CheckersParams>
       <dict>
+        <key>
+          <string>PYLINT</string>
+        </key>
+        <value>
+          <dict>
+            <key>
+              <string>configFile</string>
+            </key>
+            <value>
+              <string>/home/akira/Entwicklung/eric/revpipyplc/revpipycontrol/default.cnf</string>
+            </value>
+            <key>
+              <string>dialogReport</string>
+            </key>
+            <value>
+              <bool>False</bool>
+            </value>
+            <key>
+              <string>disabledMessages</string>
+            </key>
+            <value>
+              <string></string>
+            </value>
+            <key>
+              <string>enableBasic</string>
+            </key>
+            <value>
+              <bool>True</bool>
+            </value>
+            <key>
+              <string>enableClasses</string>
+            </key>
+            <value>
+              <bool>True</bool>
+            </value>
+            <key>
+              <string>enableDesign</string>
+            </key>
+            <value>
+              <bool>True</bool>
+            </value>
+            <key>
+              <string>enableExceptions</string>
+            </key>
+            <value>
+              <bool>True</bool>
+            </value>
+            <key>
+              <string>enableFormat</string>
+            </key>
+            <value>
+              <bool>True</bool>
+            </value>
+            <key>
+              <string>enableImports</string>
+            </key>
+            <value>
+              <bool>True</bool>
+            </value>
+            <key>
+              <string>enableLogging</string>
+            </key>
+            <value>
+              <bool>True</bool>
+            </value>
+            <key>
+              <string>enableMetrics</string>
+            </key>
+            <value>
+              <bool>True</bool>
+            </value>
+            <key>
+              <string>enableMiscellaneous</string>
+            </key>
+            <value>
+              <bool>True</bool>
+            </value>
+            <key>
+              <string>enableNewstyle</string>
+            </key>
+            <value>
+              <bool>True</bool>
+            </value>
+            <key>
+              <string>enableSimilarities</string>
+            </key>
+            <value>
+              <bool>True</bool>
+            </value>
+            <key>
+              <string>enableStringFormat</string>
+            </key>
+            <value>
+              <bool>True</bool>
+            </value>
+            <key>
+              <string>enableTypecheck</string>
+            </key>
+            <value>
+              <bool>True</bool>
+            </value>
+            <key>
+              <string>enableVariables</string>
+            </key>
+            <value>
+              <bool>True</bool>
+            </value>
+            <key>
+              <string>enabledMessages</string>
+            </key>
+            <value>
+              <string></string>
+            </value>
+            <key>
+              <string>htmlReport</string>
+            </key>
+            <value>
+              <bool>True</bool>
+            </value>
+            <key>
+              <string>txtReport</string>
+            </key>
+            <value>
+              <bool>False</bool>
+            </value>
+          </dict>
+        </value>
         <key>
           <string>Pep8Checker</string>
         </key>

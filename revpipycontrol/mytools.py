@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-#
-# RevPiPyControl
-#
-# Webpage: https://revpimodio.org/revpipyplc/
-# (c) Sven Sager, License: LGPLv3
-#
 """Tools-Sammlung."""
+
+__author__ = "Sven Sager"
+__copyright__ = "Copyright (C) 2018 Sven Sager"
+__license__ = "GPLv3"
+
 import gettext
 import locale
 import sys
@@ -19,8 +18,11 @@ if platform == "linux":
     homedir = environ["HOME"]
 else:
     homedir = environ["APPDATA"]
+
 savefile_connections = pathjoin(
     homedir, ".revpipyplc", "connections.dat")
+savefile_developer = pathjoin(
+    homedir, ".revpipyplc", "developer.dat")
 savefile_programpath = pathjoin(
     homedir, ".revpipyplc", "programpath.dat")
 

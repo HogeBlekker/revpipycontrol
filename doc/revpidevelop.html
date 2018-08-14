@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html><head>
+<title>revpidevelop</title>
+<meta charset="UTF-8">
+</head>
+<body style="background-color:#FFFFFF;color:#000000"><a NAME="top" ID="top"></a>
+<h1 style="background-color:#FFFFFF;color:#0000FF">
+revpidevelop</h1>
+
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Global Attributes</h3>
+<table>
+<tr><td>_</td></tr><tr><td>__author__</td></tr><tr><td>__copyright__</td></tr><tr><td>__license__</td></tr>
+</table>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Classes</h3>
+<table>
+<tr>
+<td><a style="color:#0000FF" href="#RevPiDevelop">RevPiDevelop</a></td>
+<td>Zeigt Debugfenster an.</td>
+</tr>
+</table>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Functions</h3>
+<table>
+<tr>
+<td><a style="color:#0000FF" href="#_loaddefaults">_loaddefaults</a></td>
+<td>&#220;bernimmt f&#252;r den Pi die letzen Pfade.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#_savedefaults">_savedefaults</a></td>
+<td>Schreibt fuer den Pi die letzen Pfade.</td>
+</tr>
+</table>
+<hr /><hr />
+<a NAME="RevPiDevelop" ID="RevPiDevelop"></a>
+<h2 style="background-color:#FFFFFF;color:#0000FF">RevPiDevelop</h2>
+<p>
+Zeigt Debugfenster an.
+</p>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Derived from</h3>
+ttk.Frame
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Class Attributes</h3>
+<table>
+<tr><td>app</td></tr><tr><td>cli</td></tr><tr><td>root</td></tr>
+</table>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Class Methods</h3>
+<table>
+<tr><td>None</td></tr>
+</table>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Methods</h3>
+<table>
+<tr>
+<td><a style="color:#0000FF" href="#RevPiDevelop.__init__">RevPiDevelop</a></td>
+<td>Init RevPiDevelop-Class.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiDevelop._checkclose">_checkclose</a></td>
+<td>Pr&#252;ft ob Fenster beendet werden soll.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiDevelop._createwidgets">_createwidgets</a></td>
+<td>Erstellt alle Widgets.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiDevelop.btn_domyjob">btn_domyjob</a></td>
+<td>Hochladen und neu starten.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiDevelop.btn_selectpath">btn_selectpath</a></td>
+<td>L&#228;sst dem Benuzter ein Verzeichnis ausw&#228;hlen.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiDevelop.load_pathfiles">load_pathfiles</a></td>
+<td>Aktualisiert die Dateiliste.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiDevelop.refresh_stats">refresh_stats</a></td>
+<td>Passt die Widgets an.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiDevelop.select_pathfiles">select_pathfiles</a></td>
+<td>Setzt state der Buttons.</td>
+</tr>
+</table>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Static Methods</h3>
+<table>
+<tr><td>None</td></tr>
+</table>
+<a NAME="RevPiDevelop.__init__" ID="RevPiDevelop.__init__"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiDevelop (Constructor)</h3>
+<b>RevPiDevelop</b>(<i>master, xmlcli, xmlmode, revpi</i>)
+<p>
+Init RevPiDevelop-Class.
+</p><dl>
+<dt>Returns:</dt>
+<dd>
+None
+</dd>
+</dl><a NAME="RevPiDevelop._checkclose" ID="RevPiDevelop._checkclose"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiDevelop._checkclose</h3>
+<b>_checkclose</b>(<i>event=None</i>)
+<p>
+Pr&#252;ft ob Fenster beendet werden soll.
+</p><dl>
+<dt><i>event</i></dt>
+<dd>
+tkinter-Event
+</dd>
+</dl><a NAME="RevPiDevelop._createwidgets" ID="RevPiDevelop._createwidgets"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiDevelop._createwidgets</h3>
+<b>_createwidgets</b>(<i></i>)
+<p>
+Erstellt alle Widgets.
+</p><a NAME="RevPiDevelop.btn_domyjob" ID="RevPiDevelop.btn_domyjob"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiDevelop.btn_domyjob</h3>
+<b>btn_domyjob</b>(<i></i>)
+<p>
+Hochladen und neu starten.
+</p><a NAME="RevPiDevelop.btn_selectpath" ID="RevPiDevelop.btn_selectpath"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiDevelop.btn_selectpath</h3>
+<b>btn_selectpath</b>(<i></i>)
+<p>
+L&#228;sst dem Benuzter ein Verzeichnis ausw&#228;hlen.
+</p><a NAME="RevPiDevelop.load_pathfiles" ID="RevPiDevelop.load_pathfiles"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiDevelop.load_pathfiles</h3>
+<b>load_pathfiles</b>(<i>silent=False</i>)
+<p>
+Aktualisiert die Dateiliste.
+</p><dl>
+<dt><i>silent</i></dt>
+<dd>
+Keinen Dialog anzeigen
+</dd>
+</dl><a NAME="RevPiDevelop.refresh_stats" ID="RevPiDevelop.refresh_stats"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiDevelop.refresh_stats</h3>
+<b>refresh_stats</b>(<i></i>)
+<p>
+Passt die Widgets an.
+</p><a NAME="RevPiDevelop.select_pathfiles" ID="RevPiDevelop.select_pathfiles"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiDevelop.select_pathfiles</h3>
+<b>select_pathfiles</b>(<i>tkevt</i>)
+<p>
+Setzt state der Buttons.
+</p>
+<div align="right"><a style="color:#0000FF" href="#top">Up</a></div>
+<hr /><hr />
+<a NAME="_loaddefaults" ID="_loaddefaults"></a>
+<h2 style="background-color:#FFFFFF;color:#0000FF">_loaddefaults</h2>
+<b>_loaddefaults</b>(<i>revpiname=None</i>)
+<p>
+&#220;bernimmt f&#252;r den Pi die letzen Pfade.
+</p><dl>
+<dt><i>revpiname</i></dt>
+<dd>
+Einstellungen nur f&#252;r RevPi laden
+</dd>
+</dl><dl>
+<dt>Returns:</dt>
+<dd>
+<class 'dict'> mit Einstellungen
+</dd>
+</dl>
+<div align="right"><a style="color:#0000FF" href="#top">Up</a></div>
+<hr /><hr />
+<a NAME="_savedefaults" ID="_savedefaults"></a>
+<h2 style="background-color:#FFFFFF;color:#0000FF">_savedefaults</h2>
+<b>_savedefaults</b>(<i>revpiname, settings</i>)
+<p>
+Schreibt fuer den Pi die letzen Pfade.
+</p><dl>
+<dt><i>revpiname</i></dt>
+<dd>
+Einstellungen sind f&#252;r diesen RevPi
+</dd><dt><i>settings</i></dt>
+<dd>
+<class 'dict'> mit Einstellungen
+</dd>
+</dl><dl>
+<dt>Returns:</dt>
+<dd>
+True, bei erfolgreicher Verarbeitung
+</dd>
+</dl>
+<div align="right"><a style="color:#0000FF" href="#top">Up</a></div>
+<hr />
+</body></html>

@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-#
-# RevPiPyControl
-#
-# Webpage: https://revpimodio.org/revpipyplc/
-# (c) Sven Sager, License: LGPLv3
-#
 u"""Zeigt die Logfiles an."""
+
+__author__ = "Sven Sager"
+__copyright__ = "Copyright (C) 2018 Sven Sager"
+__license__ = "GPLv3"
+
 import tkinter
 from mytools import gettrans
 
@@ -106,7 +105,7 @@ class RevPiLogfile(tkinter.Frame):
                 self.applog, self.xmlcli.load_applog, self.mrkapp, full
             )
             self.errapp = 0
-        except:
+        except Exception:
             self.errapp += 1
 
         # Timer neu starten
@@ -122,7 +121,7 @@ class RevPiLogfile(tkinter.Frame):
                 self.plclog, self.xmlcli.load_plclog, self.mrkplc, full
             )
             self.errplc = 0
-        except:
+        except Exception:
             self.errplc += 1
 
         # Timer neu starten

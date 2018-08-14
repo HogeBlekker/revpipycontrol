@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-#
-# RevPiPyControl
-#
-# Webpage: https://revpimodio.org/revpipyplc/
-# (c) Sven Sager, License: LGPLv3
-#
 u"""Alte Klassen laden hier, bevor sie entsorgt werden."""
+
+__author__ = "Sven Sager"
+__copyright__ = "Copyright (C) 2018 Sven Sager"
+__license__ = "GPLv3"
+
 import tkinter
 import tkinter.messagebox as tkmsg
 from mytools import gettrans
@@ -23,7 +22,7 @@ class RevPiOption(tkinter.Frame):
         @return None"""
         try:
             self.dc = xmlcli.get_config()
-        except:
+        except Exception:
             self.dc = None
             return None
 
@@ -46,17 +45,17 @@ class RevPiOption(tkinter.Frame):
         u"""Prüft ob sich die Einstellungen geändert haben.
         @return True, wenn min. eine Einstellung geändert wurde"""
         return (
-            self.var_start.get() != self.dc.get("autostart", "1")
-            or self.var_reload.get() != self.dc.get("autoreload", "1")
-            or self.var_zexit.get() != self.dc.get("zeroonexit", "0")
-            or self.var_zerr.get() != self.dc.get("zeroonerror", "0")
-            or self.var_startpy.get() != self.dc.get("plcprogram", "none.py")
-            or self.var_startargs.get() != self.dc.get("plcarguments", "")
-            or self.var_pythonver.get() != self.dc.get("pythonversion", "3")
-            or self.var_slave.get() != self.dc.get("plcslave", "0")
-            or self.var_xmlon.get() != (self.dc.get("xmlrpc", 0) >= 1)
-            or self.var_xmlmod2.get() != (self.dc.get("xmlrpc", 0) >= 2)
-            or self.var_xmlmod3.get() != (self.dc.get("xmlrpc", 0) >= 3)
+            self.var_start.get() != self.dc.get("autostart", "1") or
+            self.var_reload.get() != self.dc.get("autoreload", "1") or
+            self.var_zexit.get() != self.dc.get("zeroonexit", "0") or
+            self.var_zerr.get() != self.dc.get("zeroonerror", "0") or
+            self.var_startpy.get() != self.dc.get("plcprogram", "none.py") or
+            self.var_startargs.get() != self.dc.get("plcarguments", "") or
+            self.var_pythonver.get() != self.dc.get("pythonversion", "3") or
+            self.var_slave.get() != self.dc.get("plcslave", "0") or
+            self.var_xmlon.get() != (self.dc.get("xmlrpc", 0) >= 1) or
+            self.var_xmlmod2.get() != (self.dc.get("xmlrpc", 0) >= 2) or
+            self.var_xmlmod3.get() != (self.dc.get("xmlrpc", 0) >= 3)
             # or self.var_xmlport.get() != self.dc.get("xmlrpcport", "55123")
         )
 
