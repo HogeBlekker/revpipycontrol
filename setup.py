@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-#
-# (c) Sven Sager, License: LGPLv3
-#
 """Setupscript fuer RevPiPyLoad."""
+__author__ = "Sven Sager"
+__copyright__ = "Copyright (C) 2018 Sven Sager"
+__license__ = "LGPLv3"
+
 import distutils.command.install_egg_info
 from sys import platform
 from glob import glob

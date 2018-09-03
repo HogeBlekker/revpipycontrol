@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-#
-# RevPiPyControl
-#
-# Webpage: https://revpimodio.org/revpipyplc/
-# (c) Sven Sager, License: LGPLv3
-#
 u"""Programminformationen anzeigen."""
+
+__author__ = "Sven Sager"
+__copyright__ = "Copyright (C) 2018 Sven Sager"
+__license__ = "GPLv3"
+
 import tkinter
 import tkinter.font as tkf
 import webbrowser
@@ -55,7 +54,7 @@ class RevPiInfo(tkinter.Frame):
         lbl.pack(pady=5)
         lbl = tkinter.Label(self)
         lbl["font"] = fntmid
-        lbl["text"] = _("Version: {}").format(self.version)
+        lbl["text"] = _("Version: {0}").format(self.version)
         lbl.bind(
             "<ButtonPress-2>",
             lambda event: self._createwidgets(extended=not extended)

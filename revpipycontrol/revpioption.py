@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-#
-# RevPiPyControl
-#
-# Webpage: https://revpimodio.org/revpipyplc/
-# (c) Sven Sager, License: LGPLv3
-#
 u"""Optionsfenster."""
+
+__author__ = "Sven Sager"
+__copyright__ = "Copyright (C) 2018 Sven Sager"
+__license__ = "GPLv3"
+
 import tkinter
 import tkinter.messagebox as tkmsg
 from aclmanager import AclManager
@@ -24,7 +23,7 @@ class RevPiOption(tkinter.Frame):
         @return None"""
         try:
             self.dc = xmlcli.get_config()
-        except:
+        except Exception:
             self.dc = None
             return None
 
@@ -48,21 +47,21 @@ class RevPiOption(tkinter.Frame):
         u"""Prüft ob sich die Einstellungen geändert haben.
         @return True, wenn min. eine Einstellung geändert wurde"""
         return (
-            self.var_start.get() != self.dc.get("autostart", 1)
-            or self.var_reload.get() != self.dc.get("autoreload", 1)
-            or self.var_reload_delay.get() !=
-            str(self.dc.get("autoreloaddelay", 5))
-            or self.var_zexit.get() != self.dc.get("zeroonexit", 0)
-            or self.var_zerr.get() != self.dc.get("zeroonerror", 0)
+            self.var_start.get() != self.dc.get("autostart", 1) or
+            self.var_reload.get() != self.dc.get("autoreload", 1) or
+            self.var_reload_delay.get() !=
+            str(self.dc.get("autoreloaddelay", 5)) or
+            self.var_zexit.get() != self.dc.get("zeroonexit", 0) or
+            self.var_zerr.get() != self.dc.get("zeroonerror", 0) or
             # TODO: rtlevel (0)
-            or self.var_startpy.get() != self.dc.get("plcprogram", "none.py")
-            or self.var_startargs.get() != self.dc.get("plcarguments", "")
-            or self.var_pythonver.get() != self.dc.get("pythonversion", 3)
-            or self.var_slave.get() != self.dc.get("plcslave", 0)
-            or self.var_slaveacl.get() != self.dc.get("plcslaveacl", "")
-            or self.var_mqtton.get() != self.dc.get("mqtt", 0)
-            or self.var_xmlon.get() != self.dc.get("xmlrpc", 0)
-            or self.var_xmlacl.get() != self.dc.get("xmlrpcacl", "")
+            self.var_startpy.get() != self.dc.get("plcprogram", "none.py") or
+            self.var_startargs.get() != self.dc.get("plcarguments", "") or
+            self.var_pythonver.get() != self.dc.get("pythonversion", 3) or
+            self.var_slave.get() != self.dc.get("plcslave", 0) or
+            self.var_slaveacl.get() != self.dc.get("plcslaveacl", "") or
+            self.var_mqtton.get() != self.dc.get("mqtt", 0) or
+            self.var_xmlon.get() != self.dc.get("xmlrpc", 0) or
+            self.var_xmlacl.get() != self.dc.get("xmlrpcacl", "")
         )
 
     def _checkclose(self, event=None):
@@ -191,8 +190,11 @@ class RevPiOption(tkinter.Frame):
 
         # Row 3
         lst = self.xmlcli.get_filelist()
+        lst.sort()
         if len(lst) == 0:
             lst.append("none")
+        if ".placeholder" in lst:
+            lst.remove(".placeholder")
         opt_startpy = tkinter.OptionMenu(
             prog, self.var_startpy, *lst
         )
