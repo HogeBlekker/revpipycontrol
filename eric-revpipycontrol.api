@@ -21,6 +21,19 @@ aclmanager._?8
 aclmanager.__author__?9
 aclmanager.__copyright__?9
 aclmanager.__license__?9
+mqttmanager.MqttManager._changesdone?5()
+mqttmanager.MqttManager._checkclose?5(event=None)
+mqttmanager.MqttManager._createwidgets?5()
+mqttmanager.MqttManager._save?5()
+mqttmanager.MqttManager.dict_mqttsettings?7
+mqttmanager.MqttManager.get_settings?4()
+mqttmanager.MqttManager.root?7
+mqttmanager.MqttManager.settings?7
+mqttmanager.MqttManager?1(master, settings, readonly=False)
+mqttmanager._?8
+mqttmanager.__author__?9
+mqttmanager.__copyright__?9
+mqttmanager.__license__?9
 mytools.__author__?9
 mytools.__copyright__?9
 mytools.__license__?9
@@ -104,14 +117,17 @@ revpilogfile.__author__?9
 revpilogfile.__copyright__?9
 revpilogfile.__license__?9
 revpioption.RevPiOption._changesdone?5()
+revpioption.RevPiOption._changesdone_mqtt?5()
 revpioption.RevPiOption._checkclose?5(event=None)
 revpioption.RevPiOption._checkvalues?5()
 revpioption.RevPiOption._createwidgets?5()
 revpioption.RevPiOption._loadappdata?5(refresh=False)
 revpioption.RevPiOption._setappdata?5()
 revpioption.RevPiOption.askxmlon?4()
+revpioption.RevPiOption.btn_mqttsettings?4()
 revpioption.RevPiOption.btn_slaveacl?4()
 revpioption.RevPiOption.btn_xmlacl?4()
+revpioption.RevPiOption.destroy?4()
 revpioption.RevPiOption?1(master, xmlcli)
 revpioption._?8
 revpioption.__author__?9

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project revpipycontrol -->
-<!-- Saved: 2018-08-12, 16:56:01 -->
+<!-- Saved: 2018-09-03, 16:25:26 -->
 <!-- Copyright (C) 2018 Sven Sager, akira@narux.de -->
 <Project version="5.1">
   <Language>en_US</Language>
@@ -14,6 +14,7 @@
   <Eol index="1"/>
   <Sources>
     <Source>revpipycontrol/aclmanager.py</Source>
+    <Source>revpipycontrol/mqttmanager.py</Source>
     <Source>revpipycontrol/mytools.py</Source>
     <Source>revpipycontrol/revpicheckclient.py</Source>
     <Source>revpipycontrol/revpidevelop.py</Source>

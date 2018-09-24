@@ -54,6 +54,9 @@ Methods</h3>
 <td><a style="color:#0000FF" href="#RevPiOption._changesdone">_changesdone</a></td>
 <td>Pr&#252;ft ob sich die Einstellungen ge&#228;ndert haben.</td>
 </tr><tr>
+<td><a style="color:#0000FF" href="#RevPiOption._changesdone_mqtt">_changesdone_mqtt</a></td>
+<td>Pr&#252;ft ob MQTT-Settings ge&#228;ndert wurden.</td>
+</tr><tr>
 <td><a style="color:#0000FF" href="#RevPiOption._checkclose">_checkclose</a></td>
 <td>Pr&#252;ft ob Fenster beendet werden soll.</td>
 </tr><tr>
@@ -72,11 +75,17 @@ Methods</h3>
 <td><a style="color:#0000FF" href="#RevPiOption.askxmlon">askxmlon</a></td>
 <td>Fragt Nuter, ob wirklicht abgeschaltet werden soll.</td>
 </tr><tr>
+<td><a style="color:#0000FF" href="#RevPiOption.btn_mqttsettings">btn_mqttsettings</a></td>
+<td>&#214;ffnet Fenster f&#252;r MQTT Einstellungen.</td>
+</tr><tr>
 <td><a style="color:#0000FF" href="#RevPiOption.btn_slaveacl">btn_slaveacl</a></td>
 <td>&#214;ffnet Fenster f&#252;r ACL-Verwaltung.</td>
 </tr><tr>
 <td><a style="color:#0000FF" href="#RevPiOption.btn_xmlacl">btn_xmlacl</a></td>
 <td>&#214;ffnet Fenster f&#252;r ACL-Verwaltung.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#RevPiOption.destroy">destroy</a></td>
+<td>Beendet alle Unterfenster und sich selbst.</td>
 </tr>
 </table>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
@@ -105,6 +114,17 @@ Pr&#252;ft ob sich die Einstellungen ge&#228;ndert haben.
 <dt>Returns:</dt>
 <dd>
 True, wenn min. eine Einstellung ge&#228;ndert wurde
+</dd>
+</dl><a NAME="RevPiOption._changesdone_mqtt" ID="RevPiOption._changesdone_mqtt"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiOption._changesdone_mqtt</h3>
+<b>_changesdone_mqtt</b>(<i></i>)
+<p>
+Pr&#252;ft ob MQTT-Settings ge&#228;ndert wurden.
+</p><dl>
+<dt>Returns:</dt>
+<dd>
+True, wenn &#196;nderungen existieren
 </dd>
 </dl><a NAME="RevPiOption._checkclose" ID="RevPiOption._checkclose"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
@@ -162,6 +182,12 @@ RevPiOption.askxmlon</h3>
 <b>askxmlon</b>(<i></i>)
 <p>
 Fragt Nuter, ob wirklicht abgeschaltet werden soll.
+</p><a NAME="RevPiOption.btn_mqttsettings" ID="RevPiOption.btn_mqttsettings"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiOption.btn_mqttsettings</h3>
+<b>btn_mqttsettings</b>(<i></i>)
+<p>
+&#214;ffnet Fenster f&#252;r MQTT Einstellungen.
 </p><a NAME="RevPiOption.btn_slaveacl" ID="RevPiOption.btn_slaveacl"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiOption.btn_slaveacl</h3>
@@ -174,6 +200,12 @@ RevPiOption.btn_xmlacl</h3>
 <b>btn_xmlacl</b>(<i></i>)
 <p>
 &#214;ffnet Fenster f&#252;r ACL-Verwaltung.
+</p><a NAME="RevPiOption.destroy" ID="RevPiOption.destroy"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiOption.destroy</h3>
+<b>destroy</b>(<i></i>)
+<p>
+Beendet alle Unterfenster und sich selbst.
 </p>
 <div align="right"><a style="color:#0000FF" href="#top">Up</a></div>
 <hr />

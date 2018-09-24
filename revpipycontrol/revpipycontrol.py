@@ -82,6 +82,7 @@ class RevPiPyControl(tkinter.Frame):
             self.tklogs.master.destroy()
         if self.tkoptions is not None:
             self.tkoptions.destroy()
+            self.tkoptions.master.destroy()
         if self.tkprogram is not None:
             self.tkprogram.destroy()
         if self.debugframe is not None:

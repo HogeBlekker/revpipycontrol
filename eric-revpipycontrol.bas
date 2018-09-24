@@ -1,4 +1,5 @@
 AclManager ttk.Frame
+MqttManager tkinter.Frame
 RevPiCheckClient tkinter.Frame
 RevPiDevelop ttk.Frame
 RevPiInfo tkinter.Frame

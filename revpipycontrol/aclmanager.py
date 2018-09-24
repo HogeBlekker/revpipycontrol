@@ -20,7 +20,7 @@ class AclManager(ttk.Frame):
     u"""Hauptfenster des ACL-Managers."""
 
     def __init__(self, master, minlevel, maxlevel, acl_str="", readonly=False):
-        u"""Init RevPiOption-Class.
+        u"""Init AclManger-Class.
         @return None"""
         super().__init__(master)
         self.master.bind("<KeyPress-Escape>", self._checkclose)

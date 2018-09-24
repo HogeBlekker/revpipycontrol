@@ -8,6 +8,7 @@ __license__ = "GPLv3"
 import tkinter
 import tkinter.messagebox as tkmsg
 from aclmanager import AclManager
+from mqttmanager import MqttManager
 from mytools import gettrans
 
 # Übersetzung laden
@@ -32,9 +33,26 @@ class RevPiOption(tkinter.Frame):
         self.master.protocol("WM_DELETE_WINDOW", self._checkclose)
         self.pack(expand=True, fill="both")
 
+        self.frm_mqttmgr = None
+        self.frm_slaveacl = None
+        self.frm_xmlacl = None
+
         # XML-RPC Server konfigurieren
         self.xmlcli = xmlcli
         self.xmlmodus = self.xmlcli.xmlmodus()
+
+        self._dict_mqttsettings = {
+            "mqttbasetopic": "revpi01",
+            "mqttclient_id": "",
+            "mqttbroker_address": "127.0.0.1",
+            "mqttpassword": "",
+            "mqttport": 1883,
+            "mqttsend_events": 0,
+            "mqttsendinterval": 30,
+            "mqtttls_set": 0,
+            "mqttusername": "",
+            "mqttwrite_outputs": 0,
+        }
 
         self.mrk_xmlmodask = False
         self.dorestart = False
@@ -61,8 +79,18 @@ class RevPiOption(tkinter.Frame):
             self.var_slaveacl.get() != self.dc.get("plcslaveacl", "") or
             self.var_mqtton.get() != self.dc.get("mqtt", 0) or
             self.var_xmlon.get() != self.dc.get("xmlrpc", 0) or
-            self.var_xmlacl.get() != self.dc.get("xmlrpcacl", "")
+            self.var_xmlacl.get() != self.dc.get("xmlrpcacl", "") or
+            self._changesdone_mqtt()
         )
+
+    def _changesdone_mqtt(self):
+        u"""Prüft ob MQTT-Settings geändert wurden.
+        @return True, wenn Änderungen existieren"""
+        for key in self._dict_mqttsettings:
+            if key in self.dc:
+                if self._dict_mqttsettings[key] != self.dc[key]:
+                    return True
+        return False
 
     def _checkclose(self, event=None):
         u"""Prüft ob Fenster beendet werden soll.
@@ -246,7 +274,7 @@ class RevPiOption(tkinter.Frame):
         self.var_mqtton = tkinter.BooleanVar(services)
         try:
             status = self.xmlcli.mqttrunning()
-        except:
+        except Exception:
             pass
         else:
             row = 2
@@ -257,7 +285,7 @@ class RevPiOption(tkinter.Frame):
             ckb_slave.grid(column=0, **cpadw)
 
             btn_slaveacl = tkinter.Button(services, justify="center")
-            # TODO: btn_slaveacl["command"] = self.btn_mqttsettings
+            btn_slaveacl["command"] = self.btn_mqttsettings
             btn_slaveacl["text"] = _("Settings")
             btn_slaveacl.grid(column=1, row=row, **cpadwe)
 
@@ -317,7 +345,11 @@ class RevPiOption(tkinter.Frame):
         self.var_startargs.set(self.dc.get("plcarguments", ""))
         self.var_pythonver.set(self.dc.get("pythonversion", 3))
 
+        # MQTT Einstellungen laden
         self.var_mqtton.set(self.dc.get("mqtt", 0))
+        for key in self._dict_mqttsettings:
+            if key in self.dc:
+                self._dict_mqttsettings[key] = self.dc[key]
 
         self.var_slave.set(self.dc.get("plcslave", 0))
         self.var_slaveacl.set(self.dc.get("plcslaveacl", ""))
@@ -361,11 +393,34 @@ class RevPiOption(tkinter.Frame):
             self.dc["zeroonerror"] = int(self.var_zerr.get())
             self.dc["zeroonexit"] = int(self.var_zexit.get())
 
+            # MQTT Settings
             self.dc["mqtt"] = int(self.var_mqtton.get())
+            self.dc["mqttbasetopic"] = \
+                self._dict_mqttsettings["mqttbasetopic"]
+            self.dc["mqttclient_id"] = \
+                self._dict_mqttsettings["mqttclient_id"]
+            self.dc["mqttbroker_address"] = \
+                self._dict_mqttsettings["mqttbroker_address"]
+            self.dc["mqttpassword"] = \
+                self._dict_mqttsettings["mqttpassword"]
+            self.dc["mqttusername"] = \
+                self._dict_mqttsettings["mqttusername"]
+            self.dc["mqttport"] = \
+                int(self._dict_mqttsettings["mqttport"])
+            self.dc["mqttsend_events"] = \
+                int(self._dict_mqttsettings["mqttsend_events"])
+            self.dc["mqttsendinterval"] = \
+                int(self._dict_mqttsettings["mqttsendinterval"])
+            self.dc["mqtttls_set"] = \
+                int(self._dict_mqttsettings["mqtttls_set"])
+            self.dc["mqttwrite_outputs"] = \
+                int(self._dict_mqttsettings["mqttwrite_outputs"])
 
+            # PLCSlave Settings
             self.dc["plcslave"] = int(self.var_slave.get())
             self.dc["plcslaveacl"] = self.var_slaveacl.get()
 
+            # XML Settings
             self.dc["xmlrpc"] = int(self.var_xmlon.get())
             self.dc["xmlrpcacl"] = self.var_xmlacl.get()
 
@@ -398,34 +453,46 @@ class RevPiOption(tkinter.Frame):
             if not self.mrk_xmlmodask:
                 self.var_xmlon.set(True)
 
+    def btn_mqttsettings(self):
+        u"""Öffnet Fenster für MQTT Einstellungen."""
+        win = tkinter.Toplevel(self)
+        win.focus_set()
+        win.grab_set()
+        self.frm_mqttmgr = MqttManager(
+            win, self._dict_mqttsettings,
+            readonly=self.xmlmodus < 4
+        )
+        self.wait_window(win)
+        self._dict_mqttsettings = self.frm_mqttmgr.settings
+
     def btn_slaveacl(self):
         u"""Öffnet Fenster für ACL-Verwaltung."""
         win = tkinter.Toplevel(self)
         win.focus_set()
         win.grab_set()
-        slaveacl = AclManager(
+        self.frm_slaveacl = AclManager(
             win, 0, 1,
             self.var_slaveacl.get(),
             readonly=self.xmlmodus < 4
         )
-        slaveacl.acltext = {
+        self.frm_slaveacl.acltext = {
             0: _("read only"),
             1: _("read and write")
         }
         self.wait_window(win)
-        self.var_slaveacl.set(slaveacl.acl)
+        self.var_slaveacl.set(self.frm_slaveacl.acl)
 
     def btn_xmlacl(self):
         u"""Öffnet Fenster für ACL-Verwaltung."""
         win = tkinter.Toplevel(self)
         win.focus_set()
         win.grab_set()
-        slaveacl = AclManager(
+        self.frm_xmlacl = AclManager(
             win, 0, 4,
             self.var_xmlacl.get(),
             readonly=self.xmlmodus < 4
         )
-        slaveacl.acltext = {
+        self.frm_xmlacl.acltext = {
             0: _("Start/Stop PLC program and read logs"),
             1: _("+ read IOs in watch modus"),
             2: _("+ read properties and download PLC program"),
@@ -433,4 +500,15 @@ class RevPiOption(tkinter.Frame):
             4: _("+ set properties")
         }
         self.wait_window(win)
-        self.var_xmlacl.set(slaveacl.acl)
+        self.var_xmlacl.set(self.frm_xmlacl.acl)
+
+    def destroy(self):
+        u"""Beendet alle Unterfenster und sich selbst."""
+        if self.frm_mqttmgr is not None:
+            self.frm_mqttmgr.master.destroy()
+        if self.frm_slaveacl is not None:
+            self.frm_slaveacl.master.destroy()
+        if self.frm_xmlacl is not None:
+            self.frm_xmlacl.master.destroy()
+
+        super().destroy()

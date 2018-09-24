@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html><head>
+<title>mqttmanager</title>
+<meta charset="UTF-8">
+</head>
+<body style="background-color:#FFFFFF;color:#000000"><a NAME="top" ID="top"></a>
+<h1 style="background-color:#FFFFFF;color:#0000FF">
+mqttmanager</h1>
+
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Global Attributes</h3>
+<table>
+<tr><td>_</td></tr><tr><td>__author__</td></tr><tr><td>__copyright__</td></tr><tr><td>__license__</td></tr>
+</table>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Classes</h3>
+<table>
+<tr>
+<td><a style="color:#0000FF" href="#MqttManager">MqttManager</a></td>
+<td>Hauptfenster der MQTT-Einstellungen.</td>
+</tr>
+</table>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Functions</h3>
+<table>
+<tr><td>None</td></tr>
+</table>
+<hr /><hr />
+<a NAME="MqttManager" ID="MqttManager"></a>
+<h2 style="background-color:#FFFFFF;color:#0000FF">MqttManager</h2>
+<p>
+Hauptfenster der MQTT-Einstellungen.
+</p>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Derived from</h3>
+tkinter.Frame
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Class Attributes</h3>
+<table>
+<tr><td>dict_mqttsettings</td></tr><tr><td>root</td></tr><tr><td>settings</td></tr>
+</table>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Class Methods</h3>
+<table>
+<tr><td>None</td></tr>
+</table>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Methods</h3>
+<table>
+<tr>
+<td><a style="color:#0000FF" href="#MqttManager.__init__">MqttManager</a></td>
+<td>Init MqttManager-Class.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#MqttManager._changesdone">_changesdone</a></td>
+<td>Pr&#252;ft ob sich die Einstellungen ge&#228;ndert haben.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#MqttManager._checkclose">_checkclose</a></td>
+<td>Pr&#252;ft ob Fenster beendet werden soll.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#MqttManager._createwidgets">_createwidgets</a></td>
+<td>Erstellt Widgets.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#MqttManager._save">_save</a></td>
+<td>&#220;bernimt die &#196;nderungen.</td>
+</tr><tr>
+<td><a style="color:#0000FF" href="#MqttManager.get_settings">get_settings</a></td>
+<td>Gibt die MQTT Konfiguration zur&#252;ck.</td>
+</tr>
+</table>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+Static Methods</h3>
+<table>
+<tr><td>None</td></tr>
+</table>
+<a NAME="MqttManager.__init__" ID="MqttManager.__init__"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+MqttManager (Constructor)</h3>
+<b>MqttManager</b>(<i>master, settings, readonly=False</i>)
+<p>
+Init MqttManager-Class.
+</p><dl>
+<dt>Returns:</dt>
+<dd>
+None
+</dd>
+</dl><a NAME="MqttManager._changesdone" ID="MqttManager._changesdone"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+MqttManager._changesdone</h3>
+<b>_changesdone</b>(<i></i>)
+<p>
+Pr&#252;ft ob sich die Einstellungen ge&#228;ndert haben.
+</p><dl>
+<dt>Returns:</dt>
+<dd>
+True, wenn min. eine Einstellung ge&#228;ndert wurde
+</dd>
+</dl><a NAME="MqttManager._checkclose" ID="MqttManager._checkclose"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+MqttManager._checkclose</h3>
+<b>_checkclose</b>(<i>event=None</i>)
+<p>
+Pr&#252;ft ob Fenster beendet werden soll.
+</p><dl>
+<dt><i>event</i></dt>
+<dd>
+tkinter-Event
+</dd>
+</dl><a NAME="MqttManager._createwidgets" ID="MqttManager._createwidgets"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+MqttManager._createwidgets</h3>
+<b>_createwidgets</b>(<i></i>)
+<p>
+Erstellt Widgets.
+</p><a NAME="MqttManager._save" ID="MqttManager._save"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+MqttManager._save</h3>
+<b>_save</b>(<i></i>)
+<p>
+&#220;bernimt die &#196;nderungen.
+</p><a NAME="MqttManager.get_settings" ID="MqttManager.get_settings"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+MqttManager.get_settings</h3>
+<b>get_settings</b>(<i></i>)
+<p>
+Gibt die MQTT Konfiguration zur&#252;ck.
+</p><dl>
+<dt>Returns:</dt>
+<dd>
+Settings als <class 'dict'>
+</dd>
+</dl>
+<div align="right"><a style="color:#0000FF" href="#top">Up</a></div>
+<hr />
+</body></html>
