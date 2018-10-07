@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: RevPiPyControl 0.4.0\n"
-"POT-Creation-Date: 2018-08-14 09:19+0200\n"
-"PO-Revision-Date: 2018-08-14 09:21+0200\n"
+"POT-Creation-Date: 2018-10-07 11:51+0200\n"
+"PO-Revision-Date: 2018-10-07 12:00+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
@@ -19,14 +19,15 @@ msgstr ""
 msgid "Level"
 msgstr "Level"
 
-#: aclmanager.py:76 aclmanager.py:276 revpilegacy.py:68 revpilegacy.py:281
-#: revpilegacy.py:328 revpioption.py:72 revpioption.py:311 revpioption.py:355
-#: revpiplclist.py:62 revpiplclist.py:203 revpiprogram.py:393
-#: revpiprogram.py:467
+#: aclmanager.py:76 aclmanager.py:276 mqttmanager.py:66 revpilegacy.py:68
+#: revpilegacy.py:281 revpilegacy.py:328 revpioption.py:101 revpioption.py:377
+#: revpioption.py:446 revpiplclist.py:62 revpiplclist.py:203
+#: revpiprogram.py:393 revpiprogram.py:467
 msgid "Question"
 msgstr "Frage"
 
-#: aclmanager.py:77 revpilegacy.py:69 revpioption.py:73 revpiplclist.py:63
+#: aclmanager.py:77 mqttmanager.py:67 revpilegacy.py:69 revpioption.py:102
+#: revpiplclist.py:63
 msgid ""
 "Do you really want to quit? \n"
 "Unsaved changes will be lost"
@@ -70,12 +71,13 @@ msgstr "in Liste einfügen"
 msgid "clear"
 msgstr "leeren"
 
-#: aclmanager.py:259 revpilegacy.py:235 revpioption.py:262 revpiplclist.py:138
+#: aclmanager.py:259 mqttmanager.py:270 revpilegacy.py:235 revpioption.py:322
+#: revpiplclist.py:138
 msgid "Save"
 msgstr "Speichern"
 
-#: aclmanager.py:264 revpiinfo.py:140 revpilegacy.py:240 revpioption.py:267
-#: revpiplclist.py:142
+#: aclmanager.py:264 mqttmanager.py:275 revpiinfo.py:140 revpilegacy.py:240
+#: revpioption.py:327 revpiplclist.py:142
 msgid "Close"
 msgstr "Schließen"
 
@@ -92,14 +94,14 @@ msgstr ""
 
 #: aclmanager.py:291 aclmanager.py:367 revpicheckclient.py:112
 #: revpicheckclient.py:335 revpicheckclient.py:460 revpidevelop.py:209
-#: revpidevelop.py:217 revpidevelop.py:244 revpilegacy.py:318 revpioption.py:86
-#: revpioption.py:345 revpiplclist.py:227 revpiprogram.py:329
-#: revpiprogram.py:360 revpiprogram.py:423 revpiprogram.py:429
-#: revpiprogram.py:435 revpiprogram.py:443 revpiprogram.py:449
-#: revpiprogram.py:482 revpiprogram.py:566 revpiprogram.py:644
-#: revpiprogram.py:675 revpiprogram.py:688 revpiprogram.py:747
-#: revpiprogram.py:767 revpiprogram.py:775 revpipycontrol.py:272
-#: revpipycontrol.py:427
+#: revpidevelop.py:217 revpidevelop.py:244 revpilegacy.py:318
+#: revpioption.py:115 revpioption.py:436 revpiplclist.py:227
+#: revpiprogram.py:329 revpiprogram.py:360 revpiprogram.py:423
+#: revpiprogram.py:429 revpiprogram.py:435 revpiprogram.py:443
+#: revpiprogram.py:449 revpiprogram.py:482 revpiprogram.py:566
+#: revpiprogram.py:644 revpiprogram.py:675 revpiprogram.py:688
+#: revpiprogram.py:747 revpiprogram.py:767 revpiprogram.py:775
+#: revpipycontrol.py:273 revpipycontrol.py:428
 msgid "Error"
 msgstr "Fehler"
 
@@ -110,6 +112,102 @@ msgstr "Kann ACL nicht löschen! Format prüfen."
 #: aclmanager.py:368
 msgid "Can not load new ACL! Check format."
 msgstr "Kann neue ACL nicht laden! Format prüfen."
+
+#: mqttmanager.py:77
+msgid "MQTT Settings"
+msgstr "MQTT Einstellungen"
+
+#: mqttmanager.py:88
+msgid "MQTT base topic"
+msgstr "MQTT Basistopic"
+
+#: mqttmanager.py:97
+msgid "Base topic"
+msgstr "Basistopic"
+
+#: mqttmanager.py:110
+msgid ""
+"The base topic is the first part of any mqtt topic, the\n"
+"Revolution Pi will publish. You can use any character\n"
+"includig '/' to structure the messages on your broker.\n"
+"\n"
+"For example: revpi0000/data"
+msgstr ""
+"Der Basetopic ist der erste Teil des Topics von jeder\n"
+"MQTT-Nachricht, die der Revolution Pi sendet. Es kann jedes\n"
+"Zeichen inkl. '/' verwendet werden um die Nachrichten auf dem\n"
+"Broker zu strukturieren.\n"
+"\n"
+"Zum Beispiel: revpi0000/data"
+
+#: mqttmanager.py:120
+msgid "MQTT publish settings"
+msgstr "MQTT Sendeeinstellungen"
+
+#: mqttmanager.py:133
+msgid "Publish all exported values every n seconds"
+msgstr "Alle exportierten Werte alle n Sekunden senden"
+
+#: mqttmanager.py:144
+msgid "Topic: \t[basetopic]/io/[ioname]"
+msgstr "Topic: \t[basetopic]/io/[ioname]"
+
+#: mqttmanager.py:150
+msgid "Send exported values immediately on value change"
+msgstr "Exportierte Werte sofort senden, wenn diese sich ändern"
+
+#: mqttmanager.py:157
+msgid "Topic: \t[basetopic]/event/[ioname]"
+msgstr "Topic: \t[basetopic]/event/[ioname]"
+
+#: mqttmanager.py:162
+msgid "MQTT set outputs"
+msgstr "MQTT setze Ausgänge"
+
+#: mqttmanager.py:169
+msgid "Allow MQTT to to set outputs on Revolution Pi"
+msgstr "MQTT erlauben, Ausgänge am Revolution Pi zu setzen"
+
+#: mqttmanager.py:177
+msgid ""
+"The Revolution Pi will subscribe a topic on which your mqtt\n"
+"client can publish messages with the new io value as payload.\n"
+"\n"
+"Publish values with topic: \t[basetopic]/set/[outputname]"
+msgstr ""
+"Der Revolution Pi abonniert einen Topic, über den ein\n"
+"MQTT-Client neue IO Werte setzen kann. Der Wert wird aus\n"
+"dem Payload der Nachricht entnommen\n"
+"\n"
+"Topic für publish: \t[basetopic]/set/[outputname]"
+
+#: mqttmanager.py:188
+msgid "MQTT broker settings"
+msgstr "MQTT Brokereinstellungen"
+
+#: mqttmanager.py:208
+msgid "Broker address"
+msgstr "Brokeradresse"
+
+#: mqttmanager.py:217
+msgid "Broker port"
+msgstr "Brokerport"
+
+#: mqttmanager.py:227
+msgid "Use TLS"
+msgstr "Verwende TLS"
+
+#: mqttmanager.py:233
+msgid "Username"
+msgstr "Benutzername"
+
+#: mqttmanager.py:242
+msgid "Password"
+msgstr "Kennwort"
+
+#: mqttmanager.py:251
+msgid "Client ID"
+msgstr "Client ID"
 
 #: revpicheckclient.py:113
 #, python-brace-format
@@ -149,8 +247,8 @@ msgid "Write values to RevPi"
 msgstr "Schreibe Werte auf RevPi"
 
 #: revpicheckclient.py:292 revpidevelop.py:276 revpiprogram.py:456
-#: revpipycontrol.py:254 revpipycontrol.py:303 revpipycontrol.py:337
-#: revpipycontrol.py:355 revpipycontrol.py:388
+#: revpipycontrol.py:255 revpipycontrol.py:304 revpipycontrol.py:338
+#: revpipycontrol.py:356 revpipycontrol.py:389
 msgid "Warning"
 msgstr "Warnung"
 
@@ -193,8 +291,8 @@ msgstr "Pfad wählen"
 msgid "Stop / Upload / Start"
 msgstr "Stoppen / Hochladen / Starten"
 
-#: revpidevelop.py:200 revpilegacy.py:273 revpilegacy.py:310 revpioption.py:299
-#: revpioption.py:337 revpiplclist.py:219 revpiprogram.py:97
+#: revpidevelop.py:200 revpilegacy.py:273 revpilegacy.py:310 revpioption.py:365
+#: revpioption.py:428 revpiplclist.py:219 revpiprogram.py:97
 msgid "Information"
 msgstr "Information"
 
@@ -274,51 +372,51 @@ msgstr ""
 "\n"
 "(c) Sven Sager, Lizenz: LGPLv3"
 
-#: revpilegacy.py:79 revpioption.py:96
+#: revpilegacy.py:79 revpioption.py:125
 msgid "RevPi Python PLC Options"
 msgstr "RevPi Python PLC Einstellungen"
 
-#: revpilegacy.py:89 revpioption.py:107
+#: revpilegacy.py:89 revpioption.py:136
 msgid "Start / Stop behavior"
 msgstr "Start / Stop Verhalten"
 
-#: revpilegacy.py:98 revpioption.py:117
+#: revpilegacy.py:98 revpioption.py:146
 msgid "Start program automatically"
 msgstr "Starte Programm automatisch"
 
-#: revpilegacy.py:104 revpioption.py:123
+#: revpilegacy.py:104 revpioption.py:152
 msgid "Restart program after exit"
 msgstr "Starte Programm nach Beenden neu"
 
-#: revpilegacy.py:110 revpioption.py:139
+#: revpilegacy.py:110 revpioption.py:168
 msgid "Set process image to NULL if program terminates..."
 msgstr "Prozessabbild auf NULL setzen, wenn Programm..."
 
-#: revpilegacy.py:115 revpioption.py:144
+#: revpilegacy.py:115 revpioption.py:173
 msgid "... successfully"
 msgstr "... ohne Fehler beendet"
 
-#: revpilegacy.py:121 revpioption.py:150
+#: revpilegacy.py:121 revpioption.py:179
 msgid "... with errors"
 msgstr "... mit Fehlern beendet"
 
-#: revpilegacy.py:127 revpioption.py:158
+#: revpilegacy.py:127 revpioption.py:187
 msgid "PLC program"
 msgstr "PLC Programm"
 
-#: revpilegacy.py:138 revpioption.py:169
+#: revpilegacy.py:138 revpioption.py:197
 msgid "Python version"
 msgstr "Python Version"
 
-#: revpilegacy.py:157 revpioption.py:188
+#: revpilegacy.py:157 revpioption.py:216
 msgid "Python PLC program name"
 msgstr "Python PLC Programmname"
 
-#: revpilegacy.py:172 revpioption.py:203
+#: revpilegacy.py:172 revpioption.py:234
 msgid "Program arguments"
 msgstr "Programmargumente"
 
-#: revpilegacy.py:183 revpioption.py:224
+#: revpilegacy.py:183 revpioption.py:253
 msgid "Use RevPi as PLC-Slave"
 msgstr "RevPi als PLC-Slave verwenden"
 
@@ -326,7 +424,7 @@ msgstr "RevPi als PLC-Slave verwenden"
 msgid "XML-RPC server"
 msgstr "XML-RPC Server"
 
-#: revpilegacy.py:201 revpioption.py:249
+#: revpilegacy.py:201 revpioption.py:309
 msgid "Activate XML-RPC server on RevPi"
 msgstr "Aktiviere XML-RPC Server auf RevPi"
 
@@ -350,7 +448,7 @@ msgstr ""
 msgid "XML-RPC server port"
 msgstr "XML-RPC Serverport"
 
-#: revpilegacy.py:274 revpioption.py:300
+#: revpilegacy.py:274 revpioption.py:366
 msgid "You have not made any changes to save."
 msgstr "Sie haben keine Änderungen zum Speichern vorgenommen."
 
@@ -366,17 +464,17 @@ msgstr ""
 "Sollen die neuen Einstellungen sofort in Kraft treten? \n"
 "Dies bedeutet einen Neustart des Dienstes und des laufenden PLC-Programms!"
 
-#: revpilegacy.py:311 revpioption.py:338
+#: revpilegacy.py:311 revpioption.py:429
 msgid "Settings saved"
 msgstr "Einstellungen gespeichert"
 
-#: revpilegacy.py:319 revpioption.py:346
+#: revpilegacy.py:319 revpioption.py:437
 msgid "The settings could not be saved. This can happen if values are wrong!"
 msgstr ""
 "Die Einstellungen konnten nicht gesichert werden. Dies kann passieren, wenn "
 "Werte falsch sind!"
 
-#: revpilegacy.py:329 revpioption.py:356
+#: revpilegacy.py:329 revpioption.py:447
 msgid ""
 "Are you sure you want to deactivate the XML-RPC server? You will NOT be able "
 "to access the Revolution Pi with this program."
@@ -404,35 +502,47 @@ msgstr "Python PLC Programm - Logdatei"
 msgid "Can not access log file on the RevPi"
 msgstr "Auf die Logdatei des RevPi kann nicht zugegriffen werden"
 
-#: revpioption.py:87
+#: revpioption.py:116
 msgid "The value of 'restart delay' ist not valid."
 msgstr "Der Wert für 'Neustart Verzögerung' ist nicht gültig."
 
-#: revpioption.py:129
+#: revpioption.py:158
 msgid "Restart after n seconds of delay"
 msgstr "Neustart nach n Sekunden Verzögerung"
 
-#: revpioption.py:213
+#: revpioption.py:244
 msgid "RevPiPyLoad server services"
 msgstr "RevPiPyLoad Server Dienste"
 
-#: revpioption.py:230 revpioption.py:255
+#: revpioption.py:259 revpioption.py:315
 msgid "Edit ACL"
 msgstr "ACL bearbeiten"
 
-#: revpioption.py:235
+#: revpioption.py:264
 msgid "RevPi-Slave service is:"
 msgstr "RevPi-Slave Dienst Status:"
 
-#: revpioption.py:241
+#: revpioption.py:270 revpioption.py:299
 msgid "running"
 msgstr "läuft"
 
-#: revpioption.py:241
+#: revpioption.py:270 revpioption.py:299
 msgid "stopped"
 msgstr "beendet"
 
-#: revpioption.py:312
+#: revpioption.py:283
+msgid "MQTT process image publisher"
+msgstr "MQTT Übertragung des Prozessabbilds"
+
+#: revpioption.py:289
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: revpioption.py:294
+msgid "MQTT publish service is:"
+msgstr "MQTT Übertragungsdienst Status:"
+
+#: revpioption.py:378
 msgid ""
 "The settings will be set on the Revolution Pi now. \n"
 "\n"
@@ -446,31 +556,31 @@ msgstr ""
 "Programm jetzt neu starten!\n"
 "ACL Änderungen und Diensteinstellungen werden sofort angewandt."
 
-#: revpioption.py:375
+#: revpioption.py:478
 msgid "read only"
 msgstr "nur lesen"
 
-#: revpioption.py:376
+#: revpioption.py:479
 msgid "read and write"
 msgstr "lesen und schreiben"
 
-#: revpioption.py:392
+#: revpioption.py:495
 msgid "Start/Stop PLC program and read logs"
 msgstr "PLC Programm starten/stoppen und Logs lesen"
 
-#: revpioption.py:393
+#: revpioption.py:496
 msgid "+ read IOs in watch modus"
 msgstr "+ IOs in 'Watch modus' lesen"
 
-#: revpioption.py:394
+#: revpioption.py:497
 msgid "+ read properties and download PLC program"
 msgstr "+ Einstellungen lesen und PLC Programm herunterladen"
 
-#: revpioption.py:395
+#: revpioption.py:498
 msgid "+ upload PLC program"
 msgstr "+ PLC Programm hochladen"
 
-#: revpioption.py:396
+#: revpioption.py:499
 msgid "+ set properties"
 msgstr "+ Einstellungen ändern"
 
@@ -602,7 +712,7 @@ msgstr "piControlReset ausführen"
 msgid "execute"
 msgstr "ausführen"
 
-#: revpiprogram.py:261 revpipycontrol.py:117
+#: revpiprogram.py:261 revpipycontrol.py:118
 msgid "Exit"
 msgstr "Beenden"
 
@@ -751,71 +861,71 @@ msgstr "Das PLC Programm wurde erfolgreich übertragen."
 msgid "There is no piCtory configuration in this archive."
 msgstr "Es wurde keine piCtory Konfiguration im Archiv gefunden."
 
-#: revpipycontrol.py:115
+#: revpipycontrol.py:116
 msgid "Connections..."
 msgstr "Verbindungen..."
 
-#: revpipycontrol.py:118
+#: revpipycontrol.py:119
 msgid "Main"
 msgstr "Datei"
 
-#: revpipycontrol.py:126
+#: revpipycontrol.py:127
 msgid "Visit website..."
 msgstr "Webseite besuchen..."
 
-#: revpipycontrol.py:128
+#: revpipycontrol.py:129
 msgid "Info..."
 msgstr "Info..."
 
-#: revpipycontrol.py:129
+#: revpipycontrol.py:130
 msgid "Help"
 msgstr "Hilfe"
 
-#: revpipycontrol.py:142
+#: revpipycontrol.py:143
 msgid "PLC start"
 msgstr "PLC Start"
 
-#: revpipycontrol.py:147
+#: revpipycontrol.py:148
 msgid "PLC stop"
 msgstr "PLC Stopp"
 
-#: revpipycontrol.py:152
+#: revpipycontrol.py:153
 msgid "PLC restart"
 msgstr "PLC Neustart"
 
-#: revpipycontrol.py:157
+#: revpipycontrol.py:158
 msgid "PLC logs"
 msgstr "PLC Logs"
 
-#: revpipycontrol.py:168
+#: revpipycontrol.py:169
 msgid "PLC watch mode"
 msgstr "PLC watch Modus"
 
-#: revpipycontrol.py:185
+#: revpipycontrol.py:186
 msgid "PLC log..."
 msgstr "PLC Log..."
 
-#: revpipycontrol.py:187
+#: revpipycontrol.py:188
 msgid "PLC options..."
 msgstr "PLC Optionen..."
 
-#: revpipycontrol.py:189
+#: revpipycontrol.py:190
 msgid "PLC program..."
 msgstr "PLC Programm..."
 
-#: revpipycontrol.py:191
+#: revpipycontrol.py:192
 msgid "PLC developer..."
 msgstr "PLC Entwickler..."
 
-#: revpipycontrol.py:195
+#: revpipycontrol.py:196
 msgid "Disconnect"
 msgstr "Trennen"
 
-#: revpipycontrol.py:200
+#: revpipycontrol.py:201
 msgid "Connect"
 msgstr "Verbinden"
 
-#: revpipycontrol.py:255
+#: revpipycontrol.py:256
 #, python-brace-format
 msgid ""
 "The watch mode ist not supported in version {0} of RevPiPyLoad on your "
@@ -826,7 +936,7 @@ msgstr ""
 "mindestens Version 0.5.3 installiert sein! Stellen Sie sicher, dass auch "
 "python3-revpimodio2 auf dem RevPi installiert ist."
 
-#: revpipycontrol.py:273
+#: revpipycontrol.py:274
 msgid ""
 "Can not load piCtory configuration. \n"
 "Did you create a hardware configuration? Please check this in piCtory!"
@@ -834,7 +944,7 @@ msgstr ""
 "Kann piCtory Konfiguration nicht laden\n"
 "Wurde eine Hardwarekonfiguration erstellt? Bitte in piCtory prüfen!"
 
-#: revpipycontrol.py:304 revpipycontrol.py:356 revpipycontrol.py:389
+#: revpipycontrol.py:305 revpipycontrol.py:357 revpipycontrol.py:390
 msgid ""
 "XML-RPC access mode in the RevPiPyLoad configuration is too small to access "
 "this dialog!"
@@ -842,7 +952,7 @@ msgstr ""
 "Der XML-RPC Modus ist beim RevPiPyLoad nicht hoch genug eingestellt, um "
 "diesen Dialog zu verwenden!"
 
-#: revpipycontrol.py:338
+#: revpipycontrol.py:339
 #, python-brace-format
 msgid ""
 "This version of Logviewer ist not supported in version {0} of RevPiPyLoad on "
@@ -851,7 +961,7 @@ msgstr ""
 "Diese Version vom Logbetrachter wird in der RevPiPyLoad Version {0} auf "
 "Ihrem RevPi nicht unterstützt! Sie benötigen mindestens Version 0.4.1."
 
-#: revpipycontrol.py:428
+#: revpipycontrol.py:429
 msgid ""
 "Can not connect to RevPi XML-RPC Service! \n"
 "\n"

@@ -42,7 +42,8 @@ class MqttManager(tkinter.Frame):
         @return True, wenn min. eine Einstellung geändert wurde"""
         return (
             self.var_basetopic.get() != self.__settings["mqttbasetopic"] or
-            self.var_send_events.get() != self.__settings["mqttsend_events"] or
+            self.var_send_events.get() !=
+            self.__settings["mqttsend_on_event"] or
             self.var_client_id.get() != self.__settings["mqttclient_id"] or
             self.var_password.get() != self.__settings["mqttpassword"] or
             self.var_port.get() != str(self.__settings["mqttport"]) or
@@ -108,8 +109,7 @@ class MqttManager(tkinter.Frame):
         lbl["text"] = _(
             """The base topic is the first part of any mqtt topic, the
 Revolution Pi will publish. You can use any character
-includig '/' to identify the messages and subscribe them
-on your broker.
+includig '/' to structure the messages on your broker.
 
 For example: revpi0000/data"""
         )
@@ -122,7 +122,7 @@ For example: revpi0000/data"""
         gb.pack(expand=True, fill="both", padx=4, pady=4)
 
         self.var_send_events = tkinter.BooleanVar(
-            gb, self.__settings["mqttsend_events"])
+            gb, self.__settings["mqttsend_on_event"])
         self.var_sendinterval = tkinter.StringVar(
             gb, self.__settings["mqttsendinterval"])
         self.var_write_outputs = tkinter.BooleanVar(
@@ -174,8 +174,8 @@ For example: revpi0000/data"""
         lbl = tkinter.Label(gb)
         lbl["justify"] = "left"
         lbl["text"] = _(
-            """The Revolution Pi will subscribe a topic on which your client
-can publish messages with the new value as payload.
+            """The Revolution Pi will subscribe a topic on which your mqtt
+client can publish messages with the new io value as payload.
 
 Publish values with topic: \t[basetopic]/set/[outputname]"""
         )
@@ -283,7 +283,7 @@ Publish values with topic: \t[basetopic]/set/[outputname]"""
         # Wertübernahme
         self.__settings["mqttbasetopic"] = self.var_basetopic.get()
         self.__settings["mqttsendinterval"] = int(self.var_sendinterval.get())
-        self.__settings["mqttsend_events"] = int(self.var_send_events.get())
+        self.__settings["mqttsend_on_event"] = int(self.var_send_events.get())
         self.__settings["mqttwrite_outputs"] = \
             int(self.var_write_outputs.get())
         self.__settings["mqttbroker_address"] = self.var_broker_address.get()
@@ -311,7 +311,7 @@ if __name__ == "__main__":
         "mqttbroker_address": "127.0.0.1",
         "mqttpassword": "",
         "mqttport": 1883,
-        "mqttsend_events": 0,
+        "mqttsend_on_event": 0,
         "mqttsendinterval": 30,
         "mqtttls_set": 0,
         "mqttusername": "",

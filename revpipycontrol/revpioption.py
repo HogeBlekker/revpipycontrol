@@ -47,7 +47,7 @@ class RevPiOption(tkinter.Frame):
             "mqttbroker_address": "127.0.0.1",
             "mqttpassword": "",
             "mqttport": 1883,
-            "mqttsend_events": 0,
+            "mqttsend_on_event": 0,
             "mqttsendinterval": 30,
             "mqtttls_set": 0,
             "mqttusername": "",
@@ -294,7 +294,6 @@ class RevPiOption(tkinter.Frame):
             lbl["text"] = _("MQTT publish service is:")
             lbl.grid(column=0, **cpade)
 
-            status = self.xmlcli.mqttrunning()
             lbl = tkinter.Label(services)
             lbl["fg"] = "green" if status else "red"
             lbl["text"] = _("running") if status else _("stopped")
@@ -407,8 +406,8 @@ class RevPiOption(tkinter.Frame):
                 self._dict_mqttsettings["mqttusername"]
             self.dc["mqttport"] = \
                 int(self._dict_mqttsettings["mqttport"])
-            self.dc["mqttsend_events"] = \
-                int(self._dict_mqttsettings["mqttsend_events"])
+            self.dc["mqttsend_on_event"] = \
+                int(self._dict_mqttsettings["mqttsend_on_event"])
             self.dc["mqttsendinterval"] = \
                 int(self._dict_mqttsettings["mqttsendinterval"])
             self.dc["mqtttls_set"] = \
