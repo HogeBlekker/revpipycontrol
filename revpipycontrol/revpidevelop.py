@@ -152,15 +152,22 @@ class RevPiDevelop(ttk.Frame):
         btnlist.grid(row=r, columnspan=2, sticky="we")
 
         self.btn_jobs = ttk.Button(btnlist)
-        self.btn_jobs["command"] = self.btn_domyjob
+        self.btn_jobs["command"] = lambda: self.btn_domyjob(stop_restart=True)
         self.btn_jobs["text"] = _("Stop / Upload / Start")
+        self.btn_jobs.grid(row=0, column=0, **cpadwe)
+
+        self.btn_jobs = ttk.Button(btnlist)
+        self.btn_jobs["command"] = lambda: self.btn_domyjob(stop_restart=False)
+        self.btn_jobs["text"] = _("Just upload")
         self.btn_jobs.grid(row=0, column=1, **cpadwe)
 
-    def btn_domyjob(self):
-        u"""Hochladen und neu starten."""
+    def btn_domyjob(self, stop_restart=True):
+        u"""Hochladen und neu starten.
+        @param stop_restart Bestehendes Programm Beenden/Starten"""
 
-        # PLC Programm anhalten
-        self.xmlcli.plcstop()
+        if stop_restart:
+            # PLC Programm anhalten
+            self.xmlcli.plcstop()
 
         # Aktuell konfiguriertes Programm lesen (für uploaded Flag)
         opt_program = self.xmlcli.get_config()
@@ -219,8 +226,9 @@ class RevPiDevelop(ttk.Frame):
                 parent=self.master
             )
 
-        # PLC Programm starten
-        self.xmlcli.plcstart()
+        if stop_restart:
+            # PLC Programm starten
+            self.xmlcli.plcstart()
 
     def btn_selectpath(self):
         u"""Lässt dem Benuzter ein Verzeichnis auswählen."""

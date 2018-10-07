@@ -69,7 +69,7 @@ revpicheckclient.__license__?9
 revpidevelop.RevPiDevelop._checkclose?5(event=None)
 revpidevelop.RevPiDevelop._createwidgets?5()
 revpidevelop.RevPiDevelop.app?7
-revpidevelop.RevPiDevelop.btn_domyjob?4()
+revpidevelop.RevPiDevelop.btn_domyjob?4(stop_restart=True)
 revpidevelop.RevPiDevelop.btn_selectpath?4()
 revpidevelop.RevPiDevelop.cli?7
 revpidevelop.RevPiDevelop.load_pathfiles?4(silent=False)

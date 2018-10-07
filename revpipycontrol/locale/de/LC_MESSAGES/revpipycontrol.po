@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: RevPiPyControl 0.4.0\n"
-"POT-Creation-Date: 2018-10-07 11:51+0200\n"
-"PO-Revision-Date: 2018-10-07 12:00+0200\n"
+"POT-Creation-Date: 2018-10-07 12:08+0200\n"
+"PO-Revision-Date: 2018-10-07 12:08+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
@@ -93,8 +93,8 @@ msgstr ""
 "IP: {0} / Level: {1}"
 
 #: aclmanager.py:291 aclmanager.py:367 revpicheckclient.py:112
-#: revpicheckclient.py:335 revpicheckclient.py:460 revpidevelop.py:209
-#: revpidevelop.py:217 revpidevelop.py:244 revpilegacy.py:318
+#: revpicheckclient.py:335 revpicheckclient.py:460 revpidevelop.py:216
+#: revpidevelop.py:224 revpidevelop.py:252 revpilegacy.py:318
 #: revpioption.py:115 revpioption.py:436 revpiplclist.py:227
 #: revpiprogram.py:329 revpiprogram.py:360 revpiprogram.py:423
 #: revpiprogram.py:429 revpiprogram.py:435 revpiprogram.py:443
@@ -246,7 +246,7 @@ msgstr "Aktualisiere Werte automatisch"
 msgid "Write values to RevPi"
 msgstr "Schreibe Werte auf RevPi"
 
-#: revpicheckclient.py:292 revpidevelop.py:276 revpiprogram.py:456
+#: revpicheckclient.py:292 revpidevelop.py:284 revpiprogram.py:456
 #: revpipycontrol.py:255 revpipycontrol.py:304 revpipycontrol.py:338
 #: revpipycontrol.py:356 revpipycontrol.py:389
 msgid "Warning"
@@ -291,12 +291,16 @@ msgstr "Pfad wählen"
 msgid "Stop / Upload / Start"
 msgstr "Stoppen / Hochladen / Starten"
 
-#: revpidevelop.py:200 revpilegacy.py:273 revpilegacy.py:310 revpioption.py:365
+#: revpidevelop.py:161
+msgid "Just upload"
+msgstr "Nur hochladen"
+
+#: revpidevelop.py:207 revpilegacy.py:273 revpilegacy.py:310 revpioption.py:365
 #: revpioption.py:428 revpiplclist.py:219 revpiprogram.py:97
 msgid "Information"
 msgstr "Information"
 
-#: revpidevelop.py:201 revpiprogram.py:98
+#: revpidevelop.py:208 revpiprogram.py:98
 msgid ""
 "A PLC program has been uploaded. Please check the PLC options to see if the "
 "correct program is specified as the start program."
@@ -304,23 +308,23 @@ msgstr ""
 "Ein PLC Programm wurde hochgeladen. Bitte prüfen Sie die PLC Optionen, ob "
 "dort das richtige Programm als Startprogramm angegeben ist."
 
-#: revpidevelop.py:210 revpiprogram.py:768
+#: revpidevelop.py:217 revpiprogram.py:768
 msgid "The Revolution Pi could not process some parts of the transmission."
 msgstr "Der Revoluton Pi konnte Teile der Übertragung nicht verarbeiten."
 
-#: revpidevelop.py:218 revpiprogram.py:776
+#: revpidevelop.py:225 revpiprogram.py:776
 msgid "Errors occurred during transmission"
 msgstr "Bei der Übertragung traten Fehler auf"
 
-#: revpidevelop.py:229
+#: revpidevelop.py:237
 msgid "Directory to watch"
 msgstr "Ordner zum Überwachen"
 
-#: revpidevelop.py:245
+#: revpidevelop.py:253
 msgid "Can not open the selected folder."
 msgstr "Kann gewählten Ordner nicht öffnen."
 
-#: revpidevelop.py:277
+#: revpidevelop.py:285
 msgid ""
 "Found more than 1000 files! Only 1000 files can be shown in this dialog, all "
 "other will be ignored."
