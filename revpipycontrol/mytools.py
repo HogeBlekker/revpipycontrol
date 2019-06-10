@@ -14,6 +14,7 @@ from os.path import join as pathjoin
 from sys import platform
 
 # Systemwerte und SaveFiles
+# TODO: Mac einbauen
 if platform == "linux":
     homedir = environ["HOME"]
 else:

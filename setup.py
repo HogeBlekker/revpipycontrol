@@ -37,6 +37,7 @@ globsetup = {
     "zur Laufzeit überwacht werden.",
 }
 
+# TODO: Mac einbauen
 if platform == "linux":
     from setuptools import setup
     setup(
