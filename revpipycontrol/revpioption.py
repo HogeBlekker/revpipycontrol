@@ -219,10 +219,10 @@ class RevPiOption(tkinter.Frame):
         # Row 3
         lst = self.xmlcli.get_filelist()
         lst.sort()
-        if len(lst) == 0:
-            lst.append("none")
         if ".placeholder" in lst:
             lst.remove(".placeholder")
+        if len(lst) == 0:
+            lst.append("none")
         opt_startpy = tkinter.OptionMenu(
             prog, self.var_startpy, *lst
         )
