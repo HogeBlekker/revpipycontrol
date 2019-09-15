@@ -3,3 +3,5 @@ include stdeb.cfg
 recursive-include data *
 recursive-include revpipycontrol *
 global-exclude *.pyc
+include LICENSE.txt
+
