@@ -87,6 +87,9 @@ Methods</h3>
 <td><a style="color:#0000FF" href="#RevPiCheckClient.maxint">maxint</a></td>
 <td>Errechnet maximalen int() Wert f&#252;r Bytes max 22.</td>
 </tr><tr>
+<td><a style="color:#0000FF" href="#RevPiCheckClient.minint">minint</a></td>
+<td>Errechnet maximalen int() Wert f&#252;r Bytes max 22.</td>
+</tr><tr>
 <td><a style="color:#0000FF" href="#RevPiCheckClient.readvalues">readvalues</a></td>
 <td>Ruft nur Input Werte von RevPi ab und aktualisiert Fenster.</td>
 </tr><tr>
@@ -244,13 +247,29 @@ Versteckt alle Fenster.
 </p><a NAME="RevPiCheckClient.maxint" ID="RevPiCheckClient.maxint"></a>
 <h3 style="background-color:#FFFFFF;color:#FF0000">
 RevPiCheckClient.maxint</h3>
-<b>maxint</b>(<i>bytelen</i>)
+<b>maxint</b>(<i>io</i>)
 <p>
 Errechnet maximalen int() Wert f&#252;r Bytes max 22.
 </p><dl>
-<dt><i>bytelen</i></dt>
+<dt><i>io</i></dt>
 <dd>
-Anzahl Bytes
+IO-Liste, deren Wert berechnet werden soll
+</dd>
+</dl><dl>
+<dt>Returns:</dt>
+<dd>
+int() max oder 0 bei &#220;berschreitung
+</dd>
+</dl><a NAME="RevPiCheckClient.minint" ID="RevPiCheckClient.minint"></a>
+<h3 style="background-color:#FFFFFF;color:#FF0000">
+RevPiCheckClient.minint</h3>
+<b>minint</b>(<i>io</i>)
+<p>
+Errechnet maximalen int() Wert f&#252;r Bytes max 22.
+</p><dl>
+<dt><i>io</i></dt>
+<dd>
+IO-Liste, deren Wert berechnet werden soll
 </dd>
 </dl><dl>
 <dt>Returns:</dt>

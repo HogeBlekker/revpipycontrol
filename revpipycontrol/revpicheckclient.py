@@ -101,7 +101,7 @@ class RevPiCheckClient(tkinter.Frame):
         try:
             newvalue = io[5].get()
             # Wertebereich prüfen
-            if newvalue < 0 or newvalue > self.maxint(io[1]):
+            if not self.minint(io) <= newvalue <= self.maxint(io):
                 raise ValueError("too big")
 
             self.__chval(device, io)
@@ -168,7 +168,7 @@ class RevPiCheckClient(tkinter.Frame):
         # IOs generieren
         rowcount = 0
         for io in lst_io:
-            # io = [name,bytelen,byteaddr,bmk,bitaddress,(tkinter_var)]
+            # io = [name,blen,baddr,bmk,bitaddr,(tkinter_var),border,signed]
 
             tkinter.Label(s_frame, text=io[0]).grid(
                 column=1, row=rowcount, sticky="w"
@@ -185,7 +185,11 @@ class RevPiCheckClient(tkinter.Frame):
                 check.grid(column=0, row=rowcount)
             else:
                 var = tkinter.IntVar()
-                txt = tkinter.Spinbox(s_frame, to=self.maxint(io[1]))
+                txt = tkinter.Spinbox(
+                    s_frame,
+                    from_=self.minint(io),
+                    to=self.maxint(io),
+                )
                 txt.bind(
                     "<Key>",
                     lambda event, tkvar=var: self.__saveoldvalue(event, tkvar)
@@ -198,13 +202,13 @@ class RevPiCheckClient(tkinter.Frame):
                 txt["command"] = \
                     lambda device=device, io=io: self.__chval(device, io)
                 txt["state"] = "disabled" if iotype == "inp" or \
-                    self.maxint(io[1]) == 0 else "normal"
+                    self.maxint(io) == 0 else "normal"
                 txt["width"] = 5
                 txt["textvariable"] = var
                 txt.grid(column=0, row=rowcount)
 
             # Steuerelementvariable in IO übernehmen (mutabel)
-            io.append(var)
+            io.insert(5, var)
 
             rowcount += 1
 
@@ -345,7 +349,7 @@ class RevPiCheckClient(tkinter.Frame):
             xmlmc = MultiCall(self.cli)
 
         for dev in self.dict_devices:
-            # io = [name,bytelen,byteaddr,bmk,bitaddress,(tkinter_var)]
+            # io = [name,blen,baddr,bmk,bitaddr,(tkinter_var),border,signed]
 
             # IO Typ verarbeiten
             for iotype in io_dicts:
@@ -358,7 +362,9 @@ class RevPiCheckClient(tkinter.Frame):
 
                     # Bytes umwandeln
                     int_byte = int.from_bytes(
-                        ba_values[io[2]:io[2] + io[1]], byteorder="little"
+                        ba_values[io[2]:io[2] + io[1]],
+                        byteorder="little" if len(io) < 7 else io[6],
+                        signed=False if len(io) < 8 else io[7],
                     )
                     if io[4] >= 0:
                         # Bit-IO
@@ -384,11 +390,35 @@ class RevPiCheckClient(tkinter.Frame):
         for win in self.dict_wins:
             self.dict_wins[win].withdraw()
 
-    def maxint(self, bytelen):
+    def maxint(self, io):
         u"""Errechnet maximalen int() Wert für Bytes max 22.
-        @param bytelen Anzahl Bytes
+        @param io IO-Liste, deren Wert berechnet werden soll
         @return int() max oder 0 bei Überschreitung"""
-        return 0 if bytelen > 22 else 256 ** bytelen - 1
+        # io = [name,blen,baddr,bmk,bitaddr,(tkinter_var),border,signed]
+        bytelen = io[1]
+        if bytelen == 0:
+            return 0
+        signed = io[-1] if type(io[-1]) == bool else False
+        return 0 if bytelen > 22 else int.from_bytes(
+            (b'\x7f' if signed else b'\xff') + b'\xff' * (bytelen - 1),
+            byteorder="big"
+        )
+
+    def minint(self, io):
+        u"""Errechnet maximalen int() Wert für Bytes max 22.
+        @param io IO-Liste, deren Wert berechnet werden soll
+        @return int() max oder 0 bei Überschreitung"""
+        # io = [name,blen,baddr,bmk,bitaddr,(tkinter_var),border,signed]
+        bytelen = io[1]
+        if bytelen == 0:
+            return 0
+        signed = io[-1] if type(io[-1]) == bool else False
+        rc = 0 if bytelen > 22 or not signed else int.from_bytes(
+            b'\x80' + b'\x00' * (bytelen - 1),
+            byteorder="big",
+            signed=True
+        )
+        return rc
 
     def readvalues(self):
         u"""Ruft nur Input Werte von RevPi ab und aktualisiert Fenster."""
