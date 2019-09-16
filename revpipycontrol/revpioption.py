@@ -163,8 +163,8 @@ class RevPiOption(tkinter.Frame):
         # Gruppe Start/Stop
         stst = tkinter.LabelFrame(self)
         stst.columnconfigure(0, weight=1)
+        stst.columnconfigure(1, weight=1)
         stst.columnconfigure(2, weight=1)
-        stst.columnconfigure(3, weight=1)
         stst["text"] = _("Start / Stop behavior")
         stst.grid(columnspan=2, pady=2, sticky="we")
 

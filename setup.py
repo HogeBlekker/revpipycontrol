@@ -19,11 +19,14 @@ class MyEggInfo(distutils.command.install_egg_info.install_egg_info):
 
 
 globsetup = {
+    "version": "0.8.0",
+
     "author": "Sven Sager",
     "author_email": "akira@narux.de",
+    "maintainer": "Sven Sager",
+    "maintainer_email": "akira@revpimodio.org",
     "url": "https://revpimodio.org/revpipyplc/",
     "license": "LGPLv3",
-    "version": "0.8.0",
 
     "name": "revpipycontrol",
 
@@ -35,40 +38,18 @@ globsetup = {
     "Außerdem stellt es einen XML-RPC Server bereit, über den die Software\n"
     "auf den RevPi geladen werden kann. Das Prozessabbild kann über ein Tool\n"
     "zur Laufzeit überwacht werden.",
+
+    "install_requires": ["tkinter"],
+
+    "classifiers": [
+        "License :: OSI Approved :: "
+        "GNU Lesser General Public License v3 (LGPLv3)",
+        "Operating System :: POSIX :: Linux",
+    ],
+    "cmdclass": {"install_egg_info": MyEggInfo},
 }
 
-# TODO: Mac einbauen
-if platform == "linux":
-    from setuptools import setup
-    setup(
-        maintainer="Sven Sager",
-        maintainer_email="akira@revpimodio.org",
-
-        scripts=["data/revpipycontrol"],
-
-        data_files=[
-            ("share/applications", ["data/revpipycontrol.desktop"]),
-            ("share/icons/hicolor/32x32/apps", ["data/revpipycontrol.png"]),
-            ("share/revpipycontrol", glob("revpipycontrol/*.*")),
-            ("share/revpipycontrol/shared", glob("revpipycontrol/shared/*.*")),
-            (
-                "share/revpipycontrol/locale/de/LC_MESSAGES",
-                glob("revpipycontrol/locale/de/LC_MESSAGES/*.mo")
-            ),
-        ],
-
-        install_requires=["tkinter"],
-
-        classifiers=[
-            "License :: OSI Approved :: "
-            "GNU Lesser General Public License v3 (LGPLv3)",
-            "Operating System :: POSIX :: Linux",
-        ],
-        cmdclass={"install_egg_info": MyEggInfo},
-        **globsetup
-    )
-
-elif platform == "win32":
+if platform == "win32":
     import sys
     from cx_Freeze import setup, Executable
 
@@ -92,5 +73,24 @@ elif platform == "win32":
             ]
         }},
         executables=[exe],
+
+        **globsetup
+    )
+else:
+    from setuptools import setup
+    setup(
+        scripts=["data/revpipycontrol"],
+
+        data_files=[
+            ("share/applications", ["data/revpipycontrol.desktop"]),
+            ("share/icons/hicolor/32x32/apps", ["data/revpipycontrol.png"]),
+            ("share/revpipycontrol", glob("revpipycontrol/*.*")),
+            ("share/revpipycontrol/shared", glob("revpipycontrol/shared/*.*")),
+            (
+                "share/revpipycontrol/locale/de/LC_MESSAGES",
+                glob("revpipycontrol/locale/de/LC_MESSAGES/*.mo")
+            ),
+        ],
+
         **globsetup
     )

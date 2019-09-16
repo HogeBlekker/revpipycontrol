@@ -102,7 +102,7 @@ class RevPiCheckClient(tkinter.Frame):
             newvalue = io[5].get()
             # Wertebereich prüfen
             if not self.minint(io) <= newvalue <= self.maxint(io):
-                raise ValueError("too big")
+                raise ValueError("value not valid")
 
             self.__chval(device, io)
 
@@ -144,6 +144,7 @@ class RevPiCheckClient(tkinter.Frame):
             heigh=calc_heigh if calc_heigh <= 600 else 600
         )
         s_frame = tkinter.Frame(canvas)
+        s_frame.columnconfigure(1, weight=1)
         vsb = tkinter.Scrollbar(frame, orient="vertical", command=canvas.yview)
         canvas.configure(yscrollcommand=vsb.set)
 
@@ -203,7 +204,8 @@ class RevPiCheckClient(tkinter.Frame):
                     lambda device=device, io=io: self.__chval(device, io)
                 txt["state"] = "disabled" if iotype == "inp" or \
                     self.maxint(io) == 0 else "normal"
-                txt["width"] = 5
+                width = len(str(self.maxint(io))) + 1
+                txt["width"] = 7 if width > 7 else width
                 txt["textvariable"] = var
                 txt.grid(column=0, row=rowcount)
 
@@ -211,6 +213,7 @@ class RevPiCheckClient(tkinter.Frame):
             io.insert(5, var)
 
             rowcount += 1
+            s_frame.update()
 
     def _createwidgets(self):
         """Erstellt den Fensterinhalt."""
@@ -227,7 +230,6 @@ class RevPiCheckClient(tkinter.Frame):
                 "WM_DELETE_WINDOW",
                 lambda win=win: self.__hidewin(win)
             )
-            win.resizable(False, True)
             win.withdraw()
             self.dict_wins[dev] = win
 
@@ -239,6 +241,7 @@ class RevPiCheckClient(tkinter.Frame):
             for iotype in ["inp", "out"]:
                 frame = tkinter.Frame(group)
                 frame.pack(side="left", fill="both", expand=True)
+                frame.update()
                 self._createiogroup(dev, frame, iotype)
 
             # Button erstellen
