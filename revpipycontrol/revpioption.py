@@ -54,12 +54,38 @@ class RevPiOption(tkinter.Frame):
             "mqttwrite_outputs": 0,
         }
 
+        self.replace_ios_options = [
+            _("Do not use replace io file"),
+            _("Use static file from RevPiPyLoad"),
+            _("Use dynamic file from work directory"),
+            _("Give own path and filename"),
+        ]
+
         self.mrk_xmlmodask = False
         self.dorestart = False
 
         # Fenster bauen
         self._createwidgets()
         self._loadappdata()
+
+    def __state_replace_ios(self, text):
+        u"""Konfiguriert Werte für replace_io.
+        @param text: Ausgewählter Eintrag in Liste"""
+        selected_id = self.replace_ios_options.index(text)
+
+        # Preset value
+        if selected_id == 0:
+            self.var_replace_ios.set("")
+        elif selected_id == 1:
+            self.var_replace_ios.set("/etc/revpipyload/replace_ios.conf")
+        else:
+            self.var_replace_ios.set("replace_ios.conf")
+
+        # Set state of input field
+        self.txt_replace_ios["state"] = "normal" \
+            if self.xmlmodus >= 4 and \
+            selected_id == 3 \
+            else "disabled"
 
     def _changesdone(self):
         u"""Prüft ob sich die Einstellungen geändert haben.
@@ -71,10 +97,13 @@ class RevPiOption(tkinter.Frame):
             str(self.dc.get("autoreloaddelay", 5)) or
             self.var_zexit.get() != self.dc.get("zeroonexit", 0) or
             self.var_zerr.get() != self.dc.get("zeroonerror", 0) or
+            self.var_replace_ios.get() != self.dc.get("replace_ios", "") or
             # TODO: rtlevel (0)
             self.var_startpy.get() != self.dc.get("plcprogram", "none.py") or
             self.var_startargs.get() != self.dc.get("plcarguments", "") or
             self.var_pythonver.get() != self.dc.get("pythonversion", 3) or
+            self.var_plcworkdir_set_uid.get() != \
+            self.dc.get("plcworkdir_set_uid") or
             self.var_slave.get() != self.dc.get("plcslave", 0) or
             self.var_slaveacl.get() != self.dc.get("plcslaveacl", "") or
             self.var_mqtton.get() != self.dc.get("mqtt", 0) or
@@ -133,6 +162,9 @@ class RevPiOption(tkinter.Frame):
 
         # Gruppe Start/Stop
         stst = tkinter.LabelFrame(self)
+        stst.columnconfigure(0, weight=1)
+        stst.columnconfigure(2, weight=1)
+        stst.columnconfigure(3, weight=1)
         stst["text"] = _("Start / Stop behavior")
         stst.grid(columnspan=2, pady=2, sticky="we")
 
@@ -141,82 +173,112 @@ class RevPiOption(tkinter.Frame):
         self.var_reload_delay = tkinter.StringVar(stst)
         self.var_zexit = tkinter.BooleanVar(stst)
         self.var_zerr = tkinter.BooleanVar(stst)
+        self.var_replace_ios = tkinter.StringVar(stst)
+        self.var_replace_ios_options = tkinter.StringVar(stst)
 
+        # Row 0
         ckb_start = tkinter.Checkbutton(stst)
         ckb_start["text"] = _("Start program automatically")
         ckb_start["state"] = xmlstate
         ckb_start["variable"] = self.var_start
-        ckb_start.grid(columnspan=2, **cpadw)
+        ckb_start.grid(columnspan=3, **cpadw)
 
+        # Row 1
         ckb_reload = tkinter.Checkbutton(stst)
         ckb_reload["text"] = _("Restart program after exit")
         ckb_reload["state"] = xmlstate
         ckb_reload["variable"] = self.var_reload
-        ckb_reload.grid(columnspan=2, **cpadw)
+        ckb_reload.grid(columnspan=3, **cpadw)
 
+        # Row 2
         lbl = tkinter.Label(stst)
         lbl["text"] = _("Restart after n seconds of delay")
-        lbl.grid(**cpadw)
+        lbl.grid(columnspan=2, **cpadw)
         sbx = tkinter.Spinbox(stst)
         sbx["to"] = 60
         sbx["from_"] = 5
         sbx["textvariable"] = self.var_reload_delay
         sbx["width"] = 4
-        sbx.grid(column=1, row=2, **cpade)
+        sbx.grid(column=2, row=2, **cpade)
 
+        # Row 3
         lbl = tkinter.Label(stst)
         lbl["text"] = _("Set process image to NULL if program terminates...")
-        lbl.grid(columnspan=2, **cpadw)
+        lbl.grid(columnspan=3, **cpadw)
 
+        # Row 4
         ckb_zexit = tkinter.Checkbutton(stst, justify="left")
         ckb_zexit["state"] = xmlstate
         ckb_zexit["text"] = _("... successfully")
         ckb_zexit["variable"] = self.var_zexit
-        ckb_zexit.grid(**cpadw)
+        ckb_zexit.grid(column=1, **cpadw)
 
+        # Row 5
         ckb_zerr = tkinter.Checkbutton(stst, justify="left")
         ckb_zerr["state"] = xmlstate
         ckb_zerr["text"] = _("... with errors")
         ckb_zerr["variable"] = self.var_zerr
-        ckb_zerr.grid(**cpadw)
+        ckb_zerr.grid(column=1, **cpadw)
+
+        # Row 6
+        lbl = tkinter.Label(stst)
+        lbl["text"] = _("Replace IO file:")
+        lbl.grid(row=6, **cpadw)
+
+        opt = tkinter.OptionMenu(
+            stst, self.var_replace_ios_options, *self.replace_ios_options,
+            command=self.__state_replace_ios
+        )
+        opt["state"] = xmlstate
+        opt["width"] = 30
+        opt.grid(row=6, column=1, columnspan=2, **cpadwe)
+
+        # Row 7
+        self.txt_replace_ios = tkinter.Entry(stst)
+        self.txt_replace_ios["state"] = xmlstate
+        self.txt_replace_ios["textvariable"] = self.var_replace_ios
+        self.txt_replace_ios.grid(column=1, columnspan=2, **cpadwe)
 
         # Gruppe Programm
         prog = tkinter.LabelFrame(self)
         prog.columnconfigure(0, weight=1)
         prog.columnconfigure(1, weight=1)
+        prog.columnconfigure(2, weight=1)
         prog["text"] = _("PLC program")
         prog.grid(columnspan=2, pady=2, sticky="we")
 
         self.var_pythonver = tkinter.IntVar(prog)
         self.var_startpy = tkinter.StringVar(prog)
         self.var_startargs = tkinter.StringVar(prog)
+        self.var_plcworkdir_set_uid = tkinter.BooleanVar(prog)
 
         self.var_pythonver.set(3)
 
+        # Row 0
         lbl = tkinter.Label(prog)
         lbl["text"] = _("Python version") + ":"
-        lbl.grid(columnspan=2, row=0, **cpadw)
+        lbl.grid(row=0, **cpadw)
 
         rbn = tkinter.Radiobutton(prog)
         rbn["state"] = xmlstate
         rbn["text"] = "Python2"
         rbn["value"] = 2
         rbn["variable"] = self.var_pythonver
-        rbn.grid(column=0, row=1, **cpade)
+        rbn.grid(row=0, column=1, **cpade)
 
         rbn = tkinter.Radiobutton(prog)
         rbn["state"] = xmlstate
         rbn["text"] = "Python3"
         rbn["value"] = 3
         rbn["variable"] = self.var_pythonver
-        rbn.grid(column=1, row=1, **cpadw)
+        rbn.grid(row=0, column=2, **cpadw)
 
-        # Row 2
+        # Row 1
         lbl = tkinter.Label(prog)
         lbl["text"] = _("Python PLC program name")
-        lbl.grid(columnspan=2, **cpadw)
+        lbl.grid(columnspan=3, **cpadw)
 
-        # Row 3
+        # Row 2
         lst = self.xmlcli.get_filelist()
         lst.sort()
         if ".placeholder" in lst:
@@ -227,17 +289,23 @@ class RevPiOption(tkinter.Frame):
             prog, self.var_startpy, *lst
         )
         opt_startpy["state"] = xmlstate
-        opt_startpy.grid(columnspan=2, **cpadwe)
+        opt_startpy.grid(columnspan=3, **cpadwe)
 
-        # Row 4
+        # Row 3
         lbl = tkinter.Label(prog)
-        lbl["text"] = _("Program arguments")
-        lbl.grid(columnspan=2, **cpadw)
+        lbl["text"] = _("Program arguments:")
+        lbl.grid(**cpadw)
 
-        # Row 5
         txt = tkinter.Entry(prog)
         txt["textvariable"] = self.var_startargs
-        txt.grid(columnspan=2, **cpadw)
+        txt.grid(row=3, column=1, columnspan=2, **cpadwe)
+
+        # Row 4
+        ckb = tkinter.Checkbutton(prog)
+        ckb["text"] = _("Set write access to workdirectory")
+        ckb["state"] = xmlstate
+        ckb["variable"] = self.var_plcworkdir_set_uid
+        ckb.grid(columnspan=2, **cpadw)
 
         # Gruppe Services
         services = tkinter.LabelFrame(self)
@@ -338,11 +406,24 @@ class RevPiOption(tkinter.Frame):
         self.var_reload_delay.set(self.dc.get("autoreloaddelay", 5))
         self.var_zexit.set(self.dc.get("zeroonexit", 0))
         self.var_zerr.set(self.dc.get("zeroonerror", 0))
+        replace_ios = self.dc.get("replace_ios", "")
+        self.var_replace_ios.set(replace_ios)
+        if replace_ios == "":
+            self.var_replace_ios_options.set(self.replace_ios_options[0])
+        elif replace_ios == "/etc/revpipyload/replace_ios.conf":
+            self.var_replace_ios_options.set(self.replace_ios_options[1])
+        elif replace_ios == "replace_ios.conf":
+            self.var_replace_ios_options.set(self.replace_ios_options[2])
+        else:
+            self.var_replace_ios_options.set(self.replace_ios_options[3])
+        self.__state_replace_ios(self.var_replace_ios_options.get())
         # TODO: rtlevel (0)
 
         self.var_startpy.set(self.dc.get("plcprogram", "none.py"))
         self.var_startargs.set(self.dc.get("plcarguments", ""))
         self.var_pythonver.set(self.dc.get("pythonversion", 3))
+        self.var_plcworkdir_set_uid.set(
+            self.dc.get("plcworkdir_set_uid", False))
 
         # MQTT Einstellungen laden
         self.var_mqtton.set(self.dc.get("mqtt", 0))
@@ -388,9 +469,12 @@ class RevPiOption(tkinter.Frame):
             self.dc["plcprogram"] = self.var_startpy.get()
             self.dc["plcarguments"] = self.var_startargs.get()
             self.dc["pythonversion"] = self.var_pythonver.get()
+            self.dc["plcworkdir_set_uid"] = \
+                int(self.var_plcworkdir_set_uid.get())
             # TODO: rtlevel (0)
             self.dc["zeroonerror"] = int(self.var_zerr.get())
             self.dc["zeroonexit"] = int(self.var_zexit.get())
+            self.dc["replace_ios"] = self.var_replace_ios.get()
 
             # MQTT Settings
             self.dc["mqtt"] = int(self.var_mqtton.get())

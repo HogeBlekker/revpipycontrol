@@ -116,6 +116,7 @@ revpilogfile._?8
 revpilogfile.__author__?9
 revpilogfile.__copyright__?9
 revpilogfile.__license__?9
+revpioption.RevPiOption.__state_replace_ios?6(text)
 revpioption.RevPiOption._changesdone?5()
 revpioption.RevPiOption._changesdone_mqtt?5()
 revpioption.RevPiOption._checkclose?5(event=None)
