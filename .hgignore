@@ -1,9 +1,0 @@
-syntax: glob
-*.pyc
-deb_dist/*
-dist/*
-revpipycontrol.egg-info/*
-deb/*
-.eric6project/*
-*.directory
-*.mo
