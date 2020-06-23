@@ -40,6 +40,7 @@ class RevPiPyControl(tkinter.Frame):
         self.cli = None
         self.dict_conn = revpiplclist.get_connections()
         self.errcount = 0
+        self.revpiaddress = None
         self.revpiname = None
         self.revpipyversion = [0, 0, 0]
         self.xmlfuncs = []
@@ -193,6 +194,10 @@ class RevPiPyControl(tkinter.Frame):
         self.mplc.add_separator()
 
         self.mplc.add_command(
+            label=_("piCtory configuration"), command=self.plcpictory)
+        self.mplc.add_separator()
+
+        self.mplc.add_command(
             label=_("Disconnect"), command=self.serverdisconnect)
         self.mbar.add_cascade(label="PLC", menu=self.mplc, state="disabled")
 
@@ -219,7 +224,7 @@ class RevPiPyControl(tkinter.Frame):
             self.xmlfuncs = sp.system.listMethods()
             self.xmlmode = sp.xmlmodus()
             self.revpipyversion = list(map(int, sp.version().split(".")))
-        except Exception:
+        except Exception as e:
             self.servererror()
         else:
             self._closeall()
@@ -229,6 +234,7 @@ class RevPiPyControl(tkinter.Frame):
                     self.dict_conn[text][0], int(self.dict_conn[text][1])
                 )
             )
+            self.revpiaddress = self.dict_conn[text][0]
             self.revpiname = text
             self.var_conn.set("{0} - {1}:{2}".format(
                 text, self.dict_conn[text][0], int(self.dict_conn[text][1])
@@ -253,10 +259,10 @@ class RevPiPyControl(tkinter.Frame):
         if "psstart" not in self.xmlfuncs:
             tkmsg.showwarning(
                 _("Warning"),
-                _("The watch mode ist not supported in version {0} "
-                    "of RevPiPyLoad on your RevPi! You need at least version "
-                    "0.5.3! Maybe the python3-revpimodio2 module is not "
-                    "installed on your RevPi at least version 2.0.0."
+                _("There is no piCtory configuration on your Revlution Pi! \n\n"
+                    "Create a piCtory configuraiton. \n\nIf you already have, "
+                    "make sure RevPiPyload is at least version 0.5.3 and "
+                    "python3-revpimodio2 is installed at least version 2.5.0."
                     "").format(self.cli.version()),
                 parent=self.master
             )
@@ -381,6 +387,10 @@ class RevPiPyControl(tkinter.Frame):
 
                 if self.debugframe is not None:
                     self.cli.psstart()
+
+    def plcpictory(self):
+        u"""Öffnet piCtory Konfiguraiton."""
+        webbrowser.open("http://{0}/".format(self.revpiaddress))
 
     def plcprogram(self):
         u"""Startet das Programmfenster."""
