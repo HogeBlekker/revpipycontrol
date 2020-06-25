@@ -19,7 +19,7 @@ class MyEggInfo(distutils.command.install_egg_info.install_egg_info):
 
 
 setup(
-    version="0.8.0a",
+    version="0.8.1",
     python_requires="~=3.4",
     requires=["tkinter", "zeroconf"],
 
