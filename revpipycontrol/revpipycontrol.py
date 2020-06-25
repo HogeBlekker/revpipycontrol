@@ -115,6 +115,7 @@ class RevPiPyControl(tkinter.Frame):
 
         menu1 = tkinter.Menu(self.mbar, tearoff=False)
         menu1.add_command(label=_("Connections..."), command=self.plclist)
+        menu1.add_command(label=_("Search RevPi..."), command=self.plc_search)
         menu1.add_separator()
         menu1.add_command(label=_("Exit"), command=self.master.destroy)
         self.mbar.add_cascade(label=_("Main"), menu=menu1)
@@ -251,6 +252,9 @@ class RevPiPyControl(tkinter.Frame):
         self.dict_conn = revpiplclist.get_connections()
         self._fillconnbar()
 
+    def plc_search(self):
+        """Search Rev Pi with avahi."""
+
     def plcdebug(self):
         u"""Baut den Debugframe und packt ihn.
         @return None"""
@@ -259,10 +263,10 @@ class RevPiPyControl(tkinter.Frame):
         if "psstart" not in self.xmlfuncs:
             tkmsg.showwarning(
                 _("Warning"),
-                _("There is no piCtory configuration on your Revlution Pi! \n\n"
-                    "Create a piCtory configuraiton. \n\nIf you already have, "
-                    "make sure RevPiPyload is at least version 0.5.3 and "
-                    "python3-revpimodio2 is installed at least version 2.5.0."
+                _("The watch mode ist not supported in version {0} "
+                    "of RevPiPyLoad on your RevPi! You need at least version "
+                    "0.5.3! Maybe the python3-revpimodio2 module is not "
+                    "installed on your RevPi at least version 2.0.0."
                     "").format(self.cli.version()),
                 parent=self.master
             )
