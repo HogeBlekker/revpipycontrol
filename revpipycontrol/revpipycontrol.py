@@ -115,7 +115,6 @@ class RevPiPyControl(tkinter.Frame):
 
         menu1 = tkinter.Menu(self.mbar, tearoff=False)
         menu1.add_command(label=_("Connections..."), command=self.plclist)
-        menu1.add_command(label=_("Search RevPi..."), command=self.plc_search)
         menu1.add_separator()
         menu1.add_command(label=_("Exit"), command=self.master.destroy)
         self.mbar.add_cascade(label=_("Main"), menu=menu1)
@@ -249,11 +248,7 @@ class RevPiPyControl(tkinter.Frame):
         win.grab_set()
         revpiinfo.RevPiInfo(win, self.cli, __version__)
         self.wait_window(win)
-        self.dict_conn = revpiplclist.get_connections()
-        self._fillconnbar()
 
-    def plc_search(self):
-        """Search Rev Pi with avahi."""
 
     def plcdebug(self):
         u"""Baut den Debugframe und packt ihn.
