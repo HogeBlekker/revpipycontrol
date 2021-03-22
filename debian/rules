@@ -1,0 +1,17 @@
+#!/usr/bin/make -f
+# See debhelper(7) (uncomment to enable)
+# output every command that modifies files on the build system.
+#export DH_VERBOSE = 1
+
+export PYBUILD_NAME=revpipycontrol
+
+%:
+	dh $@ --with python3 --buildsystem=pybuild
+
+override_dh_auto_build:
+	dh_auto_build
+	msgfmt $(CURDIR)/revpipycontrol/locale/de/LC_MESSAGES/revpipycontrol.po -o $(CURDIR)/revpipycontrol/locale/de/LC_MESSAGES/revpipycontrol.mo
+
+override_dh_auto_clean:
+	dh_auto_clean
+	rm -f $(CURDIR)/revpipycontrol/locale/de/LC_MESSAGES/revpipycontrol.mo

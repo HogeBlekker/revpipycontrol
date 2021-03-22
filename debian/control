@@ -1,0 +1,27 @@
+Source: revpipycontrol
+Section: x11
+Priority: optional
+Maintainer: Philipp Rosenberger <p.rosenberger@kunbus.com>
+Build-Depends:
+ debhelper-compat (= 12),
+ dh-python,
+ gettext,
+ python3-all,
+ python3-setuptools
+X-Python3-Version: >= 3.5
+Standards-Version: 4.5.0
+Homepage: https://revpimodio.org/en/revpipyplc-2/revpipycontrol/
+Vcs-Browser: https://github.com/RevolutionPi/revpipycontrol
+Vcs-Git: https://github.com/RevolutionPi/revpipycontrol.git
+Rules-Requires-Root: no
+Testsuite: autopkgtest-pkg-python
+
+Package: revpipycontrol
+Architecture: all
+Depends:
+ ${python3:Depends},
+ ${misc:Depends},
+ python3-tk
+Description: This program is the graphical interface to access the RevPiPyLoad
+ With this program, which was also written in Python, all tasks can be performed
+ over the network with the RevPiPyLoad.

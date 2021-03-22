@@ -1,0 +1,5 @@
+revpipycontrol (0.8.1-1+revpi10) unstable; urgency=medium
+
+  * Import RevPiPyControl 0.8.1
+
+ -- Philipp Rosenberger <p.rosenberger@kunbus.com>  Mon, 22 Mar 2021 15:52:02 +0100
