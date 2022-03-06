@@ -105,7 +105,7 @@ class RevPiPyControl(tkinter.Frame):
         # Hauptfenster
         self.master.wm_title("RevPi Python PLC Loader")
         self.master.wm_iconphoto(
-            True, tkinter.PhotoImage(file=addroot("revpipycontrol.png"))
+            True, tkinter.PhotoImage(file=addroot("revpipycontrol.gif"))
         )
         self.master.wm_resizable(width=False, height=False)
 
