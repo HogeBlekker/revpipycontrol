@@ -17,8 +17,10 @@ from sys import platform
 # TODO: Mac einbauen
 if platform == "linux":
     homedir = environ["HOME"]
-else:
+elif platform == "win32":
     homedir = environ["APPDATA"]
+else:
+    homedir = environ["HOME"]
 
 savefile_connections = pathjoin(
     homedir, ".revpipyplc", "connections.dat")
